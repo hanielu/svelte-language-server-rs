@@ -3247,6 +3247,94 @@ plugin-richtext and ui open the sidecar holds ~200 MB (the official server loads
 Edits 12–26 ms. Test: `a_vite_config_that_names_preprocessors_is_a_preprocess_config`; suites lib 504,
 protocol 33, robustness 30.
 
+## 84–87. Markup completion and hover, against the official server
+
+Reported from Zed: typing a component's name in the markup (`<MyCom`) offered no completion, and
+hovering the `value` of `bind:value` showed no type where the official server shows one.
+`tests/regressions/markup-features.mjs <svelte-rs binary | svelte-ls>` builds a throwaway project
+from `tests/regressions/tpl` and asks both servers the same hovers and completions (including
+`completionItem/resolve`, where auto-import edits arrive); after these patches every answer matches.
+
+### 84. Complete a component's name as it is typed (`804e8cc`)
+
+**Problem.** The start-tag classification counted a component's own name as the whitespace after it,
+so `<MyCom` replaced TypeScript's list (the imported component and every component it can
+auto-import) with the component's props and directives, which the editor filtered to nothing.
+
+**Change.** `start_tag_completion_site` (a function of text and offset, split out of
+`Server::completion_site`) narrows only where upstream's `mightBeAtStartTagWhitespace` holds
+(`CompletionProvider.ts:252-283`, `:316-320`), and counts a dotted tag (`<ui.Button`) as a
+component, as the Svelte parser does.
+
+**Effect.** `<MyCom` offers `MyComponent` and `<OtherWid` offers `OtherWidget` with its import
+(placed by 86) (1,061 items; official 1,001 / 1,002, the same two offered); `<` still answers the 131 HTML tags,
+as official does. Test: `start_tag_completion_site_tests::a_component_name_being_typed_is_not_narrowed`.
+
+### 85. Leave an HTML attribute without a description to TypeScript (`67c53cd`)
+
+**Problem.** Hovering `placeholder` on an `<input>` showed only a browser-support badge; official
+shows `(property) placeholder?: string | null | undefined`. The web data has no description for
+it, and `getAttrHover` (`htmlHover.js:49-69`) answers only for an entry with one, so the official
+HTML plugin answers null and TypeScript answers.
+
+**Change.** The native attribute hover requires a description (the last entry that has one, as
+upstream's loop keeps the last).
+
+**Effect.** `placeholder` hovers with its type; `class` and `hidden` keep their HTML descriptions.
+Test: `hover::tests::an_attribute_without_a_description_has_no_html_hover`.
+
+### 86. Place a completion's new import after the last import (`4164fa6`)
+
+**Problem.** Found while checking 84: accepting any completion that adds an import (an auto-import in
+the script, or a component typed in the markup) inserted it at 0:1, inside `<script`, splitting the
+tag. tsgo inserts at the start of the generated line after the shadow's last import, which
+svelte2tsx's own code fills (`function $$render() {`), so the position maps to nothing useful.
+
+**Change.** `take_new_import_edits` takes a resolved item's new-import edits out before the response
+is mapped and places them as `CompletionProvider.codeActionChangeToTextEdit` (`:1087-1183`) does: on
+the line after the source of the generated line before the import; at the start of the script body
+(the one the completion was asked in) on a line of its own when that maps nowhere in a body or to the
+document's very start; in a new `<script>` for a component without one.
+
+**Effect.** Completing `OtherWid` in the script and `<OtherWid` in the markup both insert the import
+at 2:0, after the existing import, as official does (official indents it with four spaces from its
+formatting defaults). Tests: `tsgo_completion::tests::a_new_import_goes_after_the_last_import`,
+`a_first_import_opens_the_script_body`, `a_component_without_a_script_gets_one`.
+
+### 87. Map a `bind:` directive's name to the property it becomes (`19161a7`)
+
+**Problem.** svelte2tsx turns `bind:value={x}` into `"bind:value":x` on an element and `value:x` on a
+component; the key was written as a literal, so the directive name had no mapping of its own. Hover
+on an element's `bind:value` answered nothing (official: `(property) 'bind:value'?: any`); on a
+component's it answered for the nearest mapped chunk, the component (`(alias) const MyComponent…`;
+official: `(property) value: boolean`).
+
+**Change.** `push_bind_name` keeps the name as an unedited source chunk, as upstream `Binding.ts`
+pushes `[attr.start, …]` (element, with the `bind:` prefix) or `[attr.start + 'bind:'.length, …]`
+(component); a name the source does not spell that way stays a literal, and so does a shorthand
+element binding's key (`bind:files`), whose text is the expression's and keeps its mapping (upstream
+writes that key as a literal too). The component props builder had its own copy of the binding
+logic; it now calls `format_component_bind_directive_segments`. Generated code is unchanged: only
+the source map gains the names.
+
+**Effect.** Both hovers match official, and so do TypeScript errors on a binding: for
+`<MyComponent bind:nope={on} />` and `bind:value={n}` (wrong type) svelte-rs now reports at 7:19 and
+8:19, the prop name, as official does (before: 7:15 and 8:15, the directive). An unknown element
+binding (`<input bind:valu={on} />`, TS 2353) is reported at the directive, 9:8 (before 9:1); official
+reports 9:17, the `=`, where its quote insertion anchors. Twelve zeno admin components that use
+`bind:` report the same diagnostics as official (none) through `tests/diagproj.mjs`. zeno corpus
+(`tests/regressions/projection/corpus.sh`, every component, before and after): 4,744 files (`node_modules` included) project to byte-identical code; 335 maps differ, and
+`exactdiff.py` counts 2,630 source bytes newly mapped (506 runs right after `bind:`) and none lost.
+Tests: `svelte2tsx_bind_name_map.rs` (element key, component prop, a shorthand element binding
+keeps its expression's mapping, unchanged output); `cargo test -p rsvelte_projection`: 870 tests in 117 targets (1 ignored), the 866 before and these 4.
+
+Suites after 84–87 (`vendor/rsvelte` `19161a7`): lib 510 (1 ignored), protocol 33, robustness 30;
+`tests/regressions/runall.sh` on the installed build, `docs/measurements/tests/regressions-markup.txt`
+(against the last recorded run, 42 of 46 scripts identical; the rest lose only lint warnings patch 81
+made opt-in, or differ in timing order);
+`cargo fmt --all --check` clean, and clippy adds no warning. `463cb3b` gives the two protocol tests
+that shared a directory one each (one deleted the other's `rsvelte-lint.json` once under load).
+
 ## tsrs issues (outside our control)
 
 * **Memory kept after every full program build.** tsrs frees its program owners
@@ -3297,6 +3385,20 @@ protocol 33, robustness 30.
   Once tsrs answers a cancelled pull at once, or keeps its result, patch 50's rule (never cancel a
   pull for taking long) can be revisited; once the lost request is fixed, patches 44–45's restart can
   go.
+* **The "Add import" quick fix for a component used in the markup is missing.** For `<OtherWidget size={1} />`
+  with no import, official offers `Add import from "./OtherWidget.svelte"` on the `Cannot find name`
+  diagnostic; svelte-rs answers no code action (found while checking 86;
+  `textDocument/codeAction` with that diagnostic returns `[]`). Completion (84, 86) covers typing the
+  name; the quick fix for an existing tag does not.
+* **Two binding diagnostics differ from official** (found checking 87; both before and after it): a
+  Svelte analysis error without a position, `bind_invalid_name` for `<input bind:valu={on} />`, is
+  reported at 1:1 with an `Analysis error: bind_invalid_name:` prefix (official: at the directive,
+  the bare message); and binding a component prop that is not `$bindable` reports TypeScript's raw
+  `Type '"nope"' is not assignable to type '"value"'` on the generated `$$bindings` line (official
+  rewrites it to `Cannot use 'bind:' with this property…` at the directive).
+* **A cursor right before a start tag's `>` or `/>` is not in the tag.** `start_tag_context` answers
+  `None` for `<Comp |>` and `<Comp |/>`, so completion there is treated as template text; upstream
+  narrows to the component's props. `<Comp | />` (a space after the cursor) works.
 * A diagnostic pull tsgo never answers is never answered (patch 50; none is known): the editor keeps
   the previous diagnostics and the background does not wait for it, but nothing restarts tsgo. Patch
   68 leaves pulls out of its liveness rules (a check may take that long) and holds back those rules

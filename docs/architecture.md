@@ -13,7 +13,7 @@ formatting, linting, and TypeScript features through a **TypeScript 7 LSP child*
 Our binary, `crates/svelte_rs` (`svelte-rs`), is a thin wrapper that points that child at
 [tsrs](https://github.com/oxc-project/tsrs) (the Rust port of the TypeScript 7 compiler and
 language server; same protocol as tsgo) unless `TSGO_BIN` is set, then runs rsvelte's server.
-Everything else svelte-rs adds is patches to rsvelte (80 at `vendor/rsvelte` `c921b00`) that make it
+Everything else svelte-rs adds is patches to rsvelte (87 at `vendor/rsvelte` `19161a7`) that make it
 faster and lighter on real monorepos and keep it correct while a component is half typed or
 TypeScript is slow, each measured and tested (see `docs/patches.md`).
 

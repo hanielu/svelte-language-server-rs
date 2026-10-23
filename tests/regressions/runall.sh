@@ -57,3 +57,7 @@ run "rn projection7b" rn "$S/cases/projection7b.json"
 # later attribute, bind:this, a transition's argument, snippet parameters and type parameters, each keys,
 # closing tags, a repaired alias); compare with official via rnall.sh and rnmatrix.cjs.
 run "diagcmp diag3" diagcmp "$S/cases/diag3.json"
+# Markup completion and hover (84-87): a component's name typed in the markup, hovers on `bind:`
+# directive names and attributes, and where a completion's new import lands; compare with official's
+# (`node markup-features.mjs svelte-ls`).
+run markup-features markup-features
