@@ -48,7 +48,9 @@ the project) through Node, or set `TSGO_BIN` to a `tsgo.exe`.
 
 Prebuilt binaries for macOS, Linux and Windows are attached to each
 [release](https://github.com/hanielu/svelte-language-server-rs/releases): put
-`svelte-language-server-rs` (or `.exe`) on your `PATH`. To build it yourself:
+`svelte-language-server-rs` (or `.exe`) on your `PATH`. They are not code-signed: on macOS run
+`xattr -d com.apple.quarantine svelte-language-server-rs` once on a binary a browser downloaded, and
+Windows SmartScreen may ask before the first run. To build it yourself:
 
 ```sh
 git clone --recurse-submodules --shallow-submodules https://github.com/hanielu/svelte-language-server-rs
