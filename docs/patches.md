@@ -1,7 +1,7 @@
 # Patches to rsvelte
 
 svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `46a8289`).
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `2fc06c6`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -3629,6 +3629,71 @@ ignored; protocol 33 (9 before the helper), including the three preprocessing on
 fmt` clean; clippy reports nothing new (`robustness.rs`'s unused `std::fmt::Write` predates it, used by
 Unix-only tests).
 
+## 100–101. Emmet in markup
+
+Reported from Zed with a screenshot: official offers `div` → `<div>|</div>` ("Emmet
+Abbreviation") in markup; svelte-language-server-rs offered nothing. Official's HTML plugin
+registers an `onHtmlContent` participant with vscode-html-languageservice, which calls it for a
+position in markup content, and answers it with `@vscode/emmet-helper`'s `doComplete(document,
+position, 'html', emmetConfig)` (emmet-helper 2.8.4 on emmet 2.4.11), merging the items after the
+HTML ones, the list incomplete whenever it holds one.
+
+### 100. Complete Emmet abbreviations in markup (`1d80e0c`)
+
+**Change.** `src/emmet/` ports what that call runs, for `html` and the default (empty) config:
+emmet-helper's `doComplete` (the `|bem`, `|c` and `|t` filters, `isAbbreviationValid`,
+`isExpandedTextNoise`, the commonly used tags a prefix also offers, `addFinalTabStop`,
+`escapeNonTabStopDollar`, `replaceTabStopsWithCursors`) and emmet's markup half: abbreviation
+extraction (UTF-16, looking past an auto-closed quote and brackets), tokenizer, parser, converter,
+snippet resolution, the implicit tag, attribute merging, lorem ipsum, `<label>` and BEM transforms,
+and the HTML formatter with emmet-helper's options (TextMate fields, `<html>` children not indented,
+`<body>` content on its own line, no inline line breaking). `data.json` is the html snippet registry
+(202 names), the variables, the 106 commonly used tags and the lorem vocabularies, extracted from the
+installed packages by `scripts/dev/generate-emmet-data.mjs`; their MIT notices are in
+`src/emmet/NOTICE.md`. `build_completions` asks it where nothing else answered and the position is
+markup content: not in a start tag, a comment or a moustache (seeded with the enclosing element, as
+`isInsideMoustacheTag`), and not in a script or style; the items carry upstream's shape (no kind, a
+`textEdit`, snippet format, `detail` "Emmet Abbreviation", plain-text documentation) in an incomplete
+list. `svelte.plugin.html.completions.emmet: false` (or the HTML plugin's completions off) turns it
+off.
+
+Deliberate differences, both guards emmet lacks: an expansion holds at most 10,000 lorem ipsum
+words in all (`lorem99999999999` or `lorem10000*1000` would have the server build text no editor can
+show), and an abbreviation is looked for at most 2,000 UTF-16 units back (emmet's backward scan is
+quadratic on a long minified line; a longer one is not offered).
+
+**Effect.** The generator also runs emmet-helper's `doComplete` on 382 lines
+(`tests/data/emmet-oracle.json`: tags, prefixes, snippets, attributes, text, nesting, repeaters,
+numbering, implicit tags, labels, lorem, filters, noise, invalid abbreviations, lines with text,
+tags and astral characters around the cursor); the port gives the same 558 items, labels, ranges,
+snippets and documentation (lorem ipsum, random, compared by its tags and lines). Over the LSP,
+typing each case as Zed does, against official: the 20 earlier probes, 35 template contexts (in a
+comment, after one, in `<style>`, `<script>`, an attribute moustache, `{@html}`, a component's
+start tag and content, `{#each}`, `{#if}`, `{:else}`, `{#key}`, `{#await}`, `{#snippet}`,
+`<textarea>`, `<svelte:head>`, `<svelte:element>`, an unclosed element, CRLF, before the script,
+filters, a `\$`) and 7 positions right before a start tag's `>` or `/>`: the same Emmet items and
+`isIncomplete` everywhere. Tests: `emmet::tests::every_corpus_line_completes_as_emmet_helper_does`
+(the oracle), `lorem_ipsum_shares_one_budget_per_expansion`, `a_huge_lorem_is_capped`,
+`an_abbreviation_longer_than_the_limit_is_not_offered`; protocol
+`emmet_abbreviations_follow_the_html_emmet_setting`.
+
+### 101. Resolve an item without `data` to itself (`2fc06c6`)
+
+**Problem.** Found checking 100: `completionItem/resolve` for an Emmet item answered tsgo's error
+`completion item data is nil`; so did every Svelte, HTML and CSS item, all sent to tsgo. Upstream's
+`onCompletionResolve` (`server.ts`) returns an item without `data` as it is.
+
+**Change.** Such an item is answered with itself before tsgo is asked; only tsgo's items carry
+`data`.
+
+**Effect.** Resolving the Emmet `div` item returns it unchanged, as official. Test: protocol
+`an_item_without_data_resolves_to_itself` (a `{#` block item; `null` before).
+
+Suites after 100–101: lib 528 (1 ignored), protocol 35, robustness 32; 100 alone passes lib 528,
+protocol 34, robustness 32. `scripts/check-windows.sh` passes. `runall.sh` on the release build:
+`docs/measurements/tests/regressions-emmet.txt` (against 95–99's run, every script the same but
+`slowmix`'s arrival order).
+
 ## tsrs issues (outside our control)
 
 * **Memory kept after every full program build.** tsrs frees its program owners
@@ -3698,6 +3763,15 @@ Unix-only tests).
 * **A cursor right before a start tag's `>` or `/>` is not in the tag.** `start_tag_context` answers
   `None` for `<Comp |>` and `<Comp |/>`, so completion there is treated as template text; upstream
   narrows to the component's props. `<Comp | />` (a space after the cursor) works.
+* **Emmet in `<style>`, and Emmet's own settings** (found doing 100): official's CSS plugin also
+  offers emmet-helper's `css`/`scss`/`less`/`sass` abbreviations (`m10` → `margin: 10px;`) beside the
+  CSS items; only markup is ported. The editor's `emmet` section (`showExpandedAbbreviation`,
+  `showAbbreviationSuggestions`, `showSuggestionsAsSnippets`, `excludeLanguages`, `preferences`,
+  `syntaxProfiles`, `variables`, `extensionsPath`) is not read; 100 behaves as its default `{}`. Two
+  JavaScript accidents are not reproduced: a node named after an `Object.prototype` key
+  (`div>constructor`) expands to nothing in emmet, and a snippet with several top-level nodes
+  (`html:4t.a.b`) shares the abbreviation's attribute lists between them, so emmet repeats a merged
+  class.
 * A diagnostic pull tsgo never answers is never answered (patch 50; none is known): the editor keeps
   the previous diagnostics and the background does not wait for it, but nothing restarts tsgo. Patch
   68 leaves pulls out of its liveness rules (a check may take that long) and holds back those rules
