@@ -1,0 +1,107 @@
+name: Release
+
+# Builds the release binaries and attaches them to a draft GitHub release when a version tag is
+# pushed (`git tag v0.1.0 && git push origin v0.1.0`). Run it by hand (Actions → Release → Run
+# workflow) to build the binaries as workflow artifacts without releasing anything.
+#
+# Nothing here runs tests: they run on the maintainer's own machines before a tag is pushed
+# (docs/releasing.md).
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: macos-latest, target: aarch64-apple-darwin }
+          - { os: macos-latest, target: x86_64-apple-darwin }
+          # 22.04's glibc (2.35) lets the binary run on older distributions than 24.04's would.
+          - { os: ubuntu-22.04, target: x86_64-unknown-linux-gnu }
+          - { os: ubuntu-22.04-arm, target: aarch64-unknown-linux-gnu }
+          - { os: windows-latest, target: x86_64-pc-windows-msvc }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Check the tag names the version in Cargo.toml
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"$/\1/p' Cargo.toml | head -1)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match version $version in Cargo.toml"
+            exit 1
+          fi
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: Build
+        shell: bash
+        run: cargo build --locked --profile dist -p svelte_language_server_rs --target ${{ matrix.target }}
+
+      - name: Package
+        shell: bash
+        run: |
+          name="svelte-language-server-rs-${GITHUB_REF_NAME}-${{ matrix.target }}"
+          mkdir -p "package/$name" out
+          cp README.md LICENSE "package/$name/"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cp "target/${{ matrix.target }}/dist/svelte-language-server-rs.exe" "package/$name/"
+            (cd package && 7z a -tzip "../out/$name.zip" "$name" > /dev/null)
+          else
+            cp "target/${{ matrix.target }}/dist/svelte-language-server-rs" "package/$name/"
+            tar -czf "out/$name.tar.gz" -C package "$name"
+          fi
+          ls -l out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: out/*
+          if-no-files-found: error
+
+  release:
+    name: draft release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+
+      - name: Checksums
+        run: cd out && sha256sum * > SHA256SUMS && cat SHA256SUMS
+
+      # A draft: the maintainer reviews the assets and publishes it on GitHub. Re-running the
+      # workflow for the same tag replaces the assets of the existing draft.
+      - name: Create or update the draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" out/* --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" out/* --draft --verify-tag \
+              --title "svelte-language-server-rs $GITHUB_REF_NAME" --generate-notes
+          fi

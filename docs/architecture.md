@@ -95,6 +95,8 @@ not report); svelte-check-native with tsrs 0.84 s / 167 MB / 1 false positive.
 * `tests/` – `e2e.mjs` (41 steps against zeno, as Zed drives the server), `regressions/` (the
   reviewers' reproductions; `runall.sh <binary> <label>`), `review3/` (the third review's tools),
   `results/`.
+* `.github/workflows/release.yml` – builds the release binaries for a version tag (no tests:
+  `docs/releasing.md`).
 * `docs/patches.md` – every patch with its problem, change, measurements, risks and tests;
   `docs/testing.md` – test layers, tools and the reference workspace; `docs/measurements/` – every
   recorded benchmark and end-to-end run; `docs/reviews/` – review findings the patches answer;

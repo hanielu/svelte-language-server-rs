@@ -1,3 +1,4 @@
 [submodule "vendor/rsvelte"]
 	path = vendor/rsvelte
-	url = https://github.com/baseballyama/rsvelte
+	url = https://github.com/hanielu/rsvelte
+	branch = svelte-language-server-rs

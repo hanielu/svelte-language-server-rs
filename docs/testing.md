@@ -60,25 +60,16 @@ open in your editor with svelte-language-server-rs running, test on a copy inste
 the server's tests compile for Windows from macOS or Linux; only a run on Windows tests behaviour.
 On a Windows PC:
 
-1. **Carry the source over.** On the Mac, two zips of the committed source (the repository has no
-   remote, and the vendored rsvelte is a shallow clone, which a git bundle cannot carry):
-
-   ```sh
-   cd ~/Developer/adroyt/svelte-language-server-rs
-   git archive --format=zip -o ~/Desktop/svelte-language-server-rs.zip --prefix=svelte-language-server-rs/ HEAD
-   git -C vendor/rsvelte archive --format=zip -o ~/Desktop/rsvelte.zip --prefix=svelte-language-server-rs/vendor/rsvelte/ HEAD
-   ```
-
-   Copy both to the PC (say `C:\src`) and extract them into the same folder, in PowerShell:
+1. **Get the source**, in PowerShell:
 
    ```powershell
-   cd C:\src
-   Expand-Archive svelte-language-server-rs.zip -DestinationPath .
-   Expand-Archive rsvelte.zip -DestinationPath . -Force
+   git clone --recurse-submodules https://github.com/hanielu/svelte-language-server-rs
    cd svelte-language-server-rs
    ```
 
-   No git history comes along; fixes are made in the repository on the Mac.
+   (or `git pull --recurse-submodules` in an existing clone). Without network access, two
+   `git archive` zips of the repository and of `vendor/rsvelte`, extracted into one folder, build
+   just as well.
 
 2. **Install the tools**: Rust through [rustup](https://rustup.rs) (the default MSVC toolchain; it
    offers the Visual Studio Build Tools, "Desktop development with C++", which linking and mimalloc's

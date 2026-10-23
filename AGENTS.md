@@ -102,7 +102,9 @@ tens of GB.
 
 - Work in `vendor/rsvelte` for server changes; never rewrite its history or the upstream commits
   below the `svelte-language-server-rs` branch.
-- Do not push, publish, or open pull requests unless the person you work for asks you to.
+- Do not push, publish, or open pull requests unless the person you work for asks you to. When
+  pushing, push `vendor/rsvelte`'s branch to the fork first (`docs/releasing.md`), then this
+  repository; never push a release tag: the maintainer tags after testing on their machines.
 - Long builds and test runs: run them in the background and wait for them, don't poll.
 - If a finding is outside your task, record it in `docs/patches.md` under "Not done / follow-ups"
   instead of fixing it silently.

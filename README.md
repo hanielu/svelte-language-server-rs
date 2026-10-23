@@ -46,8 +46,12 @@ Windows: it compiles and the known Windows issues are fixed, but it has not been
 without one the server runs the project's TypeScript 7 (`@typescript/native-preview` installed in
 the project) through Node, or set `TSGO_BIN` to a `tsgo.exe`.
 
+Prebuilt binaries for macOS, Linux and Windows are attached to each
+[release](https://github.com/hanielu/svelte-language-server-rs/releases): put
+`svelte-language-server-rs` (or `.exe`) on your `PATH`. To build it yourself:
+
 ```sh
-git clone --recurse-submodules <this repository>
+git clone --recurse-submodules https://github.com/hanielu/svelte-language-server-rs
 cd svelte-language-server-rs
 sh scripts/install.sh            # builds the dist profile, installs ~/.local/bin/svelte-language-server-rs
 ```
