@@ -1,7 +1,7 @@
 # Patches to rsvelte
 
 svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `2fc06c6`).
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `5c9579a`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -3694,6 +3694,88 @@ protocol 34, robustness 32. `scripts/check-windows.sh` passes. `runall.sh` on th
 `docs/measurements/tests/regressions-emmet.txt` (against 95–99's run, every script the same but
 `slowmix`'s arrival order).
 
+## 102. Emmet in `<style>` (`5c9579a`)
+
+**Problem.** Found doing 100 (its follow-up): official's CSS plugin also offers emmet-helper's
+stylesheet expansions beside the CSS items — `m10-a` → `margin: 10px auto;` in `<style>` and in a
+`style` attribute — and svelte-language-server-rs offered none. `CSSPlugin.getCompletionsInternal`
+registers `onCssProperty` and `onCssPropertyValue` participants with vscode-css-languageservice
+6.3.10 and, when one is called with a word, asks `doComplete(cssDocument, position,
+getLanguage(type), emmetConfig)` (`css` for anything but `scss` and `less`) about the CSS document —
+the style body, or a `style` attribute's value as `__ {value}` — and merges the items after the CSS
+ones, the list incomplete when it holds one; `sass`, which the language service does not parse, is
+answered by `doComplete(document, position, 'sass', emmetConfig)` alone, on the component. Both obey
+`emmet.showExpandedAbbreviation: "never"`; `svelte.plugin.css.completions.emmet: false` turns off
+all but `sass`.
+
+**Change.** `src/emmet/` gains emmet's stylesheet half: the tokenizer and parser of
+`@emmetio/css-abbreviation` (`stylesheet.rs`); the snippet registry with each shorthand holding its
+properties, `scoreMatch`/`findBestMatch`, `resolveNode` (`lg` gradients, a property with an inline
+keyword (`dib`), a raw snippet's fields filled in order, the keywords of the snippet, of its nested
+properties and the global ones, unit aliases and default units) and the CSS writer (short hex,
+`rgba`, `transparent`, JavaScript's `toFixed` and number strings) in `css.rs`; the extractor gains
+emmet-helper's stylesheet options (no look-ahead, only round brackets pair).
+`stylesheet_suggestions` is emmet-helper's `isStyleSheet` branch: the `!important` patch
+(microsoft/vscode#120245), validity and noise for stylesheets, the empty list for an abbreviation of
+more than four characters that starts a CSS property name, the label as the expansion without tab
+stops, `filterText`, and `abbrRegex` (microsoft/vscode#28933). `data.json` adds the 253 stylesheet
+snippet names, the keywords, the unitless properties and emmet-helper's 591 property names.
+`src/css_emmet.rs` restates where the language service calls a participant, as there is no CSS
+parser here to walk: a property's name, or an identifier or number in its value, in a block (a
+rule's, an at-rule's, a nested one) or a top-level `@supports` condition — not a keyframe selector,
+a SCSS variable, a LESS mixin call, an at-rule's parameters, a function's arguments in a value, a
+hex colour of 3, 4, 6 or 8 digits, a string or a SCSS `#{}`; a comment is as if absent, and a LESS
+`@{}` names what surrounds it. It hands emmet-helper the CSS document's line and maps the items
+back.
+
+`build_completions` follows `CSSPlugin` around it: a style's body end is in the style (`isInTag`); a
+`<style>` nested in markup (`<svelte:head>`, an element, a block) is one too
+(`extractStyleTagAtOffset`); `sass` answers with Emmet alone, so the CSS items it had are gone, as
+in official; a trigger character other than `.`, `:`, `-` or `/` gets nothing from the CSS plugin;
+and one the HTML plugin does not declare (not `.`, `:`, `<`, `"`, `=` or `/`) has `HTMLPlugin` add
+markup Emmet in style content outside braces, first (`<m10->` after `m10-` in `sass`). The trigger
+character now reaches the worker. An incomplete native list is narrowed to the items whose label
+holds the word at the cursor (`PluginHost.ts:285-296`, unless `dontFilterIncompleteCompletions`), as
+tsgo's lists for a rejected document already were; with stylesheet labels that drops most expansions
+while digits are typed — official offers `margin: ;` at `m` and nothing at `m1` or `m10`, `margin:
+10px auto;` at `m10-a`, never `display: inline-block;` for `dib` — and the port does the same. The
+editor's `emmet` section is read (`initializationOptions.configuration.emmet` or `emmetConfig`,
+`didChangeConfiguration`'s `emmet`, and a pulled `emmet` section): `showExpandedAbbreviation:
+"never"` and `excludeLanguages` turn Emmet off in markup and per stylesheet syntax (`EmmetGates`).
+
+Not reproduced: a unit named after an `Object.prototype` key (`m10constructor`, where emmet writes a
+function's source), an `excludeLanguages` that is a string (matched as a substring), and the `emmet`
+section's other keys (unchanged from 100). The participant rules are a restatement checked on the
+corpus below; positions it does not cover may differ.
+
+**Effect.** The generator (`scripts/dev/generate-emmet-data.mjs`) writes
+`tests/data/emmet-stylesheet-oracle.json`: `lines`, emmet-helper's `doComplete` for each syntax on
+2,693 lines (a 610-line corpus in `css`, `scss`, `less` and `sass`, and the 253 snippet names in
+`css`: numbers and units, colours, keywords, gradients and functions, at-rules, `!important`,
+property names, noise, invalid abbreviations, filters, text and astral characters around the
+cursor), which the port answers with the same 2,042 items, labels, ranges, snippets, filter texts
+and documentation (and the same 543 `undefined`s and 108 empty lists); and `documents`, official's
+own `CSSPlugin.getCompletions` (built as the server builds it) on 315 components, 214 with an Emmet
+item — where it asks emmet-helper and what it answers, in each language, at-rule, nesting, comment,
+string, function, colour, SCSS and LESS form, `sass`, `stylus`, nested styles and `style` attributes
+— which `build_completions` matches in Emmet items and `isIncomplete`. Over the LSP, typing 63 cases
+into a scratch copy of the user's `turborepo-product` web app as Zed does (an incremental
+`didChange` per keystroke, then `textDocument/completion` with the trigger character the server
+declares, a re-query of an incomplete list, or an invocation), the release build and official gave
+the same Emmet items and `isIncomplete` at all 263 keystrokes (127 of them with Emmet, 135 items).
+Tests: `emmet::tests::every_stylesheet_line_completes_as_emmet_helper_does`,
+`css_emmet::tests::every_style_completes_emmet_as_the_css_plugin_does`,
+`css_emmet::tests::a_trigger_character_chooses_the_plugins_that_answer`,
+`settings::tests::emmet_follows_each_plugin_and_the_emmet_section`; protocol
+`emmet_abbreviations_in_style_follow_the_css_and_emmet_settings`.
+
+Suites after 102: lib 532 (1 ignored), protocol 36, robustness 32. `scripts/check-windows.sh`
+passes. `cargo clippy --no-deps` on the language server reports only `symbols.rs`'s
+`map_or_identity` and `tsgo_response.rs`'s `chunks_exact_to_as_chunks`, which predate 102 (clippy
+1.98). `runall.sh` on the release build: `docs/measurements/tests/regressions-emmet-style.txt` (against
+100–101's run, every script the same but `slowmix`'s arrival order and the side `r2c-format` and
+`r2d-hover` took of their probe/edit race, both `ok`; alone, three times each, they vary the same way).
+
 ## tsrs issues (outside our control)
 
 * **Memory kept after every full program build.** tsrs frees its program owners
@@ -3763,15 +3845,18 @@ protocol 34, robustness 32. `scripts/check-windows.sh` passes. `runall.sh` on th
 * **A cursor right before a start tag's `>` or `/>` is not in the tag.** `start_tag_context` answers
   `None` for `<Comp |>` and `<Comp |/>`, so completion there is treated as template text; upstream
   narrows to the component's props. `<Comp | />` (a space after the cursor) works.
-* **Emmet in `<style>`, and Emmet's own settings** (found doing 100): official's CSS plugin also
-  offers emmet-helper's `css`/`scss`/`less`/`sass` abbreviations (`m10` → `margin: 10px;`) beside the
-  CSS items; only markup is ported. The editor's `emmet` section (`showExpandedAbbreviation`,
-  `showAbbreviationSuggestions`, `showSuggestionsAsSnippets`, `excludeLanguages`, `preferences`,
-  `syntaxProfiles`, `variables`, `extensionsPath`) is not read; 100 behaves as its default `{}`. Two
-  JavaScript accidents are not reproduced: a node named after an `Object.prototype` key
-  (`div>constructor`) expands to nothing in emmet, and a snippet with several top-level nodes
-  (`html:4t.a.b`) shares the abbreviation's attribute lists between them, so emmet repeats a merged
-  class.
+* **Emmet's own settings** (found doing 100; 102 ports Emmet in `<style>`): of the editor's `emmet`
+  section only `showExpandedAbbreviation` and `excludeLanguages` are read (102);
+  `showAbbreviationSuggestions`, `showSuggestionsAsSnippets`, `preferences`, `syntaxProfiles`,
+  `variables` and `extensionsPath` are not, and Emmet behaves as with their defaults. Three JavaScript
+  accidents are not reproduced: a node named after an `Object.prototype` key (`div>constructor`)
+  expands to nothing in emmet, a unit named after one (`m10constructor`) writes a function's source,
+  and a snippet with several top-level nodes (`html:4t.a.b`) shares the abbreviation's attribute lists
+  between them, so emmet repeats a merged class.
+* **An incomplete tsgo list does not narrow the native items** (found doing 102): `PluginHost`
+  filters every plugin's items when any list is incomplete; svelte-language-server-rs narrows a
+  native list that is incomplete itself (102) and tsgo's for a rejected document, but not native items
+  merged into an incomplete tsgo list.
 * A diagnostic pull tsgo never answers is never answered (patch 50; none is known): the editor keeps
   the previous diagnostics and the background does not wait for it, but nothing restarts tsgo. Patch
   68 leaves pulls out of its liveness rules (a check may take that long) and holds back those rules

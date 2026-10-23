@@ -140,9 +140,11 @@ accepted too.
   warnings its own compiler version would not emit yet (e.g. `state_referenced_locally` on props).
 - `.svelte.ts`/`.svelte.js` modules and plain `.ts` files are served by your TypeScript server, not
   by svelte-language-server-rs, so `.ts` files do not see named exports of `.svelte` components.
-- Emmet abbreviations are completed in markup as the official server does with Emmet's default
-  settings. Emmet inside `<style>` is not offered, and the editor's `emmet.*` settings are not
-  read (`svelte.plugin.html.completions.emmet: false` turns it off).
+- Emmet abbreviations are completed in markup, in `<style>` (`css`, `scss`, `less`, `sass`) and in
+  `style` attributes as the official server does with Emmet's default settings. Of the editor's
+  `emmet.*` settings only `showExpandedAbbreviation` and `excludeLanguages` are read
+  (`svelte.plugin.html.completions.emmet` and `svelte.plugin.css.completions.emmet` turn it off;
+  as in the official server, the CSS switch does not reach `sass`).
 - On Windows it has been tried with Zed and tsgo only.
 
 ## Contributing
