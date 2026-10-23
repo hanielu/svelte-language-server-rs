@@ -63,7 +63,7 @@ On a Windows PC:
 1. **Get the source**, in PowerShell:
 
    ```powershell
-   git clone --recurse-submodules https://github.com/hanielu/svelte-language-server-rs
+   git clone --recurse-submodules --shallow-submodules https://github.com/hanielu/svelte-language-server-rs
    cd svelte-language-server-rs
    ```
 

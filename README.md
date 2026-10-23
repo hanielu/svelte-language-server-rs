@@ -51,7 +51,7 @@ Prebuilt binaries for macOS, Linux and Windows are attached to each
 `svelte-language-server-rs` (or `.exe`) on your `PATH`. To build it yourself:
 
 ```sh
-git clone --recurse-submodules https://github.com/hanielu/svelte-language-server-rs
+git clone --recurse-submodules --shallow-submodules https://github.com/hanielu/svelte-language-server-rs
 cd svelte-language-server-rs
 sh scripts/install.sh            # builds the dist profile, installs ~/.local/bin/svelte-language-server-rs
 ```

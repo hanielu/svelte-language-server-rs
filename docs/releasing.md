@@ -43,7 +43,7 @@ docker run --rm -v "$PWD":/src -w /src/vendor/rsvelte -e CARGO_TARGET_DIR=/src/t
 The first time:
 
 ```powershell
-git clone --recurse-submodules https://github.com/hanielu/svelte-language-server-rs
+git clone --recurse-submodules --shallow-submodules https://github.com/hanielu/svelte-language-server-rs
 ```
 
 After that, in the clone:
