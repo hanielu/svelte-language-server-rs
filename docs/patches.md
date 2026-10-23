@@ -3335,6 +3335,59 @@ made opt-in, or differ in timing order);
 `cargo fmt --all --check` clean, and clippy adds no warning. `463cb3b` gives the two protocol tests
 that shared a directory one each (one deleted the other's `rsvelte-lint.json` once under load).
 
+## 88–89. Import quick fixes, against the official server
+
+Found checking 86: for `<OtherWidget size={1} />` with no import, official offers
+`Add import from "./OtherWidget.svelte"` on the `Cannot find name` diagnostic, svelte-rs offered no
+code action at all; and a script's `Add import` quick fix put the import after the first import's
+indentation. `tests/regressions/markup-features.mjs` asks both servers for both quick fixes.
+
+### 88. Place a quick fix's new import like a completion's (`14e76f7`)
+
+**Problem.** For `helper()` in a script with no import, tsgo inserts the import at the start of the
+generated line of the script's first import; mapped like any other position, it landed after that
+line's indentation (1:1), leaving the existing import unindented. Official inserts at 1:0.
+
+**Change.** Official places an import fix's edits with the function it uses for a completion's
+(`CodeActionsProvider.convertAndFixCodeFixAction` calls `codeActionChangeToTextEdit`).
+`take_new_imports` takes each code action's new-import edits out before the response is mapped,
+places them with 86's placement, and `restore_new_imports` puts them back under the source
+document. A new import tsgo puts before an existing import (whose generated line before it is
+svelte2tsx's `;`) takes the start of that import's own source line. A component without a `<script>`
+is still wrapped by `wrap_import_edits_in_script`.
+
+**Effect.** The fix inserts at 1:0, as official does. Test:
+`tsgo_code_actions::tests::a_code_actions_new_import_is_placed_like_a_completions`.
+
+### 89. Offer a component tag's missing import as a quick fix (`a47574e`)
+
+**Problem.** TypeScript's import fix needs the missing name to be the export's own, and a
+component's default export carries svelte2tsx's suffix (`OtherWidget__SvelteComponent_`), so tsgo
+answers no fix for a component tag (tsrs returned `[]`; plain TypeScript files get theirs).
+
+**Change.** As official (`CodeActionsProvider.getComponentImportQuickFix`, `:1016-1112`), the fix is
+made from the auto-import completion at the tag. `component_import_sites` finds the request's
+`Cannot find name` diagnostics on tag names (the argument of `__sveltets_2_ensureComponent`, outside
+any script; a candidate that is not a tag name means none, as upstream gives up there). tsgo's answer
+is held while a completion follow-up per tag and a resolve per matching item (its name, bare or
+suffixed) are asked, the store-references pattern; each resolved item makes an `Add import from "…"`
+fix, nearest module first. These replace tsgo's own quick fixes (both kept for a "did you mean"
+diagnostic, 2552), other kinds stay, and the answer is mapped like tsgo's, so 88 places the import.
+Follow-ups time out and are cleared on a tsgo restart like the store-references ones.
+
+**Effect.** `<OtherWidget size={1} />`: `Add import from "./OtherWidget.svelte"` at 2:0, as official.
+`Select` with its import removed in a copy of SvelteValorantCopilot's `hotkeys.svelte` (a "did you
+mean" diagnostic): the same component fixes at the same line as official (`bits-ui`, the alias,
+`./select.svelte`), then tsgo's own; the alias specifier differs (below), and the edits keep the
+file's CRLF line ending where official writes `\n`. Tests: robustness
+`a_component_tag_without_an_import_is_offered_one` (a fake tsgo that answers no fix, completes the
+suffixed component and resolves its import; fails without 89), unit
+`a_component_tags_missing_name_is_an_import_site`, `only_tag_names_are_import_sites`,
+`a_resolved_component_completion_makes_an_import_fix`. Suites: lib 514 (1 ignored), protocol 33,
+robustness 31; 88 alone passes lib 511, protocol 33, robustness 30. `runall.sh` on the installed build:
+`docs/measurements/tests/regressions-quickfix.txt` (against 84–87's run, every script the same but
+the extended `markup-features` and `slowmix`'s arrival order).
+
 ## tsrs issues (outside our control)
 
 * **Memory kept after every full program build.** tsrs frees its program owners
@@ -3385,11 +3438,12 @@ that shared a directory one each (one deleted the other's `rsvelte-lint.json` on
   Once tsrs answers a cancelled pull at once, or keeps its result, patch 50's rule (never cancel a
   pull for taking long) can be revisited; once the lost request is fixed, patches 44–45's restart can
   go.
-* **The "Add import" quick fix for a component used in the markup is missing.** For `<OtherWidget size={1} />`
-  with no import, official offers `Add import from "./OtherWidget.svelte"` on the `Cannot find name`
-  diagnostic; svelte-rs answers no code action (found while checking 86;
-  `textDocument/codeAction` with that diagnostic returns `[]`). Completion (84, 86) covers typing the
-  name; the quick fix for an existing tag does not.
+* **Import specifiers and two quick fixes come from tsrs** (found checking 89): for a component under a
+  `paths` alias (`"$ui/*": ["components/ui/*"]` with `baseUrl: ./src`) official writes
+  `"$ui/select"`, svelte-rs `"components/ui/select/index"`; plain tsrs on the project's own tsconfig
+  writes `"./components/ui/select"`, so the overlay config (82) changes tsrs's choice but neither is
+  official's. Completions' auto-imports have the same specifiers. tsrs also offers no `Add missing
+  function declaration` or `Change spelling` fix where TypeScript 5 does.
 * **Two binding diagnostics differ from official** (found checking 87; both before and after it): a
   Svelte analysis error without a position, `bind_invalid_name` for `<input bind:valu={on} />`, is
   reported at 1:1 with an `Analysis error: bind_invalid_name:` prefix (official: at the directive,

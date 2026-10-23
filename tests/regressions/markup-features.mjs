@@ -1,10 +1,11 @@
-// Hover and completion in markup, for svelte-rs and the official server side by side.
+// Hover, completion and import quick fixes in markup, for svelte-rs and the official server side by side.
 //
 // Usage: node tests/regressions/markup-features.mjs <svelte-rs binary | svelte-ls> [tests/regressions/tpl]
 // Builds a throwaway project from tpl (a project with `svelte` installed) and asks, in Page.svelte:
 //   hover on a component prop name, a `bind:` directive name, an element attribute name, a shorthand;
 //   completion after `<MyCom` (imported component), `<OtherWid` (component not imported yet), `<`, and
-//   `OtherWid` in the script, each resolved as the editor does (auto-import edits arrive there).
+//   `OtherWid` in the script, each resolved as the editor does (auto-import edits arrive there);
+//   the quick fixes for `<OtherWidget size={1} />` and for `helper()` in the script, neither imported.
 // Prints one JSON object: what each query answered (hover text, completion labels, and each
 // additional edit as `line:character newText`). KEEP=1 keeps the project and prints its path.
 import { spawn } from "node:child_process";
@@ -23,6 +24,7 @@ const files = {
 	"tsconfig.json": JSON.stringify({ compilerOptions: { strict: true, target: "ESNext", module: "ESNext", moduleResolution: "bundler", verbatimModuleSyntax: true, skipLibCheck: true, types: [] } }),
 	"MyComponent.svelte": `<script lang="ts">\n\tlet { value, label }: { value: boolean; label: string } = $props();\n</script>\n\n<p>{label} {value}</p>\n`,
 	"OtherWidget.svelte": `<script lang="ts">\n\tlet { size }: { size: number } = $props();\n</script>\n\n<p>{size}</p>\n`,
+	"helpers.ts": "export function helper() { return 1; }\n",
 };
 const page = [
 	`<script lang="ts">`,
@@ -66,7 +68,7 @@ child.stdout.on("data", (chunk) => {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 await request("initialize", {
 	processId: process.pid, rootUri: pathToFileURL(root).href, workspaceFolders: [{ uri: pathToFileURL(root).href, name: "markup" }],
-	capabilities: { textDocument: { hover: { contentFormat: ["markdown", "plaintext"] }, completion: { completionItem: { snippetSupport: true } } }, workspace: { configuration: true } },
+	capabilities: { textDocument: { hover: { contentFormat: ["markdown", "plaintext"] }, completion: { completionItem: { snippetSupport: true } }, codeAction: { codeActionLiteralSupport: { codeActionKind: { valueSet: ["quickfix"] } } } }, workspace: { configuration: true, workspaceEdit: { documentChanges: true } } },
 });
 send({ method: "initialized", params: {} });
 const uri = pathToFileURL(path.join(root, "Page.svelte")).href;
@@ -115,6 +117,24 @@ for (const [name, tag, want, scriptText] of [
 	// Auto-import edits arrive on resolve, as the editor asks for them.
 	const hit = found && (await request("completionItem/resolve", found)) || found;
 	out[name] = { offered: !!hit, count: items.length, item: hit && { kind: hit.kind, detail: hit.detail, textEdit: hit.textEdit?.newText ?? hit.insertText, additionalEdits: (hit.additionalTextEdits ?? []).map((e) => `${e.range.start.line}:${e.range.start.character} ${JSON.stringify(e.newText)}`) }, sample: items.slice(0, 5).map((i) => i.label) };
+}
+// Quick fixes for a `Cannot find name`, as the editor asks with the diagnostic it was shown.
+for (const [name, text, word] of [
+	["quick fix `<OtherWidget />` (not imported)", page.trimEnd() + "\n<OtherWidget size={1} />\n", "OtherWidget"],
+	["quick fix `helper()` in the script", page.replace("</script>", "\tconst n = helper();\n</script>"), "helper"],
+]) {
+	send({ method: "textDocument/didChange", params: { textDocument: { uri, version: ++version }, contentChanges: [{ text }] } });
+	await sleep(500);
+	const textLines = text.split("\n");
+	const line = textLines.findIndex((l) => new RegExp(`[<\\s]${word}\\b`).test(l));
+	const character = textLines[line].indexOf(word);
+	const range = { start: { line, character }, end: { line, character: character + word.length } };
+	const diagnostic = { range, severity: 1, code: 2304, source: "ts", message: `Cannot find name '${word}'.` };
+	const actions = await request("textDocument/codeAction", { textDocument: { uri }, range, context: { diagnostics: [diagnostic], only: ["quickfix"] } });
+	out[name] = (actions ?? []).map((a) => {
+		const edits = [...Object.values(a.edit?.changes ?? {}).flat(), ...(a.edit?.documentChanges ?? []).flatMap((c) => c.edits ?? [])];
+		return `${a.title} @ ${edits.map((e) => `${e.range.start.line}:${e.range.start.character} ${JSON.stringify(e.newText.trim())}`).join(" | ")}`;
+	});
 }
 console.log(JSON.stringify(out, null, 1));
 child.kill("SIGKILL");
