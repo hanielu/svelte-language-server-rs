@@ -3,8 +3,9 @@
 // Usage: node tests/regressions/markup-features.mjs <svelte-rs binary | svelte-ls> [tests/regressions/tpl]
 // Builds a throwaway project from tpl (a project with `svelte` installed) and asks, in Page.svelte:
 //   hover on a component prop name, a `bind:` directive name, an element attribute name, a shorthand;
-//   completion after `<MyCom` (imported component), `<OtherWid` (component not imported yet), `<`, and
-//   `OtherWid` in the script, each resolved as the editor does (auto-import edits arrive there);
+//   completion after `<MyCom` (imported component), `<OtherWid` (component not imported yet), `<` (also after
+//   a self-closed component with an arrow in a handler), and `OtherWid` in the script, each resolved as the
+//   editor does (auto-import edits arrive there);
 //   the quick fixes for `<OtherWidget size={1} />` and for `helper()` in the script, neither imported.
 // Prints one JSON object: what each query answered (hover text, completion labels, and each
 // additional edit as `line:character newText`). KEEP=1 keeps the project and prints its path.
@@ -82,6 +83,17 @@ const hoverText = (h) => {
 	const v = typeof c === "string" ? c : Array.isArray(c) ? c.map((x) => x.value ?? x).join(" ") : c.value;
 	return String(v).replace(/```\w*\n?|```/g, "").replace(/\s+/g, " ").trim().slice(0, 140);
 };
+// Zed filters an item by the buffer text from its edit's start to the cursor, matched against the part of the
+// label `filterText` names (else the whole label), as a fuzzy subsequence.
+const zedShows = (item, text, position) => {
+	const start = item.textEdit?.range?.start ?? item.textEdit?.insert?.start ?? position;
+	const line = text.split("\n")[position.line] ?? "";
+	const query = start.line === position.line ? line.slice(start.character, position.character) : "?";
+	const candidate = item.filterText && item.label.includes(item.filterText) ? item.filterText : item.label;
+	let at = 0;
+	for (const ch of query.toLowerCase()) { at = candidate.toLowerCase().indexOf(ch, at); if (at < 0) return false; at++; }
+	return true;
+};
 const labels = (r) => (Array.isArray(r) ? r : r?.items ?? []).map((i) => i.label);
 const out = {};
 for (const [name, position] of [
@@ -101,22 +113,26 @@ let version = 1;
 // In the script: the auto-import must land among the imports, not in `<script`.
 const inScript = page.replace("</script>", "\tconst w = OtherWid\n</script>");
 const scriptPosition = { line: inScript.split("\n").findIndex((l) => l.includes("OtherWid")), character: "\tconst w = OtherWid".length };
+// After a self-closed component whose handler has an arrow: no close tag for it, and an incomplete list.
+const afterArrow = page.trimEnd() + "\n<MyComponent value={on} label=\"x\" onclick={() => (on ? 1 : 2)}\n/>\n<";
 for (const [name, tag, want, scriptText] of [
 	["complete `<MyCom` (imported)", "<MyCom", "MyComponent"],
 	["complete `<OtherWid` (not imported)", "<OtherWid", "OtherWidget"],
 	["complete `<` (any tag)", "<", "MyComponent"],
 	["complete `OtherWid` in the script", "OtherWid", "OtherWidget", inScript],
+	["complete `<` after `onclick={() => …} />`", "<", "MyComponent", afterArrow],
+	["complete `<` on its own line in an open `<div>`", "\t<", "MyComponent", page.trimEnd() + "\n<div>\n\t<"],
 ]) {
 	const text = scriptText ?? typing(tag);
 	send({ method: "textDocument/didChange", params: { textDocument: { uri, version: ++version }, contentChanges: [{ text }] } });
 	await sleep(500);
-	const position = scriptText ? scriptPosition : { line: text.split("\n").length - 1, character: tag.length };
+	const position = scriptText === inScript ? scriptPosition : { line: text.split("\n").length - 1, character: text.split("\n").at(-1).length };
 	const r = await request("textDocument/completion", { textDocument: { uri }, position, context: tag === "<" ? { triggerKind: 2, triggerCharacter: "<" } : { triggerKind: 1 } });
 	const items = Array.isArray(r) ? r : r?.items ?? [];
 	const found = items.find((i) => i.label === want);
 	// Auto-import edits arrive on resolve, as the editor asks for them.
 	const hit = found && (await request("completionItem/resolve", found)) || found;
-	out[name] = { offered: !!hit, count: items.length, item: hit && { kind: hit.kind, detail: hit.detail, textEdit: hit.textEdit?.newText ?? hit.insertText, additionalEdits: (hit.additionalTextEdits ?? []).map((e) => `${e.range.start.line}:${e.range.start.character} ${JSON.stringify(e.newText)}`) }, sample: items.slice(0, 5).map((i) => i.label) };
+	out[name] = { offered: !!hit, incomplete: !Array.isArray(r) && !!r?.isIncomplete, closeTags: items.filter((i) => i.label.startsWith("/")).map((i) => `${i.label}${zedShows(i, text, position) ? "" : " (hidden in Zed)"}`), count: items.length, item: hit && { kind: hit.kind, detail: hit.detail, textEdit: hit.textEdit?.newText ?? hit.insertText, additionalEdits: (hit.additionalTextEdits ?? []).map((e) => `${e.range.start.line}:${e.range.start.character} ${JSON.stringify(e.newText)}`) }, sample: items.slice(0, 5).map((i) => i.label) };
 }
 // Quick fixes for a `Cannot find name`, as the editor asks with the diagnostic it was shown.
 for (const [name, text, word] of [

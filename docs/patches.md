@@ -3388,6 +3388,62 @@ robustness 31; 88 alone passes lib 511, protocol 33, robustness 30. `runall.sh` 
 `docs/measurements/tests/regressions-quickfix.txt` (against 84–87's run, every script the same but
 the extended `markup-features` and `slowmix`'s arrival order).
 
+## 90–92. Typing a tag after a component and in an open element
+
+Reported from Zed: at the end of a component (taasc's `agents-section.svelte`, whose last tag is
+`<ConfirmDialog … onconfirm={() => (removing ? … : false)} />`), typing `<` offered `/ConfirmDialog`
+first, and typing on never offered a component. `tests/regressions/markup-features.mjs` now asks both
+servers for `<` after such a tag; on a copy of taasc both answer the same 131 HTML tags, incomplete,
+and both offer the components at `<C`.
+
+### 90. End a start tag at its own bracket (`7d5d105`)
+
+**Problem.** The scanner behind the close-tag suggestions ended a start tag at its first `>`, here the
+arrow's, so it never saw the `/>` and took the component for an open ancestor.
+
+**Change.** `scan_open_tags` reads tags as upstream's `parseHtml` (`lib/documents/parseHtml.ts`) does:
+`start_tag_end` reads a `{…}` value, spread or attachment, a quoted value (and the `{…}` in it) and a
+`//` or `/* */` comment whole; a `{…}` in text is an expression, where `<` opens no tag; a `<script>` or
+`<style>` body is raw text, so `$state.raw<User | null>(null)` in the script is no open `<User>` (it
+would have become the suggestion once the component was read correctly).
+
+**Effect.** No close tag after the self-closed component, as official. Test:
+`completions::tests::a_tag_ends_at_its_own_bracket` (before: `/Confirm`).
+
+### 91. Answer a bare `<` with an incomplete list (`f106a8f`)
+
+**Problem.** The list for `<` (the HTML tags) said it was complete, so Zed filtered it as the name was
+typed instead of asking again, and the HTML tags hold no components. Official's list for `<` is
+incomplete: a bare `<` is a Svelte parse error, its TypeScript plugin answers a document it cannot
+parse with an incomplete list (`CompletionProvider.ts:303`, `:451`), and `PluginHost.ts` ORs the flag.
+rsvelte's projection accepts the bare `<`, so no parse error reached the server.
+
+**Change.** The native list after a bare `<` is incomplete; the merge with tsgo's answer keeps the
+flag (`merge_tsgo_result` ORs it).
+
+**Effect.** `<` answers 131 HTML tags, incomplete, as official; the next keystroke asks again and
+`<C` offers the components. Test: `completions::tests::a_bare_open_bracket_answers_an_incomplete_list`.
+Suites after 90–92: lib 516 (1 ignored), protocol 33, robustness 31; 90 alone passes lib 515.
+`runall.sh` on the installed build: `docs/measurements/tests/regressions-tags.txt` (against 88–89's run,
+every script the same but the extended `markup-features` and `slowmix`'s arrival order).
+
+### 92. Show a close tag on a line of its own in Zed (`7bb0083`)
+
+**Problem.** Reported from Zed: inside an open `<div>`, `<` (or `</`) on a line of its own offered
+no `/div`. Both servers send it, as `collectCloseTagSuggestions` makes it: an edit of the line's
+indent and `<` (giving the close tag its ancestor's indent), filtered by `{indent}</div`. Zed filters
+an item by the buffer text from its edit's start to the cursor (`\t<`) against its label (`/div`),
+using `filterText` only where the label contains it (`code_context_menus.rs` `do_async_filtering`,
+`language.rs` `CodeLabel`), so the item never showed; on the open tag's own line it did.
+
+**Change.** A deliberate difference from upstream's item shape: the edit starts after `<` on every
+line, filtered by `/div`, and the ancestor's indent is an `additionalTextEdits` edit of the indent
+alone. Accepting it writes the same text.
+
+**Effect.** With Zed's filter applied to each server's items (`<` and `</` on a line of their own,
+nested, after text, on the open tag's line), every svelte-rs close tag is shown; official's are
+hidden on a line of their own. Test: `completions::tests::a_differing_indent_is_fixed_in_its_own_edit`.
+
 ## tsrs issues (outside our control)
 
 * **Memory kept after every full program build.** tsrs frees its program owners
@@ -3444,6 +3500,10 @@ the extended `markup-features` and `slowmix`'s arrival order).
   writes `"./components/ui/select"`, so the overlay config (82) changes tsrs's choice but neither is
   official's. Completions' auto-imports have the same specifiers. tsrs also offers no `Add missing
   function declaration` or `Change spelling` fix where TypeScript 5 does.
+* **The order of TypeScript's items at `<Con` right after a tag on the same line** (found checking 91):
+  after `/><Con` official ranks the file's imports first (its TypeScript position falls in a different
+  context there), on a new line it ranks them like svelte-rs (auto-imported components first). Both
+  offer every component.
 * **Two binding diagnostics differ from official** (found checking 87; both before and after it): a
   Svelte analysis error without a position, `bind_invalid_name` for `<input bind:valu={on} />`, is
   reported at 1:1 with an `Analysis error: bind_invalid_name:` prefix (official: at the directive,
