@@ -94,6 +94,8 @@ tens of GB.
 - [ ] `tests/regressions/runall.sh` passes; `tests/diagproj.mjs` shows no new diagnostics against
       the official server on at least one real project.
 - [ ] Benchmarks before/after if the change can affect latency or memory.
+- [ ] `sh scripts/check-windows.sh` still passes if you touched paths, processes or the filesystem
+      (it only compiles; Windows behaviour needs a Windows run, `docs/testing.md`).
 - [ ] `docs/patches.md` has a section for the patch; README updated if behaviour or settings changed.
 
 ## For coding agents

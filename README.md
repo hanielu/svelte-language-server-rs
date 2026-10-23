@@ -41,6 +41,11 @@ Requirements: Rust 1.95+, and [tsrs](https://github.com/oxc-project/tsrs) (`bun 
 `npm i -g tsrs`, or a `tsrs` devDependency in your project). tsrs ships binaries for macOS arm64
 and Linux x64/arm64. Node.js is needed only for projects with preprocessors.
 
+Windows: it compiles and the known Windows issues are fixed, but it has not been run there yet
+(see [docs/testing.md](docs/testing.md#testing-on-windows)). tsrs 0.18.0 has no Windows binary;
+without one the server runs the project's TypeScript 7 (`@typescript/native-preview` installed in
+the project) through Node, or set `TSGO_BIN` to a `tsgo.exe`.
+
 ```sh
 git clone --recurse-submodules <this repository>
 cd svelte-language-server-rs
@@ -66,6 +71,19 @@ svelte-language-server-rs in `~/.config/zed/settings.json`:
 Quit and reopen Zed after changing the path; after reinstalling the same path, "editor: restart
 language server" is enough. Remove the entry to go back to the official server.
 
+### VS Code
+
+VS Code needs a client extension: the official Svelte extension starts its server as a Node module,
+so it cannot run this binary. rsvelte's own extension ("rsvelte Language Tools",
+`vendor/rsvelte/apps/npm/vscode`) runs any binary with `--stdio`. Install it, disable the official
+Svelte extension in the workspace (two servers would both answer), and set:
+
+```jsonc
+"rsvelte.languageServer.path": "/Users/you/.local/bin/svelte-language-server-rs"
+```
+
+Not yet tried in VS Code.
+
 ### Neovim
 
 ```lua
@@ -81,7 +99,9 @@ vim.lsp.enable('svelte_language_server_rs')
 
 **TypeScript engine.** svelte-language-server-rs runs tsrs unless `TSGO_BIN` names another TypeScript 7 language
 server (tsgo works too). tsrs is looked up as `SVELTE_LANGUAGE_SERVER_RS_TSRS`, then `node_modules/.bin/tsrs` in the
-working directory or a parent, then `tsrs` on `PATH`, then `~/.bun/bin` and `~/.cargo/bin`.
+working directory or a parent, then `tsrs` on `PATH`, then `~/.bun/bin` and `~/.cargo/bin`. On Windows only
+`tsrs.exe` or `tsrs.cmd` count, a project's `node_modules/@tsrs/win32-x64/tsrs.exe` comes first, and the home
+folder is `%USERPROFILE%`. With no tsrs, the project's own TypeScript 7 is run through Node.
 
 **Svelte config and preprocessors.** In each directory above a component, a `vite.config.*` whose
 SvelteKit or vite-plugin-svelte plugin is configured inline (and whose text mentions `preprocess`)

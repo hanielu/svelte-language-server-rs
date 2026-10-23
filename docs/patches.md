@@ -1,7 +1,7 @@
 # Patches to rsvelte
 
 svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `389817e`).
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `c7a230c`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -3443,6 +3443,58 @@ alone. Accepting it writes the same text.
 **Effect.** With Zed's filter applied to each server's items (`<` and `</` on a line of their own,
 nested, after text, on the open tag's line), every svelte-language-server-rs close tag is shown; official's are
 hidden on a line of their own. Test: `completions::tests::a_differing_indent_is_fixed_in_its_own_edit`.
+
+## 93–94. Windows
+
+Asked whether the server works on Windows. Upstream rsvelte ships a Windows build of its language
+server, so the question was what these patches assume. `scripts/check-windows.sh` type-checks the
+binary and the server's tests for `x86_64-pc-windows-msvc` from macOS (a stand-in C compiler for
+mimalloc, since `cargo check` never links): everything compiles. Reading for what compiles but
+misbehaves found four things, fixed here; only a run on Windows confirms them (`docs/testing.md`,
+"Testing on Windows"). tsrs 0.18.0 itself has no Windows build (its next release adds
+`@tsrs/win32-x64`); until then the server runs the project's TypeScript 7 through Node.
+
+### 93. Keep Windows' verbatim prefix out of paths and URIs (`79e2427`)
+
+**Problem.** On Windows `fs::canonicalize` answers `\\?\C:\dir`. The server canonicalizes paths in
+about eighty places, and `path_to_uri` wrote such a path as `file:////%3F/C:/dir`: a URI no editor
+sends and no lookup keyed by the editor's URI finds, and a path never equal to the plain `C:\dir` a
+URI decodes to.
+
+**Change.** `uri::canonicalize` is `fs::canonicalize` with the prefix stripped (`strip_verbatim`: a
+drive or UNC path, unless the plain form exceeds Windows' path limit), used everywhere in the crate;
+`path_to_uri` strips it too. Elsewhere nothing changes.
+
+**Effect.** Tests `uri::tests::a_verbatim_path_loses_its_prefix`, `a_verbatim_path_is_a_plain_file_uri`,
+`canonicalize_resolves_like_the_standard_library` (string handling: they run on every platform).
+
+### 94. Link `node_modules` with a junction on Windows, and remove links as Windows does (`c7a230c`)
+
+**Problem.** The cache links each nested project's `node_modules` (`8c63ab4`). A Windows directory
+symlink needs Developer Mode or an administrator, so without them every link failed (logged, skipped)
+and a package only a nested project installs did not resolve; and a link was replaced with
+`remove_file`, which Windows refuses for a link to a directory.
+
+**Change.** On Windows the link is a directory junction (the `junction` crate, a Windows-only
+dependency), which needs no privilege. `is_link` counts a junction, `link_target` reads its target
+without the verbatim prefix (so a link in place is kept, not recreated), and `remove_link` removes a
+link to a directory as a directory, which never touches its target. Elsewhere links stay symlinks.
+
+**Effect.** Test `tsgo_overlay::tests::a_node_modules_link_is_placed_replaced_and_removed` (placed,
+kept, replaced, removed with its target intact, a real directory left alone): symlinks here,
+junctions when run on Windows.
+
+**The wrapper** (`crates/svelte_language_server_rs`, this repository): on Windows it looked for
+`node_modules/.bin/tsrs`, the extensionless shell script npm writes beside `tsrs.cmd`, which Windows
+cannot run, never for an `.exe`, and read `HOME`, usually unset there. `search_tsrs` (a pure function
+of the environment, tested for both platforms anywhere) now takes only `tsrs.exe` or `tsrs.cmd` on
+Windows, prefers a project's `@tsrs/win32-x64/tsrs.exe` (the npm launcher cannot replace itself with
+the binary on Windows and would stay running as a Node process), and reads `USERPROFILE`. Tests:
+`windows_runs_an_executable_name_only`, `windows_finds_a_global_executable`,
+`elsewhere_the_project_launcher_wins`.
+
+Suites after 93–94 (macOS): lib 520 (1 ignored), protocol 33, robustness 31; 93 alone passes lib 519;
+the wrapper's 3. `scripts/check-windows.sh`: ok.
 
 ## tsrs issues (outside our control)
 

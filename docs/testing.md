@@ -54,6 +54,78 @@ Sessions against a project that another language-server session also uses must g
 open in your editor with svelte-language-server-rs running, test on a copy instead (rsync it without
 `node_modules`, then symlink each `node_modules` back).
 
+## Testing on Windows
+
+`sh scripts/check-windows.sh` (after `rustup target add x86_64-pc-windows-msvc`) proves the binary and
+the server's tests compile for Windows from macOS or Linux; only a run on Windows tests behaviour.
+On a Windows PC:
+
+1. **Carry the repository over.** On the Mac (the repository has no remote, and the submodule's
+   branch exists only here):
+
+   ```sh
+   cd ~/Developer/adroyt/svelte-language-server-rs
+   git bundle create ~/Desktop/sls-rs.bundle --all
+   git -C vendor/rsvelte bundle create ~/Desktop/rsvelte.bundle svelte-language-server-rs
+   ```
+
+   Copy both files to the PC (say `C:\src`), then in PowerShell:
+
+   ```powershell
+   cd C:\src
+   git clone sls-rs.bundle svelte-language-server-rs
+   cd svelte-language-server-rs
+   git config submodule.vendor/rsvelte.url C:/src/rsvelte.bundle
+   git submodule update --init vendor/rsvelte
+   ```
+
+2. **Install the tools**: Rust through [rustup](https://rustup.rs) (the default MSVC toolchain; it
+   offers the Visual Studio Build Tools, "Desktop development with C++", which linking and mimalloc's
+   C build need), Git, and Node.js.
+
+3. **Build and run the tests**:
+
+   ```powershell
+   cargo build --release -p svelte_language_server_rs   # target\release\svelte-language-server-rs.exe
+   cargo test -p svelte_language_server_rs              # the wrapper's tsrs lookup
+   cd vendor\rsvelte
+   $env:CARGO_TARGET_DIR = "..\..\target-tests"
+   cargo test -p rsvelte_language_server --lib --test protocol --test robustness --no-fail-fast
+   ```
+
+   The Windows-specific ones: `uri::tests` and
+   `tsgo_overlay::tests::a_node_modules_link_is_placed_replaced_and_removed`, which makes real
+   junctions. Tests written with Unix paths (`/w/…`) may fail for that reason alone, and the
+   end-to-end robustness tests that need Unix (`#[cfg(unix)]`) do not run; keep the full list of
+   failures and their messages.
+
+4. **TypeScript**: tsrs 0.18.0 has no Windows binary. In the Svelte project to test with, run
+   `npm i -D @typescript/native-preview`; the server runs it through Node when it finds no tsrs (or
+   set `TSGO_BIN` to a `tsgo.exe`).
+
+5. **Editor**: in Zed's `settings.json` (command palette: "zed: open settings"):
+
+   ```jsonc
+   "lsp": {
+     "svelte-language-server": {
+       "binary": {
+         "path": "C:\\src\\svelte-language-server-rs\\target\\release\\svelte-language-server-rs.exe",
+         "arguments": ["--stdio"]
+       }
+     }
+   }
+   ```
+
+   or in VS Code rsvelte's extension with `rsvelte.languageServer.path` (README, VS Code).
+
+6. **What to check**, best in a monorepo with a nested package: hover on a component prop; go to
+   definition into another `.svelte` file (the URIs patch 93 fixes); diagnostics appearing and
+   clearing while editing; `<Comp` completion with its auto-import; renaming a prop; an import of a
+   package only the nested project installs resolving (patch 94's junctions:
+   `Get-ChildItem -Recurse -Attributes ReparsePoint .svelte-language-server-rs` lists them). Read the
+   language server's log (Zed: "debug: open language server logs") for errors, and for any path
+   with `\\?\` or URI with `%3F` in it.
+
 ## Recorded measurements
 
 `docs/measurements/bench/` holds every benchmark line (`final.jsonl`, tagged by build and variant),
