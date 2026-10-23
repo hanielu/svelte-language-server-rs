@@ -1,7 +1,8 @@
 # Patches to rsvelte
 
 svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `c7a230c`).
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `c7a230c`;
+95–99 sit on it in `fix/windows-paths`, head `64ad1c4`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -3496,6 +3497,137 @@ the binary on Windows and would stay running as a Node process), and reads `USER
 Suites after 93–94 (macOS): lib 520 (1 ignored), protocol 33, robustness 31; 93 alone passes lib 519;
 the wrapper's 3. `scripts/check-windows.sh`: ok.
 
+## 95–98. Windows, run on Windows
+
+The first run on Windows (Windows 11, Zed, tsgo `7.0.0-dev.20260707.2` through `TSGO_BIN`, as tsrs has
+no Windows build), on svelte-dnd-kit, a pnpm monorepo whose `packages/core` is `"type": "module"`
+under a root `package.json` without `type`. On `packages/core/.../dnd-context.svelte` the official
+server reports nothing; svelte-language-server-rs reported 70 errors, from four path assumptions that hold on
+macOS and Linux. Each was found in the generated overlay and confirmed with `tsgo -p` on it
+(`--traceResolution`, `--explainFiles`) before the fix. On `fix/windows-paths`, over `c7a230c`.
+
+### 95. Keep a shadow's `../` imports (`74d1f7c`)
+
+**Problem.** svelte2tsx's rewrite of imports that leave the workspace splits paths on `/` only
+(upstream hands it normalised paths). The overlay passed `Path::display()`, which is `\`-separated on
+Windows: the rewrite found no directory to climb out of, so every `../` import lost its `../`
+(`'../dnd-monitor/index.js'` became `'dnd-monitor/index.js'`, looked up in `node_modules`, TS2307).
+
+**Change.** The overlay passes the source, shadow and workspace paths as `path_for_tsconfig` spells
+them. Unchanged elsewhere: those paths have no `\` there.
+
+**Effect.** The shadow keeps `'../dnd-monitor/index.js'`; with 96 and 97 in place and a `C:` spelling
+(98's mismatch aside), `tsgo -p` on the overlay reports nothing in `dnd-context.svelte.tsx` (3 before,
+the three stripped imports). Test:
+`tsgo_overlay::tests::imports_keep_their_parent_steps_in_a_windows_shadow` (plain strings: runs on
+every platform, fails there without the fix), an import inside the workspace kept as written and one
+outside it rewritten from the shadow's directory.
+
+### 96. Mirror a package scope's `package.json` as a file tsgo can read on Windows (`eabddb4`)
+
+**Problem.** The shadow tree mirrors each package scope's `package.json` (patch 19): its `type` is a
+shadow's module format, its `imports` a `#` specifier's targets. `place_symlink` makes a directory
+junction on Windows (94), and a junction reaches only a directory: tsgo found no `package.json`
+there, took the workspace root's (no `type`) and checked every component of the `"type": "module"`
+package as CommonJS (`--explainFiles`: "File is CommonJS module because '../../../../../package.json'
+does not have field "type""). 35 of the 70 errors were TS1295/TS1287, most of the rest followed from
+them. The mirror was only ever placed where nothing was, so a fixed build would also have kept the
+junction an earlier one left.
+
+**Change.** `place_file_mirror`: a symlink placed once, as before, on Unix; on Windows a copy,
+rewritten whenever the package's text changes (`link_node_modules` runs on every load and on every
+`package.json` change, through `refresh_package_imports`), replacing a junction or symlink found
+there. A file symlink would need Developer Mode or an administrator, as a directory one does (94).
+
+**Effect.** No TS1295/TS1287; with 97's path corrected, `tsgo -p` on the overlay 100 → 35 errors. Tests:
+`a_mirrored_package_json_reads_as_the_package_and_follows_its_edits` (every platform; fails on
+Windows without the fix) and `a_junction_an_earlier_server_left_for_a_package_json_is_replaced`
+(Windows only).
+
+### 97. Write tsconfig paths without Windows' verbatim prefix (`e7514fe`)
+
+**Problem.** `global_type_files` (rsvelte_check) finds the project's `svelte` through
+`fs::canonicalize`, which answers `\\?\C:\…` on Windows; `path_for_tsconfig` only turned `\` into
+`/`, so the overlay's `files` listed `//?/C:/…/svelte/svelte-html.d.ts`. tsgo cannot open it:
+`tsgo -p` stops with TS6053, and the server loses the HTML element types.
+
+**Change.** `path_for_tsconfig` drops the verbatim prefix (`uri::plain_form`, now `pub(crate)`) at
+any length: Go reaches a long path without it. The URIs the overlay builds go through the same
+helper (`slash_path`).
+
+**Effect.** No `//?/` in the overlay. Tests: `a_verbatim_path_is_written_plain_into_the_tsconfig`
+(plain strings, every platform) and the existing
+`the_fallback_package_supplies_svelte_html_in_place_of_the_jsx_shim`, which failed on Windows.
+
+### 98. Spell tsconfig paths with the lowercase drive tsgo gives open files (`eb30582`)
+
+**Problem.** tsgo spells every file it is handed by URI with a lowercase drive (`c:/…`,
+`tspath.SplitVolumePath`) and matches `rootDirs` by plain prefix (`strings.HasPrefix`,
+`internal/module/resolver.go`), while the overlay wrote its absolute `rootDirs` as `C:/…`. No
+shadow ever lay under a root, so a shadow's relative imports of modules beside its source
+(`./defaults.js`, `./hooks/index.js`) went unresolved in the editor, though `tsgo -p` run from a `C:`
+directory resolved them: on the same overlay, `tsgo -p C:/…/tsconfig.json` 0 TS2307 in
+`dnd-context.svelte.tsx`, `tsgo -p c:/…/tsconfig.json` 6.
+
+**Change.** `path_for_tsconfig` lowercases a drive letter. Only the overlay config uses it; the URIs
+the server sends keep their spelling (`slash_path`).
+
+**Effect.** dnd-context over LSP, against official 0: 70 diagnostics → 38 after 95–97 → 34 after 98
+with preprocessing on (all from the preprocessed script, fixed by 99) and 1 with
+`rsvelte.preprocess.enable: false` (the compiler's `typescript_invalid_feature` for the component's
+`enum`, which is why the project preprocesses its script). With preprocessing off the TypeScript side
+matches official: no type errors, `autoScroll` hovers as `boolean | AutoScrollOptions`, `defaultSensors`
+goes to `defaults.ts:10`, a typed error shows 360 ms after the edit and clears 350 ms after the revert
+(official about 1 s and 0.8 s). A cache an earlier build wrote (junctions, `//?/`, stripped `../`) is
+repaired on load: same results over it as from an empty cache. Test:
+`a_tsconfig_path_has_the_lowercase_drive_tsgo_gives_open_files` (plain strings, every platform).
+
+Suites after 95–98 (Windows 11, Rust 1.99.1): lib 512 pass, 2 fail, 1 ignored (before: 506, 3, 1;
+the five new tests each failed before their fix, and
+`the_fallback_package_supplies_svelte_html_in_place_of_the_jsx_shim` now passes); the two failures expect
+Unix (`uri::tests::canonicalize_resolves_like_the_standard_library`,
+`extract::tests::extracts_template_and_copies_tags`); protocol 9 of 33, the same 24 failing before and after,
+before reaching the server (their URI helper, fixed with 99); robustness 5 (the Unix-only ones do not run);
+the wrapper's 3. `cargo fmt` clean; `cargo clippy --all-targets` reports nothing in the changed files.
+
+## 99. TypeScript checks the component as written; the compiler, as preprocessed (`64ad1c4`)
+
+**Problem.** When the preprocess sidecar answered, the server re-projected the component's shadow
+from the preprocessed text (`open_or_update_preprocessed`) and sent it to tsgo. Upstream's TypeScript
+plugin never does: `preprocessSvelteFile` (`DocumentSnapshot.ts`) runs svelte2tsx on
+`document.getText()`, and only the Svelte plugin compiles the preprocessed text. With
+`vitePreprocess({ script: true })` esbuild has stripped every type and compiled `enum`s before tsgo
+saw the component: svelte-dnd-kit's `dnd-context.svelte` got 34 false errors (annotated parameters
+"implicitly any", its `enum` "implicitly any", types read as `never`), and a type error typed into it
+was never reported, its annotation stripped too. Recorded over the LSP: the first pull after `didOpen`
+(the text as written) answered 0 items; the `didChange` the preprocess result sent (16,533
+characters of type-less JavaScript against 19,146) brought the 34. Not specific to Windows.
+
+**Change.** A preprocess result is kept for the compiler (`preprocess_documents`, read by
+`preprocessed_analysis`) and refreshes the document's diagnostics; the shadow is left as projected
+from the text as written. A failed preprocess no longer restores a raw shadow, as none is replaced.
+`open_or_update_preprocessed` stays (`open_or_update` is its identity case); the server no longer
+calls it.
+
+**Effect.** dnd-context with default settings (preprocessing on): 34 → 0 diagnostics, as official;
+the compiler still reads the preprocessed component (no `typescript_invalid_feature` for the `enum`,
+which it reports with preprocessing off); `autoScroll` hovers as `boolean | AutoScrollOptions` and
+`defaultSensors` goes to `defaults.ts:10`, as official; a typed error shows 49 ms after the edit and
+clears 69 ms after the revert (official about 1 s and 0.8 s; before, never). Test:
+`tsgo_checks_the_component_as_written_and_the_compiler_as_preprocessed` (robustness; fails without the
+fix: tsgo got the shadow as written at `didOpen`, then the preprocessed one), where a markup
+preprocessor drops the script's annotation and adds an `<img>` only the compiler can report
+(`a11y_missing_attribute`, mapped back through the preprocessor's map).
+
+**Tests on Windows.** For that test to run there, the traffic recorder (`traffic_recorder`, `traffic`,
+`hover`, `FAKE_TSGO_TRAFFIC`) is no longer Unix-only and compiles the fake tsgo with the platform's
+executable suffix; the tests that use it stay `#[cfg(unix)]`. The protocol tests' `file_uri` builds
+the URI with `url::Url::from_file_path`, as `robustness.rs` does: `file://C:\…` was rejected before
+the server saw it. Suites after 99 (Windows 11): lib 512 pass, 2 fail (the two that expect Unix), 1
+ignored; protocol 33 (9 before the helper), including the three preprocessing ones; robustness 6. `cargo
+fmt` clean; clippy reports nothing new (`robustness.rs`'s unused `std::fmt::Write` predates it, used by
+Unix-only tests).
+
 ## tsrs issues (outside our control)
 
 * **Memory kept after every full program build.** tsrs frees its program owners
@@ -3689,6 +3821,14 @@ the wrapper's 3. `scripts/check-windows.sh`: ok.
 * The svelte-language-server-rs build relies on the root workspace's `panic = "unwind"` for patch 35 (and for the
   analysis worker's own `catch_unwind`). rsvelte's `release` profile aborts on a panic, so a
   language server built from `vendor/rsvelte` directly must use its `dist-lsp` profile.
+* **The same `\` paths in rsvelte_check** (found fixing 95): `svelte_check/overlay.rs` passes
+  `display()` paths to the external-import rewrite too, so `rsvelte check` on Windows presumably drops
+  `../` the same way. Not run.
+* **Tests that cannot pass on Windows** (found running 95–98 there; the protocol tests' URI helper
+  is fixed with 99): `uri::tests::canonicalize_resolves_like_the_standard_library` expects std's
+  verbatim answer;
+  `extract::tests::extracts_template_and_copies_tags` gets `file:///tmp\./NewComp.svelte`, so
+  "extract component" may hand Windows editors a URI with a `\` in it (not checked in an editor).
 
 ## Tests
 
