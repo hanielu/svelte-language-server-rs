@@ -1,0 +1,32 @@
+{
+ "files": {
+  "types.ts": "export type Size = 'sm' | 'lg';\nexport interface Base { tone: Size }\n",
+  "Card.svelte": "<script lang=\"ts\">\n\timport type { Size, Base } from './types';\n\tlet { kind, tone }: Base & { kind: Size } = $props();\n</script>\n<p>{kind}{tone}</p>\n"
+ },
+ "open": [
+  "Card.svelte",
+  "types.ts"
+ ],
+ "queries": [
+  {
+   "file": "types.ts",
+   "at": "Size =",
+   "newName": "Dim"
+  },
+  {
+   "file": "types.ts",
+   "at": "tone:",
+   "newName": "hue"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "Size } from",
+   "newName": "Dim"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "kind: Size",
+   "newName": "variant"
+  }
+ ]
+}

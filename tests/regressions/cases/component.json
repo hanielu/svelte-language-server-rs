@@ -1,0 +1,38 @@
+{
+ "files": {
+  "Parent.svelte": "<script lang=\"ts\">\n\timport Child from \"./Child.svelte\";\n\timport * as UI from \"./ui\";\n\tlet n = $state(1);\n</script>\n<Child kind=\"a\">text</Child>\n<UI.Box>{n}</UI.Box>\n{#snippet cell(x: number)}<td>{x}</td>{/snippet}\n{@render cell(n)}\n<Child kind=\"b\">{@render cell(2)}</Child>\n",
+  "Child.svelte": "<script lang=\"ts\">\n\timport type { Snippet } from \"svelte\";\n\tlet { kind, children }: { kind: string; children?: Snippet } = $props();\n</script>\n<p>{kind}</p>{@render children?.()}\n",
+  "ui.ts": "export { default as Box } from \"./Child.svelte\";\n"
+ },
+ "open": [
+  "Parent.svelte",
+  "Child.svelte"
+ ],
+ "queries": [
+  {
+   "file": "Parent.svelte",
+   "at": "Child from",
+   "newName": "Kid"
+  },
+  {
+   "file": "Parent.svelte",
+   "at": "cell(n)",
+   "newName": "row"
+  },
+  {
+   "file": "Parent.svelte",
+   "at": "cell(x",
+   "newName": "row"
+  },
+  {
+   "file": "Parent.svelte",
+   "at": "UI from",
+   "newName": "Lib"
+  },
+  {
+   "file": "Parent.svelte",
+   "at": "n = $state",
+   "newName": "count"
+  }
+ ]
+}

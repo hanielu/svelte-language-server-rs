@@ -1,0 +1,181 @@
+{
+ "diags": {
+  "Card.svelte": [
+   "7:6133:'node' is declared but its value is never read.",
+   "7:6133:'p' is declared but its value is never read."
+  ]
+ },
+ "Card.svelte@Size = \"sm\"": {
+  "at": "Card.svelte 2:6",
+  "rename": {
+   "Card.svelte": [
+    "12:18-12:22 Dim",
+    "13:19-13:23 Dim",
+    "13:36-13:40 Dim",
+    "2:6-2:10 Dim",
+    "3:32-3:36 Dim",
+    "5:10-5:14 Dim",
+    "7:36-7:40 Dim",
+    "8:21-8:25 Dim",
+    "18:37-18:41 Dim"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "2: \ttype Dim = \"sm\" | \"lg\";",
+    "3: \ttype Row = { id: string; size: Dim };",
+    "5: \tlet val: Dim = $state(\"sm\");",
+    "7: \tfunction act(node: HTMLElement, p: Dim) { return {}; }",
+    "8: \tconst prom: Promise<Dim> = Promise.resolve(\"sm\");",
+    "12: {#snippet cell(x: Dim, r: Row)}<td use:act={x}>{r.id}{x}</td>{/snippet}",
+    "13: {#snippet inner(y: Dim)}{@const z: Dim = y}<b>{z}</b>{/snippet}",
+    "18: <Child size={val}>{#snippet named(q: Dim)}{q}{/snippet}</Child>"
+   ]
+  },
+  "references": [
+   "Card.svelte 12:18-12:22",
+   "Card.svelte 13:19-13:23",
+   "Card.svelte 13:36-13:40",
+   "Card.svelte 18:37-18:41",
+   "Card.svelte 2:6-2:10",
+   "Card.svelte 3:32-3:36",
+   "Card.svelte 5:10-5:14",
+   "Card.svelte 7:36-7:40",
+   "Card.svelte 8:21-8:25"
+  ],
+  "definition": [
+   "Card.svelte 2:6-2:10"
+  ],
+  "highlights": [
+   "12:18-12:22",
+   "13:19-13:23",
+   "13:36-13:40",
+   "18:37-18:41",
+   "2:6-2:10",
+   "3:32-3:36",
+   "5:10-5:14",
+   "7:36-7:40",
+   "8:21-8:25"
+  ]
+ },
+ "Card.svelte@val: Size": {
+  "at": "Card.svelte 5:5",
+  "rename": {
+   "Card.svelte": [
+    "5:5-5:8 cur",
+    "10:55-10:58 cur",
+    "14:14-14:17 cur",
+    "15:27-15:30 cur",
+    "16:34-16:37 cur",
+    "16:40-16:43 cur",
+    "17:19-17:22 cur",
+    "18:13-18:16 cur",
+    "19:20-19:23 cur"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "5: \tlet cur: Size = $state(\"sm\");",
+    "10: {#each rows as row (row.id)}<p class:big={row.size === cur}>{row.id}</p>{/each}",
+    "14: {@render cell(cur, rows[0])}",
+    "15: {#await prom then v}<i>{v}{cur}</i>{/await}",
+    "16: <svelte:element this={tag} title={cur}>{cur}</svelte:element>",
+    "17: <input bind:value={cur} />",
+    "18: <Child size={cur}>{#snippet named(q: Size)}{q}{/snippet}</Child>",
+    "19: <div>{@render inner(cur)}</div>"
+   ]
+  },
+  "references": [
+   "Card.svelte 10:55-10:58",
+   "Card.svelte 14:14-14:17",
+   "Card.svelte 15:27-15:30",
+   "Card.svelte 16:34-16:37",
+   "Card.svelte 16:40-16:43",
+   "Card.svelte 17:19-17:22",
+   "Card.svelte 18:13-18:16",
+   "Card.svelte 19:20-19:23",
+   "Card.svelte 5:5-5:8"
+  ],
+  "definition": [
+   "Card.svelte 5:5-5:8"
+  ],
+  "highlights": [
+   "10:55-10:58",
+   "14:14-14:17",
+   "15:27-15:30",
+   "16:34-16:37",
+   "16:40-16:43",
+   "17:19-17:22",
+   "18:13-18:16",
+   "19:20-19:23",
+   "5:5-5:8"
+  ]
+ },
+ "Card.svelte@id: string": {
+  "at": "Card.svelte 3:14",
+  "rename": {
+   "Card.svelte": [
+    "12:51-12:53 ident",
+    "3:14-3:16 ident",
+    "10:24-10:26 ident",
+    "10:65-10:67 ident",
+    "11:17-11:19 ident: id"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "3: \ttype Row = { ident: string; size: Size };",
+    "10: {#each rows as row (row.ident)}<p class:big={row.size === val}>{row.ident}</p>{/each}",
+    "11: {#each rows as { ident: id, size } (id)}<p style:width={size}>{id}</p>{/each}",
+    "12: {#snippet cell(x: Size, r: Row)}<td use:act={x}>{r.ident}{x}</td>{/snippet}"
+   ]
+  },
+  "references": [
+   "Card.svelte 10:24-10:26",
+   "Card.svelte 10:65-10:67",
+   "Card.svelte 11:17-11:19",
+   "Card.svelte 12:51-12:53",
+   "Card.svelte 3:14-3:16"
+  ],
+  "definition": [
+   "Card.svelte 3:14-3:16"
+  ],
+  "highlights": [
+   "10:24-10:26",
+   "10:65-10:67",
+   "11:17-11:19",
+   "12:51-12:53",
+   "3:14-3:16"
+  ]
+ },
+ "Card.svelte@Row = {": {
+  "at": "Card.svelte 3:6",
+  "rename": {
+   "Card.svelte": [
+    "12:27-12:30 Line",
+    "3:6-3:9 Line",
+    "4:11-4:14 Line"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "3: \ttype Line = { id: string; size: Size };",
+    "4: \tlet rows: Line[] = $state([]);",
+    "12: {#snippet cell(x: Size, r: Line)}<td use:act={x}>{r.id}{x}</td>{/snippet}"
+   ]
+  },
+  "references": [
+   "Card.svelte 12:27-12:30",
+   "Card.svelte 3:6-3:9",
+   "Card.svelte 4:11-4:14"
+  ],
+  "definition": [
+   "Card.svelte 3:6-3:9"
+  ],
+  "highlights": [
+   "12:27-12:30",
+   "3:6-3:9",
+   "4:11-4:14"
+  ]
+ }
+}

@@ -1,0 +1,144 @@
+# tests/regressions at vendor/rsvelte 7179942 (patches 1-54; the final integration's 'git merge --no-ff svelte-rs-projection' was a no-op: svelte-rs-projection = 670722d is already in svelte-rs), 2026-10-22
+# svelte-rs build of 7179942 (target/release/svelte-rs, sha1 45c7ad02a855a124fab327e559f00a8797897441, byte-identical to round 5's 738b7fa build). Comparison builds: 02e6b31 (patch 27), 670722d (patches 1-49). Load average 2-11.
+
+## sh tests/regressions/runall.sh <binary> 7179942 (load 10.93)
+== s1 @ 7179942
+{ "child0": [], "child1": [], "parentAfterOpen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "parentAfterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s1b @ 7179942
+{ "before": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterConfigChange": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "waitedMs": 116, "afterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s2 @ 7179942
+{ "initial": [], "unsaved": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterSaveEvent": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterReopen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterFullRefresh": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s3 @ 7179942
+{ "freshBeforeCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ], "freshAfterCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ], "existingAfterCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ]}
+== s4 @ 7179942
+{ "initial": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterDelete": [ "1:2307:Cannot find module '../../../../../../b/Child.svelte' or its corresponding type declarations." ], "afterRestore": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterParentKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s7 @ 7179942
+{ "app": [], "libraryComponent": [ "1:2322:Type 'string' is not assignable to type 'number'.", "5:2304:Cannot find name 'svelteHTML'." ], "hover": "\"```typescript\\nconst n: number\\n```\""}
+== s8 @ 7179942
+{ "importerWhileTargetOpen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterTargetClosed": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s10 @ 7179942
+{ "dialog": [ "8:2322:Type 'number' is not assignable to type 'string'." ], "hoverUtil": "\"```typescript\\n(alias) const fromUtil: number\\n```\"", "ok": true}
+== s11 @ 7179942
+{ "closed": { "tag": [ "Child.svelte:0:1" ], "binding": [ "Child.svelte:0:1" ], "specifier": [ "Child.svelte:0:1" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "open": { "tag": [ "Child.svelte:0:1" ], "binding": [ "Child.svelte:0:1" ], "specifier": [ "Child.svelte:0:1" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "ok": true}
+== incomplete-edits @ 7179942
+{ "steps": { "member": { "unresolved": [], "propErrorKept": true, "completions": [ "title", "i18n", "manifest" ], "ok": true }, "call": { "unresolved": [], "propErrorKept": true, "ok": true }, "initializer": { "unresolved": [], "propErrorKept": true, "ok": true }, "import": { "unresolved": [], "propErrorKept": true, "ok": true }, "childBlockOpen": { "parent": [ "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true }, "openingTag": { "parent": [ "8:parse-error:Parsing error: element_invalid_closing_tag: `</p>` attempted to close an element that was not open", "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true } }, "initial": [ "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true}
+== r1-depkill @ 7179942
+{ "appBefore": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "dep": [ "3:2304:Cannot find name 'svelteHTML'." ], "appAfterDepOpen": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "appAfterImportEdit": [ "3:2322:Type 'number' is not assignable to type 'string'.", "1:6196:'Snippet' is declared but never used." ], "shadowLinks": [ "tsgo/dependencies/app/node_modules (real dir)", "tsgo/svelte/app/node_modules -> symlink" ], "ok": true}
+== r1b-close @ 7179942
+{ "appBefore": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "dep": [ "3:2304:Cannot find name 'svelteHTML'." ], "appWhileDepOpen": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "appAfterDepClosed": [ "3:2322:Type 'number' is not assignable to type 'string'.", "1:6196:'Snippet' is declared but never used." ], "link": "symlink"}
+== r2c-format @ 7179942
+{ "formatQuiet": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "tries": 1, "delay": 12, "probeEndedByEdit": true, "formatSentBeforeEdit": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "expectedForRequestVersion": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "ok": true}
+== r2d-hover @ 7179942
+{"quiet":["const later: number @7:4","const other: string @8:4"],"probeEndedByEdit":true,"sentBeforeEdit":["const later: number @7:0","const other: string @8:4"],"ok":true}
+== r2e-hover-edit-race @ 7179942
+{"rounds":10,"wrong":0}
+== r5-crash @ 7179942
+{ "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r6-watchers @ 7179942
+{"editorWatchesNodeModules":["<root>/node_modules/**/*"],"ok":true}
+== hashscope @ 7179942
+{ "editor": [ "4:2322:Type '\"nope\"' is not assignable to type 'Kind'.", "4:2322:Type '\"xl\"' is not assignable to type 'Size'." ]}
+== start-of-file @ 7179942
+{ "import {": "3:8-3:8 1005", "import { ": "3:8-3:8 1005", "import { x": "3:10-3:10 1005, 3:10-3:10 6133", "import {}": "3:9-3:9 1005", "import { x }": "3:12-3:12 1005, 3:10-3:11 6133", "import { x } from ''": "3:19-3:20 2307, 3:10-3:11 6133", "import type {": "3:13-3:13 1005", "type T = {": "3:6-3:7 6196", "type T = {}": "3:6-3:7 6196", "interface I {": "3:11-3:12 6196", "enum E {": "4:10-4:12 1357, 4:12-4:13 1357, 4:24-4:25 1005, 8:4-8:6 2304", "const o = {": "4:10-4:12 1005, 4:14-4:15 1005, 4:24-4:25 1005, 4:33-4:34 1005, 4:35-4:36 1005, 4:10-4:12 2304, 4:13-4:14 2448, 4:16-4:22 2693, 4:33-4:34 7031, 7:14-7:19 2304, 8:4-8:6 2304, 2:7-2:12 6133", "export {": ""}
+== start-of-file2 @ 7179942
+{ "import {": "3:8-3:8 1005, 7:7-7:12 2322", "import { ": "3:8-3:8 1005, 7:7-7:12 2322", "import { x": "3:10-3:10 1005, 7:7-7:12 2322, 3:10-3:10 6133", "import {}": "3:9-3:9 1005, 7:7-7:12 2322", "import { x }": "3:12-3:12 1005, 7:7-7:12 2322, 3:10-3:11 6133", "import type {": "3:13-3:13 1005, 7:7-7:12 2322", "type T = {": "7:7-7:12 2322, 3:6-3:7 6196"}
+== style-open @ 7179942
+{"unclosedStyle":["6:parse-error:Parsing error: expected_token: Expected token </style","6:css_unknown_property:Unknown CSS property `colr`.","1:2322:Type 'number' is not assignable to type 'string'."],"closedStyle":["6:css_unknown_property:Unknown CSS property `colr`.","1:2322:Type 'number' is not assignable to type 'string'."],"panics":0}
+== bigtype @ 7179942
+{"lines":2113,"quietPullMs":110,"finalDiagMs":218,"completionP50":20,"completionP95":39,"completionMax":39}
+== r5-crash crash-inputs @ 7179942
+{ "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== recover-pos @ 7179942
+{"states":377,"problems":486,"atStart":0}
+== slow @ 7179942
+{ "aliases": 6, "firstTs2322Ms": 6954, "events": [ "open at 0 -> 6954 ms ts2322=true n=1", "edit1 at 8001 -> 14928 ms ts2322=true n=1", "edit2 at 16003 -> 22954 ms ts2322=true n=1", "edit3 at 24004 -> 31013 ms ts2322=true n=1", "edit4 at 32006 -> 38922 ms ts2322=true n=1" ], "didNotAnswer": [], "restarts": 0}
+== burst folding @ 7179942
+{"kind":"folding","lines":2106,"quietMs":41,"kindP50":37,"kindMax":54,"compP50":37,"compMax":64,"answered":60,"errors":[],"restarts":[]}
+== burst symbol @ 7179942
+{"kind":"symbol","lines":2106,"quietMs":63,"kindP50":112,"kindMax":127,"compP50":114,"compMax":140,"answered":40,"errors":[],"restarts":[]}
+load after: 3.14
+
+## the same scripts from tests/review3/ (the third review's copies), 7179942
+== review3/hashscope
+{ "editor": [ "4:2322:Type '\"nope\"' is not assignable to type 'Kind'.", "4:2322:Type '\"xl\"' is not assignable to type 'Size'." ]}
+== review3/start-of-file2
+{ "import {": "3:8-3:8 1005, 7:7-7:12 2322", "import { ": "3:8-3:8 1005, 7:7-7:12 2322", "import { x": "3:10-3:10 1005, 7:7-7:12 2322, 3:10-3:10 6133", "import {}": "3:9-3:9 1005, 7:7-7:12 2322", "import { x }": "3:12-3:12 1005, 7:7-7:12 2322, 3:10-3:11 6133", "import type {": "3:13-3:13 1005, 7:7-7:12 2322", "type T = {": "7:7-7:12 2322, 3:6-3:7 6196"}
+== review3/start-of-file
+{ "import {": "3:8-3:8 1005", "import { ": "3:8-3:8 1005", "import { x": "3:10-3:10 1005, 3:10-3:10 6133", "import {}": "3:9-3:9 1005", "import { x }": "3:12-3:12 1005, 3:10-3:11 6133", "import { x } from ''": "3:19-3:20 2307, 3:10-3:11 6133", "import type {": "3:13-3:13 1005", "type T = {": "3:6-3:7 6196", "type T = {}": "3:6-3:7 6196", "interface I {": "3:11-3:12 6196", "enum E {": "4:10-4:12 1357, 4:12-4:13 1357, 4:24-4:25 1005, 8:4-8:6 2304", "const o = {": "4:10-4:12 1005, 4:14-4:15 1005, 4:24-4:25 1005, 4:33-4:34 1005, 4:35-4:36 1005, 4:10-4:12 2304, 4:13-4:14 2448, 4:16-4:22 2693, 4:33-4:34 7031, 7:14-7:19 2304, 8:4-8:6 2304, 2:7-2:12 6133", "export {": ""}
+== review3/style-open
+{"unclosedStyle":["6:parse-error:Parsing error: expected_token: Expected token </style","6:css_unknown_property:Unknown CSS property `colr`.","1:2322:Type 'number' is not assignable to type 'string'."],"closedStyle":["6:css_unknown_property:Unknown CSS property `colr`.","1:2322:Type 'number' is not assignable to type 'string'."],"panics":0}
+== review3/hashscope alias
+{ "editor": [ "4:2322:Type '\"nope\"' is not assignable to type 'Kind'.", "4:2322:Type '\"xl\"' is not assignable to type 'Size'." ]}
+== review3/recover-pos
+== review3/r5-crash crash-inputs
+{ "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== review3/r5-crash 54 candidates (rev3 cand cand2 cand3 cand4, proj3/cases)
+{ "inputs": 54, "answered": 54, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r5-crash second review allpanics
+{ "inputs": 165, "answered": 165, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r5-crash second review found-1
+{ "inputs": 15, "answered": 15, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r5-crash second review found-2
+{ "inputs": 2, "answered": 2, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r5-crash second review found-3
+{ "inputs": 12, "answered": 12, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r5-crash second review found-4
+{ "inputs": 9, "answered": 9, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r5-crash second review sfound-1
+{ "inputs": 37, "answered": 37, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r5-crash second review sfound-2
+{ "inputs": 35, "answered": 35, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r5-crash second review sfound-3
+{ "inputs": 29, "answered": 29, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r5-crash second review sfound-4
+{ "inputs": 31, "answered": 31, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r5-crash second review real
+{ "inputs": 70, "answered": 70, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+recover-pos (tests/review3, OUT=records): {"states":377,"problems":486}; records compared with 670722d's (rp-compare.mjs): moved 0, extra 0, missing 0, hover 0
+
+## lsfuzz.mjs <binary> tests/review3/tpl <seed> 300, THIRD=1 NO_WS=1 INIT_SLEEP=600 LONG_SLEEP=700 CANCEL=1 (timeout = RSVELTE_TSGO_REQUEST_TIMEOUT_MS; server stderr captured with STDERR_OUT)
+timeout=10000 seed=22 rerun: {"answered":287,"errors":0,"exited":null,"timeouts":["control (no lost request): third loaded before true, after 8 s idle true"],"panics":0} panicLines=0 tsgo did not answer textDocument/signatureHelp (275) in 10000 ms; answering without it restarting tsgo, which is still busy with textDocument/signatureHelp (275) 
+timeout=10000 seed=38 rerun: {"answered":309,"errors":0,"exited":null,"timeouts":["control (no lost request): third loaded before true, after 8 s idle true"],"panics":0} panicLines=0 tsgo did not answer textDocument/completion (200) in 10000 ms; answering without it restarting tsgo, which is still busy with textDocument/completion (200) 
+timeout=default seed=22 rerun: {"answered":286,"errors":1,"exited":null,"timeouts":["textDocument/signatureHelp id 275 pending 16196 ms params {\"textDocument\":{\"uri\":\"file:///","later hover: answered","later folding: answered","background before stall: true; third loaded before: true; after 8 s idle: true; all loaded","after cancelling it: third loaded true"],"panics":0} panicLines=0 
+timeout=default seed=38 rerun: {"answered":210,"errors":1,"exited":null,"timeouts":["textDocument/completion id 200 pending 16759 ms params {\"textDocument\":{\"uri\":\"file:///Use","later hover: answered","later folding: answered","background before stall: true; third loaded before: true; after 8 s idle: true; all loaded","after cancelling it: third loaded true"],"panics":0} panicLines=0 
+# first pass (without STDERR_OUT; same answers):
+timeout=default seed=22 exit=0 load=7.39 {"seed":22,"iters":300,"exited":null,"answered":286,"errors":1,"timeouts":["textDocument/signatureHelp id 275 pending 16200 ms params {\"textDocument\":{\"uri\":\"file:///Users/hyprsonic/Developer/adroyt/svelte-rs/tests/review3/run-axO...]
+timeout=default seed=38 exit=0 load=6.03 {"seed":38,"iters":300,"exited":null,"answered":210,"errors":1,"timeouts":["textDocument/completion id 200 pending 16761 ms params {\"textDocument\":{\"uri\":\"file:///Users/hyprsonic/Developer/adroyt/svelte-rs/tests/review3/run-5lxqjD...]
+timeout=10000 seed=22 exit=0 load=4.96 {"seed":22,"iters":300,"exited":null,"answered":287,"errors":0,"timeouts":["control (no lost request): third loaded before true, after 8 s idle true"...]
+timeout=10000 seed=38 exit=0 load=3.60 {"seed":38,"iters":300,"exited":null,"answered":309,"errors":0,"timeouts":["control (no lost request): third loaded before true, after 8 s idle true"...]
+
+## bigtype.mjs <bin> tests/regressions/tpl <N>, interleaved (02e6b31, 670722d, 7179942)
+N=1000 run=1 svelte-rs-02e6b31 load=3.60 {"lines":1413,"quietPullMs":63,"finalDiagMs":206,"completionP50":76,"completionP95":92,"completionMax":92}
+N=1000 run=1 svelte-rs-670722d load=5.06 {"lines":1413,"quietPullMs":83,"finalDiagMs":138,"completionP50":13,"completionP95":30,"completionMax":30}
+N=1000 run=1 svelte-rs-7179942 load=5.06 {"lines":1413,"quietPullMs":86,"finalDiagMs":138,"completionP50":13,"completionP95":29,"completionMax":29}
+N=1500 run=1 svelte-rs-02e6b31 load=6.62 {"lines":2113,"quietPullMs":135,"finalDiagMs":640,"completionP50":253,"completionP95":467,"completionMax":467}
+N=1500 run=1 svelte-rs-670722d load=7.45 {"lines":2113,"quietPullMs":117,"finalDiagMs":219,"completionP50":19,"completionP95":36,"completionMax":36}
+N=1500 run=1 svelte-rs-7179942 load=7.22 {"lines":2113,"quietPullMs":114,"finalDiagMs":222,"completionP50":20,"completionP95":39,"completionMax":39}
+N=2000 run=1 svelte-rs-02e6b31 load=7.73 {"lines":2813,"quietPullMs":151,"finalDiagMs":1103,"completionP50":461,"completionP95":866,"completionMax":866}
+N=2000 run=1 svelte-rs-670722d load=6.62 {"lines":2813,"quietPullMs":149,"finalDiagMs":181,"completionP50":30,"completionP95":45,"completionMax":45}
+N=2000 run=1 svelte-rs-7179942 load=6.25 {"lines":2813,"quietPullMs":123,"finalDiagMs":177,"completionP50":27,"completionP95":47,"completionMax":47}
+N=1000 run=2 svelte-rs-02e6b31 load=7.59 {"lines":1413,"quietPullMs":85,"finalDiagMs":178,"completionP50":59,"completionP95":68,"completionMax":68}
+N=1000 run=2 svelte-rs-670722d load=7.15 {"lines":1413,"quietPullMs":60,"finalDiagMs":159,"completionP50":13,"completionP95":28,"completionMax":28}
+N=1000 run=2 svelte-rs-7179942 load=7.39 {"lines":1413,"quietPullMs":90,"finalDiagMs":110,"completionP50":12,"completionP95":29,"completionMax":29}
+N=1500 run=2 svelte-rs-02e6b31 load=6.87 {"lines":2113,"quietPullMs":119,"finalDiagMs":617,"completionP50":240,"completionP95":445,"completionMax":445}
+N=1500 run=2 svelte-rs-670722d load=7.99 {"lines":2113,"quietPullMs":98,"finalDiagMs":195,"completionP50":19,"completionP95":37,"completionMax":37}
+N=1500 run=2 svelte-rs-7179942 load=8.84 {"lines":2113,"quietPullMs":112,"finalDiagMs":188,"completionP50":19,"completionP95":36,"completionMax":36}
+N=2000 run=2 svelte-rs-02e6b31 load=9.10 {"lines":2813,"quietPullMs":152,"finalDiagMs":1071,"completionP50":447,"completionP95":837,"completionMax":837}
+N=2000 run=2 svelte-rs-670722d load=9.19 {"lines":2813,"quietPullMs":140,"finalDiagMs":198,"completionP50":24,"completionP95":46,"completionMax":46}
+N=2000 run=2 svelte-rs-7179942 load=9.79 {"lines":2813,"quietPullMs":124,"finalDiagMs":188,"completionP50":27,"completionP95":45,"completionMax":45}
+
+## bench/allprojects.mjs <bin> <zeno> background 40000, through the lock, alternating 670722d / 7179942 (phys_footprint MB; svelte-rs process / tsrs)
+svelte-rs-670722d run1 load=2.33 {"loads":12,"before":{"rssMB":179,"footprintMB":287,"rss":{"svelte-rs-670722d":28,"tsrs":151},"footprint":{"svelte-rs-670722d":55,"tsrs":232}},"after":{"rssMB":198,"footprintMB":289,"rss":{"svelte-rs-670722d":28,"tsrs":170},"footprint":{"svelte-rs-670722d":55,"tsrs":234}},"sym":"16/3 3/1 2/1"}
+svelte-rs-7179942 run1 load=4.37 {"loads":12,"before":{"rssMB":312,"footprintMB":289,"rss":{"svelte-rs-7179942":68,"tsrs":244},"footprint":{"svelte-rs-7179942":57,"tsrs":232}},"after":{"rssMB":314,"footprintMB":290,"rss":{"svelte-rs-7179942":68,"tsrs":246},"footprint":{"svelte-rs-7179942":57,"tsrs":233}},"sym":"11/3 3/1 2/1"}
+svelte-rs-670722d run2 load=12.97 {"loads":12,"before":{"rssMB":309,"footprintMB":286,"rss":{"svelte-rs-670722d":66,"tsrs":243},"footprint":{"svelte-rs-670722d":55,"tsrs":231}},"after":{"rssMB":311,"footprintMB":288,"rss":{"svelte-rs-670722d":66,"tsrs":245},"footprint":{"svelte-rs-670722d":55,"tsrs":233}},"sym":"11/3 3/1 2/1"}
+svelte-rs-7179942 run2 load=7.85 {"loads":12,"before":{"rssMB":311,"footprintMB":289,"rss":{"svelte-rs-7179942":67,"tsrs":244},"footprint":{"svelte-rs-7179942":56,"tsrs":233}},"after":{"rssMB":314,"footprintMB":291,"rss":{"svelte-rs-7179942":67,"tsrs":247},"footprint":{"svelte-rs-7179942":56,"tsrs":235}},"sym":"11/3 2/1 2/1"}
+
+## e2e (node tests/e2e.mjs run patched --out tests/results/e2e-final.json, through the lock)
+41/41; 0 steps differ from e2e-round5-ls.json (e2e-compare-round5-ls-vs-final.txt) and from e2e-final-670722d.json; 12 watcher registrations, 0 unregistrations; no panic, no tsgo restart; zeno git status clean before and after (0 lines); initialize 849 ms (first execution of the relinked binary; every later session 2-19 ms)
+
+## cargo test (vendor/rsvelte, CARGO_TARGET_DIR=target-rsvelte-tests)
+rsvelte_language_server: test result: ok. 480 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; fi [unit]; protocol 31, robustness 23, css_documentation 2, html_documentation 2, svelte_html_provider 3 pass; upstream_fixture_manifest 2 passed / 5 failed (pre-existing: no language-tools checkout)
+rsvelte_projection: 113 targets, 847 passed, 0 failed, 1 ignored
+rsvelte_core --lib + loose tests: 1980 passed (1 ignored) + 5 + 4 + 6
+rsvelte_check: 13 targets, 279 passed, 0 failed, 0 ignored
+cargo fmt --all --check: clean; cargo clippy -p rsvelte_language_server -p rsvelte_projection --all-targets: 4 warnings, the pre-existing ones (rsvelte_core utils.rs:936, :953; symbols.rs:236; tsgo_response.rs:718)

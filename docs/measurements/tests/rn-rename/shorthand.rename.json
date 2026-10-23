@@ -1,0 +1,279 @@
+{
+ "diags": {
+  "Parent.svelte": [
+   "14:a11y_click_events_have_key_events:Visible, non-interactive element `<p>` with a click event must be accompanied by a keyboard event ha",
+   "14:a11y_no_noninteractive_element_interactions:Non-interactive element `<p>` should not be assigned mouse or keyboard event listeners",
+   "9:6133:'node' is declared but its value is never read."
+  ],
+  "Child.svelte": []
+ },
+ "Parent.svelte@count = writable": {
+  "at": "Parent.svelte 3:7",
+  "rename": {
+   "Parent.svelte": [
+    "3:7-3:12 total",
+    "8:22-8:28 $total",
+    "14:47-14:53 $total",
+    "15:5-15:11 $total"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "3: \tconst total = writable(0);",
+    "8: \tfunction onclick() { $total++; }",
+    "14: <p class:active style:color use:tip {onclick}>{$total}{kind}</p>",
+    "15: {#if $total > 1}<b>{value}</b>{/if}"
+   ]
+  },
+  "references": [
+   "Parent.svelte 14:47-14:53",
+   "Parent.svelte 15:5-15:11",
+   "Parent.svelte 3:7-3:12",
+   "Parent.svelte 8:22-8:28"
+  ],
+  "definition": [
+   "Parent.svelte 3:7-3:12"
+  ],
+  "highlights": [
+   "3:7-3:12"
+  ]
+ },
+ "Parent.svelte@kind = $state": {
+  "at": "Parent.svelte 4:5",
+  "rename": {
+   "Parent.svelte": [
+    "4:5-4:9 variant",
+    "11:7-11:13 kind={variant}",
+    "12:13-12:17 variant",
+    "14:55-14:59 variant"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "4: \tlet variant = $state(\"a\");",
+    "11: <Child kind={variant} />",
+    "12: <Child kind={variant} {onclick} />",
+    "14: <p class:active style:color use:tip {onclick}>{$count}{variant}</p>"
+   ]
+  },
+  "references": [
+   "Parent.svelte 11:8-11:12",
+   "Parent.svelte 12:13-12:17",
+   "Parent.svelte 14:55-14:59",
+   "Parent.svelte 4:5-4:9"
+  ],
+  "definition": [
+   "Parent.svelte 4:5-4:9"
+  ],
+  "highlights": [
+   "11:8-11:12",
+   "12:13-12:17",
+   "14:55-14:59",
+   "4:5-4:9"
+  ]
+ },
+ "Parent.svelte@value = $state": {
+  "at": "Parent.svelte 5:5",
+  "rename": {
+   "Parent.svelte": [
+    "5:5-5:10 text",
+    "13:12-13:17 value={text}",
+    "15:20-15:25 text"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "5: \tlet text = $state(\"\");",
+    "13: <input bind:value={text} />",
+    "15: {#if $count > 1}<b>{text}</b>{/if}"
+   ]
+  },
+  "references": [
+   "Parent.svelte 13:12-13:17",
+   "Parent.svelte 15:20-15:25",
+   "Parent.svelte 5:5-5:10"
+  ],
+  "definition": [
+   "Parent.svelte 5:5-5:10"
+  ],
+  "highlights": [
+   "13:12-13:17",
+   "15:20-15:25",
+   "5:5-5:10"
+  ]
+ },
+ "Parent.svelte@active = $state": {
+  "at": "Parent.svelte 6:5",
+  "rename": {
+   "Parent.svelte": [
+    "6:5-6:11 on",
+    "14:9-14:15 active={on}"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "6: \tlet on = $state(false);",
+    "14: <p class:active={on} style:color use:tip {onclick}>{$count}{kind}</p>"
+   ]
+  },
+  "references": [
+   "Parent.svelte 14:9-14:15",
+   "Parent.svelte 6:5-6:11"
+  ],
+  "definition": [
+   "Parent.svelte 6:5-6:11"
+  ],
+  "highlights": [
+   "14:9-14:15",
+   "6:5-6:11"
+  ]
+ },
+ "Parent.svelte@color = $state": {
+  "at": "Parent.svelte 7:5",
+  "rename": {
+   "Parent.svelte": [
+    "7:5-7:10 hue",
+    "14:22-14:27 color={hue}"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "7: \tlet hue = $state(\"red\");",
+    "14: <p class:active style:color={hue} use:tip {onclick}>{$count}{kind}</p>"
+   ]
+  },
+  "references": [
+   "Parent.svelte 14:22-14:27",
+   "Parent.svelte 7:5-7:10"
+  ],
+  "definition": [
+   "Parent.svelte 7:5-7:10"
+  ],
+  "highlights": [
+   "14:22-14:27",
+   "7:5-7:10"
+  ]
+ },
+ "Parent.svelte@onclick() {": {
+  "at": "Parent.svelte 8:10",
+  "rename": {
+   "Parent.svelte": [
+    "8:10-8:17 handle",
+    "12:19-12:28 onclick={handle}",
+    "14:36-14:45 onclick={handle}"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "8: \tfunction handle() { $count++; }",
+    "12: <Child kind={kind} onclick={handle} />",
+    "14: <p class:active style:color use:tip onclick={handle}>{$count}{kind}</p>"
+   ]
+  },
+  "references": [
+   "Parent.svelte 12:20-12:27",
+   "Parent.svelte 14:37-14:44",
+   "Parent.svelte 8:10-8:17"
+  ],
+  "definition": [
+   "Parent.svelte 8:10-8:17"
+  ],
+  "highlights": [
+   "12:20-12:27",
+   "14:37-14:44",
+   "8:10-8:17"
+  ]
+ },
+ "Parent.svelte@tip(node": {
+  "at": "Parent.svelte 9:10",
+  "rename": {
+   "Parent.svelte": [
+    "9:10-9:13 tooltip",
+    "14:32-14:35 tooltip"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "9: \tfunction tooltip(node: HTMLElement) {}",
+    "14: <p class:active style:color use:tooltip {onclick}>{$count}{kind}</p>"
+   ]
+  },
+  "references": [
+   "Parent.svelte 14:32-14:35",
+   "Parent.svelte 9:10-9:13"
+  ],
+  "definition": [
+   "Parent.svelte 9:10-9:13"
+  ],
+  "highlights": [
+   "14:32-14:35",
+   "9:10-9:13"
+  ]
+ },
+ "Child.svelte@kind: string": {
+  "at": "Child.svelte 1:26",
+  "rename": {
+   "Child.svelte": [
+    "1:26-1:30 variant",
+    "1:7-1:11 variant: kind"
+   ],
+   "Parent.svelte": [
+    "11:7-11:13 variant={kind}",
+    "12:7-12:11 variant"
+   ]
+  },
+  "after": {
+   "Child.svelte": [
+    "1: \tlet { variant: kind, onclick }: { variant: string; onclick?: () => void } = $props();"
+   ],
+   "Parent.svelte": [
+    "11: <Child variant={kind} />",
+    "12: <Child variant={kind} {onclick} />"
+   ]
+  },
+  "references": [
+   "Child.svelte 1:26-1:30",
+   "Child.svelte 1:7-1:11",
+   "Parent.svelte 11:8-11:12",
+   "Parent.svelte 12:7-12:11"
+  ],
+  "definition": [
+   "Child.svelte 1:26-1:30"
+  ],
+  "highlights": [
+   "1:26-1:30",
+   "1:7-1:11"
+  ]
+ },
+ "Parent.svelte@$count}": {
+  "at": "Parent.svelte 14:48",
+  "rename": {
+   "Parent.svelte": [
+    "8:22-8:28 $total",
+    "14:47-14:53 $total",
+    "15:5-15:11 $total",
+    "3:7-3:12 total"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "3: \tconst total = writable(0);",
+    "8: \tfunction onclick() { $total++; }",
+    "14: <p class:active style:color use:tip {onclick}>{$total}{kind}</p>",
+    "15: {#if $total > 1}<b>{value}</b>{/if}"
+   ]
+  },
+  "references": [
+   "Parent.svelte 14:47-14:53",
+   "Parent.svelte 15:5-15:11",
+   "Parent.svelte 3:7-3:12",
+   "Parent.svelte 8:22-8:28"
+  ],
+  "definition": [],
+  "highlights": [
+   "14:47-14:53",
+   "15:5-15:11",
+   "8:22-8:28"
+  ]
+ }
+}

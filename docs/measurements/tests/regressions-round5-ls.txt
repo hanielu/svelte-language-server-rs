@@ -1,0 +1,115 @@
+# tests/regressions at vendor/rsvelte 7179942 (patches 50-54 on 670722d), 2026-10-22
+# measured with the svelte-rs build of 738b7fa, which is byte-identical to the build of 7179942 (the amend only changed a test's string building).
+# comparison builds: 670722d (round 4 final), 02e6b31 (patch 27), and for burst/folding d726645 (patch 53 without 54). Load average 2-10.
+
+## sh tests/regressions/runall.sh <binary> 738b7fa
+== s1 @ 738b7fa
+{ "child0": [], "child1": [], "parentAfterOpen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "parentAfterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s1b @ 738b7fa
+{ "before": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterConfigChange": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "waitedMs": 113, "afterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s2 @ 738b7fa
+{ "initial": [], "unsaved": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterSaveEvent": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterReopen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterFullRefresh": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s3 @ 738b7fa
+{ "freshBeforeCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ], "freshAfterCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ], "existingAfterCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ]}
+== s4 @ 738b7fa
+{ "initial": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterDelete": [ "1:2307:Cannot find module '../../../../../../b/Child.svelte' or its corresponding type declarations." ], "afterRestore": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterParentKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s7 @ 738b7fa
+{ "app": [], "libraryComponent": [ "1:2322:Type 'string' is not assignable to type 'number'.", "5:2304:Cannot find name 'svelteHTML'." ], "hover": "\"```typescript\\nconst n: number\\n```\""}
+== s8 @ 738b7fa
+{ "importerWhileTargetOpen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterTargetClosed": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s10 @ 738b7fa
+{ "dialog": [ "8:2322:Type 'number' is not assignable to type 'string'." ], "hoverUtil": "\"```typescript\\n(alias) const fromUtil: number\\n```\"", "ok": true}
+== s11 @ 738b7fa
+{ "closed": { "tag": [ "Child.svelte:0:1" ], "binding": [ "Child.svelte:0:1" ], "specifier": [ "Child.svelte:0:1" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "open": { "tag": [ "Child.svelte:0:1" ], "binding": [ "Child.svelte:0:1" ], "specifier": [ "Child.svelte:0:1" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "ok": true}
+== incomplete-edits @ 738b7fa
+{ "steps": { "member": { "unresolved": [], "propErrorKept": true, "completions": [ "title", "i18n", "manifest" ], "ok": true }, "call": { "unresolved": [], "propErrorKept": true, "ok": true }, "initializer": { "unresolved": [], "propErrorKept": true, "ok": true }, "import": { "unresolved": [], "propErrorKept": true, "ok": true }, "childBlockOpen": { "parent": [ "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true }, "openingTag": { "parent": [ "8:parse-error:Parsing error: element_invalid_closing_tag: `</p>` attempted to close an element that was not open", "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true } }, "initial": [ "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true}
+== r1-depkill @ 738b7fa
+{ "appBefore": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "dep": [ "3:2304:Cannot find name 'svelteHTML'." ], "appAfterDepOpen": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "appAfterImportEdit": [ "3:2322:Type 'number' is not assignable to type 'string'.", "1:6196:'Snippet' is declared but never used." ], "shadowLinks": [ "tsgo/dependencies/app/node_modules (real dir)", "tsgo/svelte/app/node_modules -> symlink" ], "ok": true}
+== r1b-close @ 738b7fa
+{ "appBefore": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "dep": [ "3:2304:Cannot find name 'svelteHTML'." ], "appWhileDepOpen": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "appAfterDepClosed": [ "3:2322:Type 'number' is not assignable to type 'string'.", "1:6196:'Snippet' is declared but never used." ], "link": "symlink"}
+== r2c-format @ 738b7fa
+{ "formatQuiet": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "tries": 1, "delay": 12, "probeEndedByEdit": true, "formatSentBeforeEdit": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "expectedForRequestVersion": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "ok": true}
+== r2d-hover @ 738b7fa
+{"quiet":["const later: number @7:4","const other: string @8:4"],"probeEndedByEdit":false,"sentBeforeEdit":["const later: number @7:0","const other: string @8:4"],"ok":true}
+== r2e-hover-edit-race @ 738b7fa
+{"rounds":10,"wrong":0}
+== r5-crash @ 738b7fa
+{ "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r6-watchers @ 738b7fa
+{"editorWatchesNodeModules":["<root>/node_modules/**/*"],"ok":true}
+== hashscope @ 738b7fa
+{ "editor": [ "4:2322:Type '\"nope\"' is not assignable to type 'Kind'.", "4:2322:Type '\"xl\"' is not assignable to type 'Size'." ]}
+== start-of-file @ 738b7fa
+{ "import {": "3:8-3:8 1005", "import { ": "3:8-3:8 1005", "import { x": "3:10-3:10 1005, 3:10-3:10 6133", "import {}": "3:9-3:9 1005", "import { x }": "3:12-3:12 1005, 3:10-3:11 6133", "import { x } from ''": "3:19-3:20 2307, 3:10-3:11 6133", "import type {": "3:13-3:13 1005", "type T = {": "3:6-3:7 6196", "type T = {}": "3:6-3:7 6196", "interface I {": "3:11-3:12 6196", "enum E {": "4:10-4:12 1357, 4:12-4:13 1357, 4:24-4:25 1005, 8:4-8:6 2304", "const o = {": "4:10-4:12 1005, 4:14-4:15 1005, 4:24-4:25 1005, 4:33-4:34 1005, 4:35-4:36 1005, 4:10-4:12 2304, 4:13-4:14 2448, 4:16-4:22 2693, 4:33-4:34 7031, 7:14-7:19 2304, 8:4-8:6 2304, 2:7-2:12 6133", "export {": ""}
+== start-of-file2 @ 738b7fa
+{ "import {": "3:8-3:8 1005, 7:7-7:12 2322", "import { ": "3:8-3:8 1005, 7:7-7:12 2322", "import { x": "3:10-3:10 1005, 7:7-7:12 2322, 3:10-3:10 6133", "import {}": "3:9-3:9 1005, 7:7-7:12 2322", "import { x }": "3:12-3:12 1005, 7:7-7:12 2322, 3:10-3:11 6133", "import type {": "3:13-3:13 1005, 7:7-7:12 2322", "type T = {": "7:7-7:12 2322, 3:6-3:7 6196"}
+== style-open @ 738b7fa
+{"unclosedStyle":["6:parse-error:Parsing error: expected_token: Expected token </style","6:css_unknown_property:Unknown CSS property `colr`.","1:2322:Type 'number' is not assignable to type 'string'."],"closedStyle":["6:css_unknown_property:Unknown CSS property `colr`.","1:2322:Type 'number' is not assignable to type 'string'."],"panics":0}
+== bigtype @ 738b7fa
+{"lines":2113,"quietPullMs":90,"finalDiagMs":227,"completionP50":20,"completionP95":38,"completionMax":38}
+== r5-crash crash-inputs @ 738b7fa
+{ "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== recover-pos @ 738b7fa
+{"states":377,"problems":486,"atStart":0}
+
+## new in runall.sh: slow (RSVELTE_TSGO_REQUEST_TIMEOUT_MS=3000 EDIT_EVERY=8000, 6 aliases, 40 s) and burst folding 1500/30, both builds
+== slow @ 738b7fa
+{ "aliases": 6, "firstTs2322Ms": 6694, "events": [ "open at 0 -> 6694 ms ts2322=true n=1", "edit1 at 8002 -> 14605 ms ts2322=true n=1", "edit2 at 16004 -> 22546 ms ts2322=true n=1", "edit3 at 24006 -> 30469 ms ts2322=true n=1", "edit4 at 32008 -> 38657 ms ts2322=true n=1" ], "didNotAnswer": [], "restarts": 0}
+== burst folding @ 738b7fa
+{"kind":"folding","lines":2106,"quietMs":45,"kindP50":36,"kindMax":43,"compP50":36,"compMax":53,"answered":60,"errors":[],"restarts":[]}
+== slow @ 670722d
+{ "aliases": 6, "firstTs2322Ms": null, "events": [ "open at 0 -> 3017 ms ts2322=false n=0", "edit1 at 8002 -> 11006 ms ts2322=false n=0", "edit2 at 16004 -> 19009 ms ts2322=false n=0", "edit3 at 24006 -> 27012 ms ts2322=false n=0", "edit4 at 32007 -> 35012 ms ts2322=false n=0" ], "didNotAnswer": [ "tsgo did not answer textDocument/diagnostic (2) in 3000 ms; answering without it", "tsgo did not answer textDocument/diagnostic (3) in 3000 ms; answering without it", "tsgo did not answer textDocument/diagnostic (4) in 3000 ms; answering without it", "tsgo did not answer textDocument/diagnostic (5) in 3000 ms; answering without it", "tsgo did not answer textDocument/diagnostic (6) in 3000 ms; answering without it" ], "restarts": 5}
+== burst folding @ 670722d
+{"kind":"folding","lines":2106,"quietMs":1781,"kindP50":28205,"kindMax":45473,"compP50":24694,"compMax":45474,"answered":56,"errors":["{\"code\":-32603,\"message\":\"TypeScript service restarted: a request never finished"],"restarts":["restarting tsgo, which is still busy with textDocument/diagnostic (81), textDocument/foldingRange (83), textDocument/completion (79), textDocument/diagnostic (84), textDocument/diagnostic (78)"]}
+
+## slow.mjs <bin> tpl 36 50000 (default timeout; the check takes about 41 s)
+670722d (RSVELTE_TSGO_REQUEST_TIMEOUT_MS=600000, i.e. no expiry, as 7793da7): firstTs2322Ms 40686, no restart
+738b7fa (default timeout): firstTs2322Ms 41509, no restart (an earlier run under the load of a parallel build: 49295)
+670722d (default timeout, review 4): open at 0 -> 30008 ms ts2322=false; 'tsgo did not answer textDocument/diagnostic (2) in 30000 ms'; 1 restart
+
+## burst.mjs <bin> tpl 1500 <kind> 20
+svelte-rs-670722d folding {"kind":"folding","lines":2106,"quietMs":1896,"kindP50":19755,"kindMax":35107,"compP50":18077,"compMax":35108,"answered":40,"errors":[],"restarts":[]}
+svelte-rs-1d777cd folding {"kind":"folding","lines":2106,"quietMs":1860,"kindP50":20345,"kindMax":36790,"compP50":20346,"compMax":36792,"answered":40,"errors":[],"restarts":[]}
+svelte-rs-d726645 folding {"kind":"folding","lines":2106,"quietMs":270,"kindP50":2832,"kindMax":4804,"compP50":2833,"compMax":4805,"answered":40,"errors":[],"restarts":[]}
+svelte-rs-738b7fa folding {"kind":"folding","lines":2106,"quietMs":32,"kindP50":36,"kindMax":46,"compP50":36,"compMax":56,"answered":40,"errors":[],"restarts":[]}
+svelte-rs-670722d symbol {"kind":"symbol","lines":2106,"quietMs":603,"kindP50":6143,"kindMax":10808,"compP50":5630,"compMax":10808,"answered":40,"errors":[],"restarts":[]}
+svelte-rs-1d777cd symbol {"kind":"symbol","lines":2106,"quietMs":610,"kindP50":6336,"kindMax":11030,"compP50":6336,"compMax":11030,"answered":40,"errors":[],"restarts":[]}
+svelte-rs-738b7fa symbol {"kind":"symbol","lines":2106,"quietMs":41,"kindP50":96,"kindMax":113,"compP50":88,"compMax":130,"answered":40,"errors":[],"restarts":[]}
+
+## bigtype.mjs <bin> tpl <N>, interleaved
+N=1000 run=1 02e6b31 load=3.26 {"lines":1413,"quietPullMs":70,"finalDiagMs":153,"completionP50":42,"completionP95":60,"completionMax":60}
+N=1000 run=1 670722d load=3.57 {"lines":1413,"quietPullMs":85,"finalDiagMs":153,"completionP50":13,"completionP95":28,"completionMax":28}
+N=1000 run=1 738b7fa load=3.52 {"lines":1413,"quietPullMs":66,"finalDiagMs":113,"completionP50":13,"completionP95":28,"completionMax":28}
+N=1500 run=1 02e6b31 load=5.22 {"lines":2113,"quietPullMs":113,"finalDiagMs":689,"completionP50":323,"completionP95":521,"completionMax":521}
+N=1500 run=1 670722d load=4.88 {"lines":2113,"quietPullMs":106,"finalDiagMs":210,"completionP50":19,"completionP95":39,"completionMax":39}
+N=1500 run=1 738b7fa load=5.55 {"lines":2113,"quietPullMs":89,"finalDiagMs":210,"completionP50":19,"completionP95":37,"completionMax":37}
+N=2000 run=1 02e6b31 load=6.84 {"lines":2813,"quietPullMs":121,"finalDiagMs":1156,"completionP50":459,"completionP95":908,"completionMax":908}
+N=2000 run=1 670722d load=6.69 {"lines":2813,"quietPullMs":192,"finalDiagMs":246,"completionP50":27,"completionP95":48,"completionMax":48}
+N=2000 run=1 738b7fa load=7.30 {"lines":2813,"quietPullMs":132,"finalDiagMs":219,"completionP50":26,"completionP95":42,"completionMax":42}
+N=1000 run=2 02e6b31 load=8.27 {"lines":1413,"quietPullMs":71,"finalDiagMs":167,"completionP50":46,"completionP95":63,"completionMax":63}
+N=1000 run=2 670722d load=7.69 {"lines":1413,"quietPullMs":78,"finalDiagMs":133,"completionP50":15,"completionP95":31,"completionMax":31}
+N=1000 run=2 738b7fa load=8.65 {"lines":1413,"quietPullMs":60,"finalDiagMs":150,"completionP50":14,"completionP95":27,"completionMax":27}
+N=1500 run=2 02e6b31 load=8.28 {"lines":2113,"quietPullMs":94,"finalDiagMs":697,"completionP50":317,"completionP95":522,"completionMax":522}
+N=1500 run=2 670722d load=7.92 {"lines":2113,"quietPullMs":106,"finalDiagMs":224,"completionP50":18,"completionP95":87,"completionMax":87}
+N=1500 run=2 738b7fa load=8.27 {"lines":2113,"quietPullMs":103,"finalDiagMs":256,"completionP50":20,"completionP95":38,"completionMax":38}
+N=2000 run=2 02e6b31 load=8.81 {"lines":2813,"quietPullMs":153,"finalDiagMs":1146,"completionP50":465,"completionP95":908,"completionMax":908}
+N=2000 run=2 670722d load=9.84 {"lines":2813,"quietPullMs":144,"finalDiagMs":240,"completionP50":28,"completionP95":49,"completionMax":49}
+N=2000 run=2 738b7fa load=10.26 {"lines":2813,"quietPullMs":154,"finalDiagMs":280,"completionP50":29,"completionP95":67,"completionMax":67}
+
+## lsfuzz.mjs <binary> tpl <seed> 300, THIRD=1 NO_WS=1 INIT_SLEEP=600 LONG_SLEEP=700 CANCEL=1 (738b7fa; timeout = RSVELTE_TSGO_REQUEST_TIMEOUT_MS)
+timeout=default seed=22 {"seed":22,"iters":300,"exited":null,"answered":286,"errors":1,"timeouts":["textDocument/signatureHelp id 275 pending 16202 ms params {\"textDocument\":{\"uri\":\"file:///Users/hyprsonic/Developer/adroyt/svelte-rs/tests/review3/run-tDUwDH/src/Parent.svelte\"},\"position\":{\"line\":5,\"character\":4}} versions {\"src/Parent.svelte\":225,\"src/Child.svelte\":61}","later hover: answered","later folding: answered","background before stall: true; third loaded before: true; after 8 s idle: true; all loaded: true","after cancelling it: third loaded true"]} panics=[] 
+timeout=default seed=38 {"seed":38,"iters":300,"exited":null,"answered":210,"errors":1,"timeouts":["textDocument/completion id 200 pending 16757 ms params {\"textDocument\":{\"uri\":\"file:///Users/hyprsonic/Developer/adroyt/svelte-rs/tests/review3/run-QjwLOw/src/Parent.svelte\"},\"position\":{\"line\":15,\"character\":68},\"context\":{\"triggerKind\":1}} versions {\"src/Parent.svelte\":179,\"src/Child.svelte\":34}","later hover: answered","later folding: answered","background before stall: true; third loaded before: true; after 8 s idle: true; all loaded: true","after cancelling it: third loaded true"]} panics=[] 
+timeout=10000 seed=22 {"seed":22,"iters":300,"exited":null,"answered":287,"errors":0,"timeouts":["control (no lost request): third loaded before true, after 8 s idle true"]} panics=[] restarting tsgo, which is still busy with textDocument/signatureHelp (275)
+timeout=10000 seed=38 {"seed":38,"iters":300,"exited":null,"answered":309,"errors":0,"timeouts":["control (no lost request): third loaded before true, after 8 s idle true"]} panics=[] 
+
+## bench/typing.mjs svelte-rs <zeno> admin-layout.svelte, through the lock, direct alternating pairs
+738b7fa pair1 load=3.60 {"final":14,"comp":[7.2,16.4,21.9],"member":[6.2,7.5],"ms":"22,16,15,16,15,15,15,7,6,7,7,8,7,8,6,6,6,6,6,5"}
+670722d pair1 load=3.20 {"final":16,"comp":[7.8,17.6,20.1],"member":[6.5,7.8],"ms":"20,17,16,18,16,16,16,8,8,7,8,9,7,8,7,7,6,7,6,7"}
+670722d pair2 load=3.02 {"final":18,"comp":[7,21.9,27.1],"member":[6.5,8.6],"ms":"27,18,18,22,18,20,17,8,7,7,6,7,7,8,6,7,6,7,6,8"}
+738b7fa pair2 load=3.44 {"final":15,"comp":[6.2,16,20.1],"member":[5.8,11.3],"ms":"20,16,15,14,13,14,15,6,6,6,6,6,6,7,6,5,6,6,6,6"}
+738b7fa pair3 load=3.36 {"final":15,"comp":[6.5,17,22],"member":[6.7,7.8],"ms":"22,17,16,16,15,15,16,6,6,6,6,8,7,6,6,6,7,6,6,6"}
+670722d pair3 load=3.83 {"final":15,"comp":[6.8,17.2,21.2],"member":[5.9,6.4],"ms":"21,17,16,16,14,14,15,7,7,7,7,7,6,6,6,6,6,7,6,7"}
+670722d pair4 load=3.84 {"final":16,"comp":[6.8,20.1,26.8],"member":[6.6,7.5],"ms":"20,15,14,15,16,27,18,9,7,7,7,6,6,6,6,6,6,6,6,7"}
+738b7fa pair4 load=3.57 {"final":13,"comp":[6.3,16.5,20.5],"member":[6,6.9],"ms":"21,16,16,16,15,14,13,6,6,6,8,6,6,7,6,6,6,6,5,5"}
+
+## docs/upstream/tsrs-cancelled-check/repro.mjs (tsrs 0.18.0): see result-tsrs-0.18.0.json there

@@ -1,0 +1,32 @@
+{
+ "files": {
+  "List.svelte": "<script lang='ts' generics='T extends { id: string }, K extends keyof T = keyof T'>\n\tlet { items, key }: { items: T[]; key: K } = $props();\n\tlet first: T | undefined = items[0];\n</script>\n{#each items as item (item.id)}<p>{String(item[key])}</p>{/each}\n",
+  "Use.svelte": "<script lang=\"ts\">\n\timport List from './List.svelte';\n</script>\n<List items={[{ id: 'a', n: 1 }]} key=\"n\" />\n"
+ },
+ "open": [
+  "List.svelte",
+  "Use.svelte"
+ ],
+ "queries": [
+  {
+   "file": "List.svelte",
+   "at": "T | undefined",
+   "newName": "Item"
+  },
+  {
+   "file": "List.svelte",
+   "at": "K extends",
+   "newName": "Key"
+  },
+  {
+   "file": "List.svelte",
+   "at": "key: K",
+   "newName": "field"
+  },
+  {
+   "file": "List.svelte",
+   "at": "id: string",
+   "newName": "ident"
+  }
+ ]
+}

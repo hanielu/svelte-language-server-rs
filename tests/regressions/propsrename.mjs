@@ -1,0 +1,22 @@
+// Rename a type alias used in a $props() annotation, from a use elsewhere in the script.
+import { session, makeProject } from "./h.mjs";
+import fs from "node:fs";
+const [bin, tpl] = process.argv.slice(2);
+const cfg = JSON.stringify({ compilerOptions: { strict: true, target: "ESNext", module: "ESNext", moduleResolution: "bundler", verbatimModuleSyntax: true, skipLibCheck: true, types: [] } });
+const comp = `<script lang="ts">\n\ttype Size = 'sm' | 'lg';\n\tlet s: Size = 'sm';\n\tlet { kind }: { kind: Size } = $props();\n</script>\n<p>{s}{kind}</p>\n`;
+const root = makeProject(tpl, { "package.json": '{"name":"pr","private":true,"type":"module"}', "tsconfig.json": cfg, "Card.svelte": comp });
+const s = await session(bin, root);
+s.open("Card.svelte", comp);
+await s.settle("Card.svelte");
+const td = { uri: s.uri("Card.svelte") };
+const rn = await s.request("textDocument/rename", { textDocument: td, position: { line: 2, character: 9 }, newName: "Dim" }).catch((e) => ({ error: e.message }));
+const edits = [];
+for (const [uri, list] of Object.entries(rn?.changes ?? {})) for (const e of list) edits.push(e);
+for (const dc of rn?.documentChanges ?? []) edits.push(...(dc.edits ?? []));
+const lines = comp.split("\n");
+const toIdx = (p) => lines.slice(0, p.line).reduce((a, l) => a + l.length + 1, 0) + p.character;
+let text = comp;
+for (const e of [...edits].sort((a, b) => toIdx(b.range.start) - toIdx(a.range.start))) text = text.slice(0, toIdx(e.range.start)) + e.newText + text.slice(toIdx(e.range.end));
+const refs = await s.request("textDocument/references", { textDocument: td, position: { line: 2, character: 9 }, context: { includeDeclaration: true } });
+console.log(JSON.stringify({ edits: edits.map((e) => `${e.range.start.line}:${e.range.start.character}-${e.range.end.line}:${e.range.end.character} ${e.newText}`), after: text.split("\n").slice(0, 4), references: (refs ?? []).map((l) => `${l.range.start.line}:${l.range.start.character}-${l.range.end.line}:${l.range.end.character}`) }, null, 1));
+await s.end(); fs.rmSync(root, { recursive: true, force: true }); process.exit(0);

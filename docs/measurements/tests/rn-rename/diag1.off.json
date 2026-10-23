@@ -1,0 +1,32 @@
+{
+ "ModOpen": [
+  "2:0-3:0 ts 1136 Property assignment expected."
+ ],
+ "ModOpenNoGen": [
+  "2:0-3:0 ts 1136 Property assignment expected."
+ ],
+ "ModImport": [
+  "2:0-3:0 ts 1003 Identifier expected.",
+  "3:0-3:1 ts 1003 Identifier expected.",
+  "3:1-3:1 ts 1003 Identifier expected.",
+  "3:1-3:27 ts 1005 ',' expected.",
+  "3:27-3:28 ts 1005 ',' expected.",
+  "3:44-3:45 ts 1005 '=>' expected.",
+  "3:27-3:44 ts 1141 String literal expected."
+ ],
+ "InstOpen": [
+  "2:1-2:1 svelte js_parse_error The keyword 'let' is reserved",
+  "2:5-2:6 ts 1005 ',' expected.",
+  "2:10-2:11 ts 1128 Declaration or statement expected.",
+  "2:21-2:22 ts 2809 Declaration or statement expected. This '=' follows a block of stateme",
+  "0:27-0:30 ts 6133 'T' is declared but its value is never read.",
+  "2:14-2:15 ts 7028 Unused label.",
+  "2:5-2:10 ts 1141 String literal expected.",
+  "2:17-2:18 ts 2693 'T' only refers to a type, but is being used as a value here.",
+  "4:11-4:12 ts 2304 Cannot find name 'a'."
+ ],
+ "TypeOpen": [
+  "2:11-2:12 ts 1131 Property or signature expected.",
+  "2:11-2:11 ts 1131 Property or signature expected."
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "files": {
+  "Card.svelte": "<script lang=\"ts\">\n\timport Child from \"./Child.svelte\";\n\timport Outer from \"./Outer.svelte\";\n\ttype Size = \"sm\" | \"lg\";\n\ttype Row = { id: string; size: Size };\n\tlet rows: Row[] = $state([]);\n\tlet active = $state(false);\n\tlet ref: HTMLElement | undefined = $state();\n\tlet tag = \"div\";\n\tfunction pick(r: Row) {}\n</script>\n{#each rows as { id, size }, i (id)}<p>{id}{size}{i}</p>{/each}\n{#each rows as row, i (row.id)}<p class:big={row.size === \"lg\"} onclick={() => pick(row)}>{i}</p>{/each}\n{#snippet pair<T extends Size>(a: T, b: Row)}<i>{a}{b.id}</i>{/snippet}\n{@render pair(\"sm\", rows[0])}\n<svelte:element this={tag} class:active onclick={() => {}}>x</svelte:element>\n<div bind:this={ref} class=\"box\">y</div>\n<Outer><Child slot=\"a\" size=\"sm\">z</Child></Outer>\n",
+  "Child.svelte": "<script lang=\"ts\">\n\timport type { Snippet } from \"svelte\";\n\tlet { size, children }: { size: string; children?: Snippet } = $props();\n</script>\n<p>{size}</p>{@render children?.()}\n",
+  "Outer.svelte": "<slot name=\"a\" />\n"
+ },
+ "open": [
+  "Card.svelte"
+ ],
+ "queries": [
+  {
+   "file": "Card.svelte",
+   "at": "id: string",
+   "newName": "key"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "id, size }",
+   "newName": "ident"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "Size = ",
+   "newName": "Dim"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "Row = {",
+   "newName": "Line"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "pair(\"sm\"",
+   "newName": "duo"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "active = $state",
+   "newName": "on"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "ref: HTMLElement",
+   "newName": "node"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "Child from",
+   "newName": "Kid"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "pick(r: Row)",
+   "newName": "choose"
+  }
+ ]
+}

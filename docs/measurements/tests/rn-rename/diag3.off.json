@@ -1,0 +1,55 @@
+{
+ "DirWrongType": [
+  "6:0-6:51 svelte a11y_click_events_have_key_events Visible, non-interactive element `<p>` with a click event must be acco",
+  "6:0-6:51 svelte a11y_no_noninteractive_element_interactions Non-interactive element `<p>` should not be assigned mouse or keyboard",
+  "3:14-3:18 ts 6133 'node' is declared but its value is never read.",
+  "6:22-6:27 ts 2345 Argument of type '{ r: number; }' is not assignable to parameter of ty"
+ ],
+ "DirExprWrong": [
+  "3:0-3:59 svelte a11y_click_events_have_key_events Visible, non-interactive element `<p>` with a click event must be acco",
+  "3:0-3:59 svelte a11y_no_noninteractive_element_interactions Non-interactive element `<p>` should not be assigned mouse or keyboard",
+  "3:14-3:25 ts 2304 Cannot find name 'missingName'.",
+  "3:40-3:42 ts 2345 Argument of type '{}' is not assignable to parameter of type 'String |"
+ ],
+ "DirOnSvelteElement": [
+  "4:0-4:99 svelte a11y_no_static_element_interactions `<svelte:element>` with a click handler must have an ARIA role",
+  "4:33-4:38 ts 2345 Argument of type '{ r: number; }' is not assignable to parameter of ty",
+  "4:49-4:60 ts 2304 Cannot find name 'missingFlag'."
+ ],
+ "BindThisWrong": [
+  "1:5-1:8 ts 6133 'ref' is declared but its value is never read.",
+  "3:16-3:19 ts 2322 Type 'HTMLDivElement' is not assignable to type 'number'."
+ ],
+ "BindThisMissing": [
+  "3:16-3:26 ts 2304 Cannot find name 'missingRef'."
+ ],
+ "TransitionWrong": [
+  "3:24-3:33 ts 2561 Object literal may only specify known properties, but 'durationx' does"
+ ],
+ "SnippetParamWrong": [
+  "3:14-3:15 ts 6133 'x' is declared but its value is never read.",
+  "3:17-3:24 ts 2304 Cannot find name 'Missing'.",
+  "3:40-3:44 ts 2339 Property 'nope' does not exist on type 'Row'."
+ ],
+ "SnippetTypeParamWrong": [
+  "3:10-3:14 ts 6133 'pair' is declared but its value is never read.",
+  "3:14-3:14 ts 2304 Cannot find name 'Missing'."
+ ],
+ "EachKeyWrong": [
+  "4:29-4:36 ts 2339 Property 'missing' does not exist on type 'Row'.",
+  "4:46-4:49 ts 2339 Property 'foo' does not exist on type 'number'."
+ ],
+ "EachKeyMissing": [
+  "3:20-3:30 ts 2304 Cannot find name 'missingKey'."
+ ],
+ "ClosingTagUnknown": [
+  "3:1-3:8 ts 2304 Cannot find name 'Missing'.",
+  "3:21-3:28 ts 2304 Cannot find name 'Missing'.",
+  "4:1-4:3 ts 2304 Cannot find name 'UI'.",
+  "4:11-4:13 ts 2304 Cannot find name 'UI'."
+ ],
+ "RepairedAliasUse": [
+  "1:32-1:33 ts 1110 Type expected.",
+  "1:20-1:27 ts 2304 Cannot find name 'Missing'."
+ ]
+}

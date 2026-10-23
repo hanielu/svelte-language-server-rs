@@ -1,0 +1,189 @@
+{
+ "diags": {
+  "A.svelte": [
+   "2:state_referenced_locally:This reference only captures the initial value of `m`. Did you mean to reference it inside a closure",
+   "2:state_referenced_locally:This reference only captures the initial value of `k`. Did you mean to reference it inside a closure"
+  ],
+  "B.svelte": [],
+  "C.svelte": [
+   "2:state_referenced_locally:This reference only captures the initial value of `a`. Did you mean to reference it inside a closure"
+  ],
+  "D.svelte": [
+   "5:state_referenced_locally:This reference only captures the initial value of `item`. Did you mean to reference it inside a clos"
+  ]
+ },
+ "A.svelte@k: K": {
+  "at": "A.svelte 1:26",
+  "rename": {
+   "A.svelte": [
+    "0:42-0:43 Key",
+    "0:49-0:50 Key",
+    "1:26-1:27 Key"
+   ]
+  },
+  "after": {
+   "A.svelte": [
+    "0: <script lang=\"ts\" generics=\"T extends Map<Key, V>, Key, V\">",
+    "1: \tlet { m, k }: { m: T; k: Key } = $props();"
+   ]
+  },
+  "references": [
+   "A.svelte 0:42-0:43",
+   "A.svelte 0:49-0:50",
+   "A.svelte 1:26-1:27"
+  ],
+  "definition": [
+   "A.svelte 0:49-0:50"
+  ],
+  "highlights": [
+   "0:42-0:43",
+   "0:49-0:50",
+   "1:26-1:27"
+  ]
+ },
+ "A.svelte@V | undefined": {
+  "at": "A.svelte 2:8",
+  "rename": {
+   "A.svelte": [
+    "0:45-0:46 Val",
+    "0:52-0:53 Val",
+    "2:8-2:9 Val"
+   ]
+  },
+  "after": {
+   "A.svelte": [
+    "0: <script lang=\"ts\" generics=\"T extends Map<K, Val>, K, Val\">",
+    "2: \tlet v: Val | undefined = m.get(k);"
+   ]
+  },
+  "references": [
+   "A.svelte 0:45-0:46",
+   "A.svelte 0:52-0:53",
+   "A.svelte 2:8-2:9"
+  ],
+  "definition": [
+   "A.svelte 0:52-0:53"
+  ],
+  "highlights": [
+   "0:45-0:46",
+   "0:52-0:53",
+   "2:8-2:9"
+  ]
+ },
+ "B.svelte@a: T": {
+  "at": "B.svelte 7:20",
+  "rename": {
+   "B.svelte": [
+    "3:2-3:3 S",
+    "4:6-4:7 S",
+    "7:20-7:21 S"
+   ]
+  },
+  "after": {
+   "B.svelte": [
+    "3: \t\tS extends string,",
+    "4: \t\tU = S",
+    "7: \tlet { a, b }: { a: S; b: U } = $props();"
+   ]
+  },
+  "references": [
+   "B.svelte 3:2-3:3",
+   "B.svelte 4:6-4:7",
+   "B.svelte 7:20-7:21"
+  ],
+  "definition": [
+   "B.svelte 3:2-3:3"
+  ],
+  "highlights": [
+   "3:2-3:3",
+   "4:6-4:7",
+   "7:20-7:21"
+  ]
+ },
+ "B.svelte@b: U": {
+  "at": "B.svelte 7:26",
+  "rename": {
+   "B.svelte": [
+    "4:2-4:3 W",
+    "7:26-7:27 W"
+   ]
+  },
+  "after": {
+   "B.svelte": [
+    "4: \t\tW = T",
+    "7: \tlet { a, b }: { a: T; b: W } = $props();"
+   ]
+  },
+  "references": [
+   "B.svelte 4:2-4:3",
+   "B.svelte 7:26-7:27"
+  ],
+  "definition": [
+   "B.svelte 4:2-4:3"
+  ],
+  "highlights": [
+   "4:2-4:3",
+   "7:26-7:27"
+  ]
+ },
+ "C.svelte@x: T": {
+  "at": "C.svelte 2:8",
+  "rename": {
+   "C.svelte": [
+    "0:27-0:28 S",
+    "1:17-1:18 S",
+    "2:8-2:9 S"
+   ]
+  },
+  "after": {
+   "C.svelte": [
+    "0: <script lang=\"ts\" generics=S>",
+    "1: \tlet { a }: { a: S } = $props();",
+    "2: \tlet x: S = a;"
+   ]
+  },
+  "references": [
+   "C.svelte 0:27-0:28",
+   "C.svelte 1:17-1:18",
+   "C.svelte 2:8-2:9"
+  ],
+  "definition": [
+   "C.svelte 0:27-0:28"
+  ],
+  "highlights": [
+   "0:27-0:28",
+   "1:17-1:18",
+   "2:8-2:9"
+  ]
+ },
+ "D.svelte@Base[": {
+  "at": "D.svelte 5:11",
+  "rename": {
+   "D.svelte": [
+    "1:13-1:17 Root",
+    "3:38-3:42 Root",
+    "5:11-5:15 Root"
+   ]
+  },
+  "after": {
+   "D.svelte": [
+    "1: \texport type Root = { id: number };",
+    "3: <script lang=\"ts\" generics=\"T extends Root\">",
+    "5: \tconst id: Root[\"id\"] = item.id;"
+   ]
+  },
+  "references": [
+   "D.svelte 1:13-1:17",
+   "D.svelte 3:38-3:42",
+   "D.svelte 5:11-5:15"
+  ],
+  "definition": [
+   "D.svelte 1:13-1:17"
+  ],
+  "highlights": [
+   "1:13-1:17",
+   "3:38-3:42",
+   "5:11-5:15"
+  ]
+ }
+}

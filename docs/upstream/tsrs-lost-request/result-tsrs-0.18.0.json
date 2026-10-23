@@ -1,0 +1,62 @@
+{
+ "server": "/Users/hyprsonic/.bun/bin/tsrs",
+ "version": "Version 7.1.0-dev.20260930.4 (tsrs 0.18.0-ts7.1.0-dev.20260929, microsoft/TypeScript@b85298b6a81f)",
+ "results": [
+  {
+   "file": "a.tsx",
+   "text": "<}{",
+   "request": "textDocument/signatureHelp at 0:2",
+   "answeredAfterMs": null,
+   "cpuPercentAfterCancel": 99.6,
+   "otherRequests": "answered"
+  },
+  {
+   "file": "b.tsx",
+   "text": "}i<{",
+   "request": "textDocument/completion at 0:3",
+   "answeredAfterMs": null,
+   "cpuPercentAfterCancel": 100,
+   "otherRequests": "answered"
+  },
+  {
+   "file": "c.tsx",
+   "text": "}\nfoo<{",
+   "request": "textDocument/completion at 1:4",
+   "answeredAfterMs": null,
+   "cpuPercentAfterCancel": 99.2,
+   "otherRequests": "answered"
+  },
+  {
+   "file": "d.ts",
+   "text": "{}i<{",
+   "request": "textDocument/completion at 0:4",
+   "answeredAfterMs": null,
+   "cpuPercentAfterCancel": 100,
+   "otherRequests": "answered"
+  },
+  {
+   "file": "e.tsx",
+   "text": "<{",
+   "request": "textDocument/signatureHelp at 0:1",
+   "answeredAfterMs": 13,
+   "cpuPercentAfterCancel": 0,
+   "otherRequests": "answered"
+  },
+  {
+   "file": "f.tsx",
+   "text": "i<{",
+   "request": "textDocument/completion at 0:2",
+   "answeredAfterMs": 16,
+   "cpuPercentAfterCancel": 0,
+   "otherRequests": "answered"
+  },
+  {
+   "file": "g.ts",
+   "text": "f();i<{",
+   "request": "textDocument/completion at 0:6",
+   "answeredAfterMs": 17,
+   "cpuPercentAfterCancel": 0.1,
+   "otherRequests": "answered"
+  }
+ ]
+}

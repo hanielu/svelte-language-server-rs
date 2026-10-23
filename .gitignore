@@ -1,0 +1,11 @@
+.DS_Store
+/bench/results/
+/bench/results/*.tmp
+/target
+/target-*
+/tests/regressions/run-*
+/tests/results/
+/tests/results/*.stderr.log
+/tests/review3/fuzzout*/
+/tests/review3/run-*
+/vendor-wt

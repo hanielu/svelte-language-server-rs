@@ -1,0 +1,30 @@
+{
+ "files": {
+  "Card.svelte": "<script lang=\"ts\">\r\n\ttype Size = \"sm\" | \"lg\"; // café ☕ 😀\r\n\tlet s: Size = \"sm\"; let é = \"😀\"; let t: Size = \"lg\";\r\n\tlet { kind }: { kind: Size; /* ü */ other?: Size } = $props();\r\n</script>\r\n<p title=\"😀 {s}\">é😀 {t}{kind}{é}</p>\r\n{#each [s, t] as x}😀{x}{/each}\r\n"
+ },
+ "open": [
+  "Card.svelte"
+ ],
+ "queries": [
+  {
+   "file": "Card.svelte",
+   "at": "Size =",
+   "newName": "Dim"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "t: Size",
+   "newName": "tt"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "é =",
+   "newName": "e2"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "other?",
+   "newName": "more"
+  }
+ ]
+}

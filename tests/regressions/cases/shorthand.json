@@ -1,0 +1,58 @@
+{
+ "files": {
+  "Parent.svelte": "<script lang=\"ts\">\n\timport Child from \"./Child.svelte\";\n\timport { writable } from \"svelte/store\";\n\tconst count = writable(0);\n\tlet kind = $state(\"a\");\n\tlet value = $state(\"\");\n\tlet active = $state(false);\n\tlet color = $state(\"red\");\n\tfunction onclick() { $count++; }\n\tfunction tip(node: HTMLElement) {}\n</script>\n<Child {kind} />\n<Child kind={kind} {onclick} />\n<input bind:value />\n<p class:active style:color use:tip {onclick}>{$count}{kind}</p>\n{#if $count > 1}<b>{value}</b>{/if}\n",
+  "Child.svelte": "<script lang=\"ts\">\n\tlet { kind, onclick }: { kind: string; onclick?: () => void } = $props();\n</script>\n<button {onclick}>{kind}</button>\n"
+ },
+ "open": [
+  "Parent.svelte",
+  "Child.svelte"
+ ],
+ "queries": [
+  {
+   "file": "Parent.svelte",
+   "at": "count = writable",
+   "newName": "total"
+  },
+  {
+   "file": "Parent.svelte",
+   "at": "kind = $state",
+   "newName": "variant"
+  },
+  {
+   "file": "Parent.svelte",
+   "at": "value = $state",
+   "newName": "text"
+  },
+  {
+   "file": "Parent.svelte",
+   "at": "active = $state",
+   "newName": "on"
+  },
+  {
+   "file": "Parent.svelte",
+   "at": "color = $state",
+   "newName": "hue"
+  },
+  {
+   "file": "Parent.svelte",
+   "at": "onclick() {",
+   "newName": "handle"
+  },
+  {
+   "file": "Parent.svelte",
+   "at": "tip(node",
+   "newName": "tooltip"
+  },
+  {
+   "file": "Child.svelte",
+   "at": "kind: string",
+   "newName": "variant"
+  },
+  {
+   "file": "Parent.svelte",
+   "at": "$count}",
+   "offset": 1,
+   "newName": "total"
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+{
+ "files": {
+  "Card.svelte": "<script lang=\"ts\">\n\tconst sizes = ['sm', 'lg'] as const;\n\tlet { kind }: { kind: (typeof sizes)[number] } = $props();\n\tconst n = sizes.length;\n</script>\n<p>{kind}{n}</p>\n"
+ },
+ "open": [
+  "Card.svelte"
+ ],
+ "queries": [
+  {
+   "file": "Card.svelte",
+   "at": "sizes.length",
+   "newName": "all"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "kind }",
+   "newName": "variant"
+  }
+ ]
+}

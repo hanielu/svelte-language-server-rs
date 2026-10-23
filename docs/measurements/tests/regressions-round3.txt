@@ -1,0 +1,99 @@
+# tests/regressions at vendor/rsvelte 7793da7 (target/release/svelte-rs), 2026-10-22T05:06Z
+
+## sh tests/regressions/runall.sh <binary> merged-7793da7
+== s1 @ merged-7793da7
+{ "child0": [], "child1": [], "parentAfterOpen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "parentAfterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s1b @ merged-7793da7
+{ "before": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterConfigChange": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "waitedMs": 129, "afterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s2 @ merged-7793da7
+{ "initial": [], "unsaved": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterSaveEvent": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterReopen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterFullRefresh": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s3 @ merged-7793da7
+{ "freshBeforeCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ], "freshAfterCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ], "existingAfterCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ]}
+== s4 @ merged-7793da7
+{ "initial": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterDelete": [ "1:2307:Cannot find module '../../../../../../b/Child.svelte' or its corresponding type declarations." ], "afterRestore": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterParentKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s7 @ merged-7793da7
+{ "app": [], "libraryComponent": [ "1:2322:Type 'string' is not assignable to type 'number'.", "5:2304:Cannot find name 'svelteHTML'." ], "hover": "\"```typescript\\nconst n: number\\n```\""}
+== s8 @ merged-7793da7
+{ "importerWhileTargetOpen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterTargetClosed": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s10 @ merged-7793da7
+{ "dialog": [ "8:2322:Type 'number' is not assignable to type 'string'." ], "hoverUtil": "\"```typescript\\n(alias) const fromUtil: number\\n```\"", "ok": true}
+== s11 @ merged-7793da7
+{ "closed": { "tag": [ "Child.svelte:0:1" ], "binding": [ "Child.svelte:0:1" ], "specifier": [ "Child.svelte:0:1" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "open": { "tag": [ "Child.svelte:0:1" ], "binding": [ "Child.svelte:0:1" ], "specifier": [ "Child.svelte:0:1" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "ok": true}
+== incomplete-edits @ merged-7793da7
+{ "steps": { "member": { "unresolved": [], "propErrorKept": true, "completions": [ "title", "i18n", "manifest" ], "ok": true }, "call": { "unresolved": [], "propErrorKept": true, "ok": true }, "initializer": { "unresolved": [], "propErrorKept": true, "ok": true }, "import": { "unresolved": [], "propErrorKept": true, "ok": true }, "childBlockOpen": { "parent": [ "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true }, "openingTag": { "parent": [ "8:parse-error:Parsing error: element_invalid_closing_tag: `</p>` attempted to close an element that was not open", "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true } }, "initial": [ "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true}
+== r1-depkill @ merged-7793da7
+{ "appBefore": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "dep": [ "3:2304:Cannot find name 'svelteHTML'." ], "appAfterDepOpen": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "appAfterImportEdit": [ "3:2322:Type 'number' is not assignable to type 'string'.", "1:6196:'Snippet' is declared but never used." ], "shadowLinks": [ "tsgo/dependencies/app/node_modules (real dir)", "tsgo/svelte/app/node_modules -> symlink" ], "ok": true}
+== r1b-close @ merged-7793da7
+{ "appBefore": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "dep": [ "3:2304:Cannot find name 'svelteHTML'." ], "appWhileDepOpen": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "appAfterDepClosed": [ "3:2322:Type 'number' is not assignable to type 'string'.", "1:6196:'Snippet' is declared but never used." ], "link": "symlink"}
+== r2c-format @ merged-7793da7
+{ "formatQuiet": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "tries": 4, "delay": 15, "probeEndedByEdit": true, "formatSentBeforeEdit": [ "0:0-10:0=>\"<!-- top -->\\n<!-- top -->\\n<!-- top -->\\n<script lang=\\\"ts" ], "expectedForRequestVersion": [ "0:0-10:0=>\"<!-- top -->\\n<!-- top -->\\n<!-- top -->\\n<script lang=\\\"ts" ], "ok": true}
+== r2d-hover @ merged-7793da7
+{"quiet":["const later: number @7:4","const other: string @8:4"],"probeEndedByEdit":true,"sentBeforeEdit":["const later: number @7:0","const other: string @8:4"],"ok":true}
+== r2e-hover-edit-race @ merged-7793da7
+{"rounds":10,"wrong":0}
+== r5-crash @ merged-7793da7
+{ "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r6-watchers @ merged-7793da7
+{"editorWatchesNodeModules":["<root>/node_modules/**/*"],"ok":true}
+
+## r5-crash.mjs <binary> tpl <dir>, the review's saved panicking inputs
+allpanics: { "inputs": 165, "answered": 165, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+found-1: { "inputs": 15, "answered": 15, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+found-2: { "inputs": 2, "answered": 2, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+found-3: { "inputs": 12, "answered": 12, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+found-4: { "inputs": 9, "answered": 9, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+sfound-1: { "inputs": 37, "answered": 37, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+sfound-2: { "inputs": 35, "answered": 35, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+sfound-3: { "inputs": 29, "answered": 29, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+sfound-4: { "inputs": 31, "answered": 31, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+real: { "inputs": 70, "answered": 70, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+
+## s5 (N=400), s6, s9, r6e-nested-install, r6b-install
+== s5 ts chain
+{"kind":"ts","shape":"chain","N":400,"firstDiagnosticsMs":175,"diags":0,"processes":["svelte-rs=20MB","tsrs=55MB","ps=2MB"],"totalMB":76}
+== s5 ts flat
+{"kind":"ts","shape":"flat","N":400,"firstDiagnosticsMs":157,"diags":0,"processes":["svelte-rs=18MB","tsrs=54MB","ps=2MB"],"totalMB":73}
+== s5 js chain
+{"kind":"js","shape":"chain","N":400,"firstDiagnosticsMs":653,"diags":0,"processes":["svelte-rs=20MB","tsrs=59MB","ps=2MB"],"totalMB":81}
+== s5 js flat
+{"kind":"js","shape":"flat","N":400,"firstDiagnosticsMs":175,"diags":0,"processes":["svelte-rs=18MB","tsrs=54MB","ps=2MB"],"totalMB":73}
+== s6
+{ "openedAtVersion0": [ "4:svelte/no-unused-vars:'n' is defined but never used.", "4:2322:Type 'string' is not assignable to type 'number'.", "4:6133:'n' is declared but its value is never read." ], "afterChangeVersion1": [ "4:svelte/no-unused-vars:'n' is defined but never used.", "4:2322:Type 'string' is not assignable to type 'number'.", "4:6133:'n' is declared but its value is never read." ]}
+== s9 copy-first
+{"order":"copy-first","propsOffered":["alphaProp","betaProp"],"total":2}
+== s9 owner-first
+{"order":"owner-first","propsOffered":["alphaProp","betaProp"],"total":2}
+== r6e none
+{"mode":"none","before":["1:2307:Cannot find module 'nested-later' or its corresponding type declarations."],"afterInstall":["1:2307:Cannot find module 'nested-later' or its corresponding type declarations."],"resolved":false}
+== r6e real
+{"mode":"real","before":["1:2307:Cannot find module 'nested-later' or its corresponding type declarations."],"afterInstall":["2:2322:Type 'number' is not assignable to type 'string'."],"resolved":true}
+== r6e link
+{"mode":"link","before":["1:2307:Cannot find module 'nested-later' or its corresponding type declarations."],"afterInstall":["2:2322:Type 'number' is not assignable to type 'string'."],"resolved":true}
+== r6b
+{"before":["1:2307:Cannot find module 'not-installed-yet' or its corresponding type declarations."],"afterInstall":["2:2322:Type 'number' is not assignable to type 'string'."]}
+
+## s5 A/B, interleaved: <run> <build> <kind> <shape> firstDiagnosticsMs
+1 42d8d9e ts chain 177
+1 7793da7 ts chain 157
+1 42d8d9e ts flat 159
+1 7793da7 ts flat 153
+1 42d8d9e js chain 626
+1 7793da7 js chain 602
+1 42d8d9e js flat 165
+1 7793da7 js flat 156
+2 42d8d9e ts chain 175
+2 7793da7 ts chain 179
+2 42d8d9e ts flat 160
+2 7793da7 ts flat 154
+2 42d8d9e js chain 611
+2 7793da7 js chain 615
+2 42d8d9e js flat 164
+2 7793da7 js flat 164
+3 42d8d9e ts chain 191
+3 7793da7 ts chain 186
+3 42d8d9e ts flat 156
+3 7793da7 ts flat 173
+3 42d8d9e js chain 624
+3 7793da7 js chain 627
+3 42d8d9e js flat 158
+3 7793da7 js flat 156

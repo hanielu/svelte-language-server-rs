@@ -1,0 +1,274 @@
+{
+ "diags": {
+  "Card.svelte": [
+   "12:a11y_click_events_have_key_events:Visible, non-interactive element `<p>` with a click event must be accompanied by a keyboard event ha",
+   "12:a11y_no_noninteractive_element_interactions:Non-interactive element `<p>` should not be assigned mouse or keyboard event listeners",
+   "15:a11y_no_static_element_interactions:`<svelte:element>` with a click handler must have an ARIA role",
+   "7:6133:'ref' is declared but its value is never read.",
+   "9:6133:'r' is declared but its value is never read.",
+   "2:7016:Could not find a declaration file for module './Outer.svelte'. '/Users/hyprsonic/Developer/adroyt/sv"
+  ]
+ },
+ "Card.svelte@id: string": {
+  "at": "Card.svelte 4:14",
+  "rename": {
+   "Card.svelte": [
+    "13:54-13:56 key",
+    "4:14-4:16 key",
+    "11:17-11:19 key: id",
+    "12:27-12:29 key"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "4: \ttype Row = { key: string; size: Size };",
+    "11: {#each rows as { key: id, size }, i (id)}<p>{id}{size}{i}</p>{/each}",
+    "12: {#each rows as row, i (row.key)}<p class:big={row.size === \"lg\"} onclick={() => pick(row)}>{i}</p>{/each}",
+    "13: {#snippet pair<T extends Size>(a: T, b: Row)}<i>{a}{b.key}</i>{/snippet}"
+   ]
+  },
+  "references": [
+   "Card.svelte 11:17-11:19",
+   "Card.svelte 12:27-12:29",
+   "Card.svelte 13:54-13:56",
+   "Card.svelte 4:14-4:16"
+  ],
+  "definition": [
+   "Card.svelte 4:14-4:16"
+  ],
+  "highlights": [
+   "11:17-11:19",
+   "12:27-12:29",
+   "13:54-13:56",
+   "4:14-4:16"
+  ]
+ },
+ "Card.svelte@id, size }": {
+  "at": "Card.svelte 11:17",
+  "rename": {
+   "Card.svelte": [
+    "11:17-11:19 id: ident",
+    "11:32-11:34 ident",
+    "11:40-11:42 ident"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "11: {#each rows as { id: ident, size }, i (ident)}<p>{ident}{size}{i}</p>{/each}"
+   ]
+  },
+  "references": [
+   "Card.svelte 11:17-11:19",
+   "Card.svelte 11:32-11:34",
+   "Card.svelte 11:40-11:42",
+   "Card.svelte 12:27-12:29",
+   "Card.svelte 13:54-13:56",
+   "Card.svelte 4:14-4:16"
+  ],
+  "definition": [
+   "Card.svelte 4:14-4:16"
+  ],
+  "highlights": [
+   "11:17-11:19",
+   "11:32-11:34",
+   "11:40-11:42",
+   "12:27-12:29",
+   "13:54-13:56",
+   "4:14-4:16"
+  ]
+ },
+ "Card.svelte@Size = ": {
+  "at": "Card.svelte 3:6",
+  "rename": {
+   "Card.svelte": [
+    "13:14-13:15 Dim",
+    "3:6-3:10 Dim",
+    "4:32-4:36 Dim"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "3: \ttype Dim = \"sm\" | \"lg\";",
+    "4: \ttype Row = { id: string; size: Dim };",
+    "13: {#snippet pairDimT extends Size>(a: T, b: Row)}<i>{a}{b.id}</i>{/snippet}"
+   ]
+  },
+  "references": [
+   "Card.svelte 3:6-3:10",
+   "Card.svelte 4:32-4:36"
+  ],
+  "definition": [
+   "Card.svelte 3:6-3:10"
+  ],
+  "highlights": [
+   "3:6-3:10",
+   "4:32-4:36"
+  ]
+ },
+ "Card.svelte@Row = {": {
+  "at": "Card.svelte 4:6",
+  "rename": {
+   "Card.svelte": [
+    "13:40-13:43 Line",
+    "4:6-4:9 Line",
+    "5:11-5:14 Line",
+    "9:18-9:21 Line"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "4: \ttype Line = { id: string; size: Size };",
+    "5: \tlet rows: Line[] = $state([]);",
+    "9: \tfunction pick(r: Line) {}",
+    "13: {#snippet pair<T extends Size>(a: T, b: Line)}<i>{a}{b.id}</i>{/snippet}"
+   ]
+  },
+  "references": [
+   "Card.svelte 13:40-13:43",
+   "Card.svelte 4:6-4:9",
+   "Card.svelte 5:11-5:14",
+   "Card.svelte 9:18-9:21"
+  ],
+  "definition": [
+   "Card.svelte 4:6-4:9"
+  ],
+  "highlights": [
+   "13:40-13:43",
+   "4:6-4:9",
+   "5:11-5:14",
+   "9:18-9:21"
+  ]
+ },
+ "Card.svelte@pair(\"sm\"": {
+  "at": "Card.svelte 14:9",
+  "rename": {
+   "Card.svelte": [
+    "13:10-13:14 duo",
+    "14:9-14:13 duo"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "13: {#snippet duo<T extends Size>(a: T, b: Row)}<i>{a}{b.id}</i>{/snippet}",
+    "14: {@render duo(\"sm\", rows[0])}"
+   ]
+  },
+  "references": [
+   "Card.svelte 13:10-13:14",
+   "Card.svelte 14:9-14:13"
+  ],
+  "definition": [
+   "Card.svelte 13:10-13:14"
+  ],
+  "highlights": [
+   "13:10-13:14",
+   "14:9-14:13"
+  ]
+ },
+ "Card.svelte@active = $state": {
+  "at": "Card.svelte 6:5",
+  "rename": {
+   "Card.svelte": [
+    "6:5-6:11 on",
+    "15:33-15:39 on"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "6: \tlet on = $state(false);",
+    "15: <svelte:element this={tag} class:on onclick={() => {}}>x</svelte:element>"
+   ]
+  },
+  "references": [
+   "Card.svelte 15:33-15:39",
+   "Card.svelte 6:5-6:11"
+  ],
+  "definition": [
+   "Card.svelte 6:5-6:11"
+  ],
+  "highlights": [
+   "15:33-15:39",
+   "6:5-6:11"
+  ]
+ },
+ "Card.svelte@ref: HTMLElement": {
+  "at": "Card.svelte 7:5",
+  "rename": {
+   "Card.svelte": [
+    "7:5-7:8 node",
+    "16:16-16:19 node"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "7: \tlet node: HTMLElement | undefined = $state();",
+    "16: <div bind:this={node} class=\"box\">y</div>"
+   ]
+  },
+  "references": [
+   "Card.svelte 16:16-16:19",
+   "Card.svelte 7:5-7:8"
+  ],
+  "definition": [
+   "Card.svelte 7:5-7:8"
+  ],
+  "highlights": [
+   "16:16-16:19",
+   "7:5-7:8"
+  ]
+ },
+ "Card.svelte@Child from": {
+  "at": "Card.svelte 1:8",
+  "rename": {
+   "Card.svelte": [
+    "1:8-1:13 Kid",
+    "17:8-17:13 Kid",
+    "17:36-17:41 Kid"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "1: \timport Kid from \"./Child.svelte\";",
+    "17: <Outer><Kid slot=\"a\" size=\"sm\">z</Kid></Outer>"
+   ]
+  },
+  "references": [
+   "Card.svelte 17:8-17:13",
+   "Card.svelte 1:8-1:13"
+  ],
+  "definition": [
+   "Child.svelte 0:1-0:1"
+  ],
+  "highlights": [
+   "17:36-17:41",
+   "17:8-17:13",
+   "1:8-1:13"
+  ]
+ },
+ "Card.svelte@pick(r: Row)": {
+  "at": "Card.svelte 9:10",
+  "rename": {
+   "Card.svelte": [
+    "9:10-9:14 choose",
+    "12:79-12:83 choose"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "9: \tfunction choose(r: Row) {}",
+    "12: {#each rows as row, i (row.id)}<p class:big={row.size === \"lg\"} onclick={() => choose(row)}>{i}</p>{/each}"
+   ]
+  },
+  "references": [
+   "Card.svelte 12:79-12:83",
+   "Card.svelte 9:10-9:14"
+  ],
+  "definition": [
+   "Card.svelte 9:10-9:14"
+  ],
+  "highlights": [
+   "12:79-12:83",
+   "9:10-9:14"
+  ]
+ }
+}

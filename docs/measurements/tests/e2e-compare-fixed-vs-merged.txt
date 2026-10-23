@@ -1,0 +1,47 @@
+compare patched (e2e-fixed.json) vs patched (e2e-merged.json)
+  init 14 ms vs 14 ms; passed 40/41 vs 41/41
+  same 1.layout                     PASS -> PASS 1412 ms vs 1397 ms
+  same 1.renderer                   PASS -> PASS 1250 ms vs 1294 ms
+  same 1.radio                      PASS -> PASS 1219 ms vs 1239 ms
+  same 1.jsonNode                   PASS -> PASS 1231 ms vs 1269 ms
+  same 1.dialog                     PASS -> PASS 1320 ms vs 1333 ms
+  same 2.script+template            PASS -> PASS 1248 ms vs 1286 ms
+  same 3a.wrong-prop                PASS -> PASS 624 ms vs 641 ms
+  same 3b.child-buffer-change       PASS -> PASS 1245 ms vs 1283 ms
+  same 3c.child-close-reverts       PASS -> PASS 1246 ms vs 1272 ms
+  same 4a.hover-identifier          PASS -> PASS 4 ms vs 4 ms
+  same 4b.hover-component-tag       PASS -> PASS 1 ms vs 1 ms
+  same 4c.definition-component-tag  PASS -> PASS 1 ms vs 2 ms
+  same 4c2.definition-component-import PASS -> PASS 1 ms vs 1 ms
+  same 4d.definition-import         PASS -> PASS 1 ms vs 1 ms
+  same 4e.references-small          PASS -> PASS 398 ms vs 378 ms
+  same 4f.references-large          PASS -> PASS 100 ms vs 98 ms
+* DIFF 4g.completion-member         FAIL -> PASS 682 ms vs 647 ms
+    patched: {"count":0,"missing":["i18n","manifest","session","bootstrap","config"],"unexpectedGlobals":[],"sample":[],"isIncomplete":false,"errorsWhileTyped":["10:27-10:62 E ts 2307 Cannot find module '@admin/app/not-found-route.svelte' or its corresponding type declarations.","11:61-11:94 E ts 2307 Cannot find module '@admin/core/routing/admin-paths' or its corresponding type declarations.","12:43-12:84 E ts 2307 Cannot find module '@admin/core/routing/admin-scroll.svelte' or its corresponding type declarations.","13:33-13:75 E ts 2307 Cannot find module '@admin/core/runtime/admin-runtime.svelte' or its corresponding type declarations.","14:25-14:70 E ts 2307 Cannot find module '@admin/features/account/account-menu.svelte' or its corresponding type declarations.","15:29-15:81 E ts 2307 Cannot find module '@admin/features/navigation/admin-navigation.svelte' or its corresponding type declarations.","16:44-16:101 E ts 2307 Cannot find module '@admin/features/navigation/navigation-preference.svelte' or its corresponding type declarations.","17:36-17:90 E ts 2307 Cannot find module '@admin/features/navigation/breadcrumb-context.svelte' or its corresponding type declarations.","18:30-18:83 E ts 2307 Cannot find module '@admin/features/navigation/admin-breadcrumbs.svelte' or its corresponding type declarations.","19:30-19:84 E ts 2307 Cannot find module '@admin/features/navigation/admin-command-menu.svelte' or its corresponding type declarations.","1:61-1:84 E ts 2307 Cannot find module '@hvn
+    patched: {"count":50,"missing":[],"unexpectedGlobals":[],"sample":["manifest","manifestRevision","documentRevision","session","authBootstrapAvailable","loading","error","refreshingManifest","manifestRefreshError","collectionOperations","globalOperations","preparedPreferences"],"isIncomplete":false,"errorsWhileTyped":["93:0-93:0 E svelte parse-error Parsing error: js_parse_error: Unexpected token","93:0-93:0 E ts 1003 Identifier expected."]}
+  same 4h.completion-member-partial PASS -> PASS 642 ms vs 667 ms
+  same 4i.completion-member-template PASS -> PASS 637 ms vs 653 ms
+  same 4j.rename                    PASS -> PASS 62 ms vs 48 ms
+  same 4k.workspace-symbol-loaded   PASS -> PASS 9 ms vs 9 ms
+  same 4l.workspace-symbol-unopened PASS -> PASS 6 ms vs 6 ms
+  same 5a.ui-hover-#lib-import      PASS -> PASS 6 ms vs 6 ms
+  same 5b.ui-hover-bits-ui          PASS -> PASS 1 ms vs 1 ms
+  same 5c.ui-injected-error         PASS -> PASS 1239 ms vs 1254 ms
+  same 6.contract                   PASS -> PASS 1228 ms vs 1245 ms
+  same 6.typesColor                 PASS -> PASS 1224 ms vs 1245 ms
+  same 6.playground                 PASS -> PASS 1237 ms vs 1269 ms
+  same 6.example                    PASS -> PASS 1224 ms vs 1247 ms
+  same 6.dist                       PASS -> PASS 1221 ms vs 1235 ms
+  same 7a.new-file-diagnostics      PASS -> PASS 635 ms vs 647 ms
+  same 7b.parent-sees-new-file      PASS -> PASS 648 ms vs 680 ms
+  same 7c.new-file-fixed            PASS -> PASS 607 ms vs 616 ms
+  same 7d.new-file-discarded        PASS -> PASS 1297 ms vs 1347 ms
+  same 7e.new-file-without-project  PASS -> PASS 638 ms vs 657 ms
+  same 8.layout                     PASS -> PASS 1250 ms vs 1292 ms
+  same 8.renderer                   PASS -> PASS 1250 ms vs 1280 ms
+  same 9a.event-for-dirty-buffer    PASS -> PASS 2744 ms vs 2793 ms
+         timing patched {"events":660,"writtenThisSession":0,"firstPullMs":248,"firstPullHadCanary":true,"settledMs":7} vs patched {"events":660,"writtenThisSession":0,"firstPullMs":236,"firstPullHadCanary":true,"settledMs":7}
+  same 9b.echo-own-cache-writes     PASS -> PASS 2778 ms vs 2857 ms
+  same 9c.directory-event           PASS -> PASS 2993 ms vs 3078 ms
+  same 10.reopen-closed-child       PASS -> PASS 1250 ms vs 1285 ms
+1 step(s) differ

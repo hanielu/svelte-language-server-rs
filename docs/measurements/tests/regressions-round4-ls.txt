@@ -1,0 +1,112 @@
+# tests/regressions at vendor/rsvelte 1d4cb87 (svelte-rs build of 1d4cb87), 2026-10-22, load average 40-300 (other work on the machine)
+
+## sh tests/regressions/runall.sh <binary> 1d4cb87
+== s1 @ 1d4cb87
+{ "child0": [], "child1": [], "parentAfterOpen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "parentAfterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s1b @ 1d4cb87
+{ "before": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterConfigChange": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "waitedMs": 108, "afterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s2 @ 1d4cb87
+{ "initial": [], "unsaved": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterSaveEvent": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterReopen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterFullRefresh": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s3 @ 1d4cb87
+{ "freshBeforeCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ], "freshAfterCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ], "existingAfterCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ]}
+== s4 @ 1d4cb87
+{ "initial": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterDelete": [ "1:2307:Cannot find module '../../../../../../b/Child.svelte' or its corresponding type declarations." ], "afterRestore": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterParentKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s7 @ 1d4cb87
+{ "app": [], "libraryComponent": [ "1:2322:Type 'string' is not assignable to type 'number'.", "5:2304:Cannot find name 'svelteHTML'." ], "hover": "\"```typescript\\nconst n: number\\n```\""}
+== s8 @ 1d4cb87
+{ "importerWhileTargetOpen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterTargetClosed": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s10 @ 1d4cb87
+{ "dialog": [ "8:2322:Type 'number' is not assignable to type 'string'." ], "hoverUtil": "\"```typescript\\n(alias) const fromUtil: number\\n```\"", "ok": true}
+== s11 @ 1d4cb87
+{ "closed": { "tag": [ "Child.svelte:0:1" ], "binding": [ "Child.svelte:0:1" ], "specifier": [ "Child.svelte:0:1" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "open": { "tag": [ "Child.svelte:0:1" ], "binding": [ "Child.svelte:0:1" ], "specifier": [ "Child.svelte:0:1" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "ok": true}
+== incomplete-edits @ 1d4cb87
+{ "steps": { "member": { "unresolved": [], "propErrorKept": true, "completions": [ "title", "i18n", "manifest" ], "ok": true }, "call": { "unresolved": [], "propErrorKept": true, "ok": true }, "initializer": { "unresolved": [], "propErrorKept": true, "ok": true }, "import": { "unresolved": [], "propErrorKept": true, "ok": true }, "childBlockOpen": { "parent": [ "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true }, "openingTag": { "parent": [ "8:parse-error:Parsing error: element_invalid_closing_tag: `</p>` attempted to close an element that was not open", "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true } }, "initial": [ "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true}
+== r1-depkill @ 1d4cb87
+{ "appBefore": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "dep": [ "3:2304:Cannot find name 'svelteHTML'." ], "appAfterDepOpen": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "appAfterImportEdit": [ "3:2322:Type 'number' is not assignable to type 'string'.", "1:6196:'Snippet' is declared but never used." ], "shadowLinks": [ "tsgo/dependencies/app/node_modules (real dir)", "tsgo/svelte/app/node_modules -> symlink" ], "ok": true}
+== r1b-close @ 1d4cb87
+{ "appBefore": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "dep": [ "3:2304:Cannot find name 'svelteHTML'." ], "appWhileDepOpen": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "appAfterDepClosed": [ "3:2322:Type 'number' is not assignable to type 'string'.", "1:6196:'Snippet' is declared but never used." ], "link": "symlink"}
+== r2c-format @ 1d4cb87
+{ "formatQuiet": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "tries": 2, "delay": 8, "probeEndedByEdit": true, "formatSentBeforeEdit": [ "0:0-8:0=>\"<!-- top -->\\n<script lang=\\\"ts\\\">\\n import Child from \\\"." ], "expectedForRequestVersion": [ "0:0-8:0=>\"<!-- top -->\\n<script lang=\\\"ts\\\">\\n import Child from \\\"." ], "ok": true}
+== r2d-hover @ 1d4cb87
+{"quiet":["const later: number @7:4","const other: string @8:4"],"probeEndedByEdit":false,"sentBeforeEdit":["const later: number @7:0","const other: string @8:4"],"ok":true}
+== r2e-hover-edit-race @ 1d4cb87
+{"rounds":10,"wrong":0}
+== r5-crash @ 1d4cb87
+{ "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r6-watchers @ 1d4cb87
+{"editorWatchesNodeModules":["<root>/node_modules/**/*"],"ok":true}
+== hashscope @ 1d4cb87
+{ "editor": [ "4:2322:Type '\"nope\"' is not assignable to type 'Kind'.", "4:2322:Type '\"xl\"' is not assignable to type 'Size'." ]}
+== start-of-file2 @ 1d4cb87
+{ "import {": "3:8-3:8 1003", "import { ": "3:8-3:8 1003", "import { x": "3:10-3:10 1005, 3:10-3:10 6133", "import {}": "3:9-3:9 1005, 7:7-7:12 2322", "import { x }": "3:12-3:12 1005, 7:7-7:12 2322, 3:10-3:11 6133", "import type {": "3:13-3:13 1003", "type T = {": "4:14-4:15 1005, 4:24-4:25 1005, 4:1-4:9 7008, 4:10-4:12 2304, 4:13-4:14 2304, 4:16-4:22 2693, 4:33-4:34 2304, 7:7-7:12 2322, 8:4-8:6 2304"}
+== style-open @ 1d4cb87
+{"unclosedStyle":["6:parse-error:Parsing error: expected_token: Expected token </style","6:css_unknown_property:Unknown CSS property `colr`.","1:2322:Type 'number' is not assignable to type 'string'."],"closedStyle":["6:css_unknown_property:Unknown CSS property `colr`.","1:2322:Type 'number' is not assignable to type 'string'."],"panics":0}
+== bigtype @ 1d4cb87
+{"lines":2113,"quietPullMs":147,"finalDiagMs":343,"completionP50":27,"completionP95":51,"completionMax":51}
+
+## r5-crash.mjs <binary> tpl <dir>, the second review's saved panicking inputs
+allpanics: { "inputs": 165, "answered": 165, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+found-1: { "inputs": 15, "answered": 15, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+found-2: { "inputs": 2, "answered": 2, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+found-3: { "inputs": 12, "answered": 12, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+found-4: { "inputs": 9, "answered": 9, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+sfound-1: { "inputs": 37, "answered": 37, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+sfound-2: { "inputs": 35, "answered": 35, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+sfound-3: { "inputs": 29, "answered": 29, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+sfound-4: { "inputs": 31, "answered": 31, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+real: { "inputs": 70, "answered": 70, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+
+## bigtype.mjs <binary> tpl <N>, interleaved with 02e6b31 (patch 27, before the regression); load average at the start of each session
+svelte-rs-02e6b31 N=1000 run1 load=187.36 {"lines":1413,"quietPullMs":84,"finalDiagMs":1221,"completionP50":426,"completionP95":931,"completionMax":931}
+svelte-rs-1d4cb87 N=1000 run1 load=211.49 {"lines":1413,"quietPullMs":78,"finalDiagMs":271,"completionP50":23,"completionP95":53,"completionMax":53}
+svelte-rs-02e6b31 N=1000 run2 load=221.30 {"lines":1413,"quietPullMs":65,"finalDiagMs":1007,"completionP50":373,"completionP95":724,"completionMax":724}
+svelte-rs-1d4cb87 N=1000 run2 load=238.67 {"lines":1413,"quietPullMs":95,"finalDiagMs":287,"completionP50":23,"completionP95":57,"completionMax":57}
+svelte-rs-02e6b31 N=1500 run1 load=251.96 {"lines":2113,"quietPullMs":151,"finalDiagMs":2080,"completionP50":921,"completionP95":1656,"completionMax":1656}
+svelte-rs-1d4cb87 N=1500 run1 load=262.83 {"lines":2113,"quietPullMs":1381,"finalDiagMs":2344,"completionP50":1382,"completionP95":1592,"completionMax":1592}
+svelte-rs-02e6b31 N=1500 run2 load=274.81 {"lines":2113,"quietPullMs":934,"finalDiagMs":6228,"completionP50":4611,"completionP95":5827,"completionMax":5827}
+svelte-rs-1d4cb87 N=1500 run2 load=311.92 {"lines":2113,"quietPullMs":123,"finalDiagMs":706,"completionP50":33,"completionP95":56,"completionMax":56}
+svelte-rs-02e6b31 N=2000 run1 load=319.98 {"lines":2813,"quietPullMs":134,"finalDiagMs":1234,"completionP50":541,"completionP95":960,"completionMax":960}
+svelte-rs-1d4cb87 N=2000 run1 load=288.01 {"lines":2813,"quietPullMs":124,"finalDiagMs":237,"completionP50":35,"completionP95":81,"completionMax":81}
+svelte-rs-02e6b31 N=2000 run2 load=273.28 {"lines":2813,"quietPullMs":129,"finalDiagMs":1155,"completionP50":486,"completionP95":877,"completionMax":877}
+svelte-rs-1d4cb87 N=2000 run2 load=248.99 {"lines":2813,"quietPullMs":220,"finalDiagMs":363,"completionP50":321,"completionP95":512,"completionMax":512}
+svelte-rs-02e6b31 N=1000 run3 load=89.00 {"lines":1413,"quietPullMs":86,"finalDiagMs":1146,"completionP50":478,"completionP95":1014,"completionMax":1014}
+svelte-rs-1d4cb87 N=1000 run3 load=79.13 {"lines":1413,"quietPullMs":198,"finalDiagMs":505,"completionP50":84,"completionP95":258,"completionMax":258}
+svelte-rs-02e6b31 N=1500 run3 load=77.20 {"lines":2113,"quietPullMs":92,"finalDiagMs":629,"completionP50":251,"completionP95":463,"completionMax":463}
+svelte-rs-1d4cb87 N=1500 run3 load=67.61 {"lines":2113,"quietPullMs":97,"finalDiagMs":192,"completionP50":19,"completionP95":40,"completionMax":40}
+svelte-rs-02e6b31 N=2000 run3 load=58.27 {"lines":2813,"quietPullMs":124,"finalDiagMs":1121,"completionP50":468,"completionP95":884,"completionMax":884}
+svelte-rs-1d4cb87 N=2000 run3 load=54.08 {"lines":2813,"quietPullMs":128,"finalDiagMs":302,"completionP50":34,"completionP95":49,"completionMax":49}
+svelte-rs-02e6b31 N=1000 run4 load=50.85 {"lines":1413,"quietPullMs":57,"finalDiagMs":172,"completionP50":63,"completionP95":69,"completionMax":69}
+svelte-rs-1d4cb87 N=1000 run4 load=46.26 {"lines":1413,"quietPullMs":57,"finalDiagMs":149,"completionP50":12,"completionP95":28,"completionMax":28}
+svelte-rs-02e6b31 N=1500 run4 load=45.03 {"lines":2113,"quietPullMs":93,"finalDiagMs":684,"completionP50":272,"completionP95":507,"completionMax":507}
+svelte-rs-1d4cb87 N=1500 run4 load=43.40 {"lines":2113,"quietPullMs":90,"finalDiagMs":234,"completionP50":21,"completionP95":38,"completionMax":38}
+svelte-rs-02e6b31 N=2000 run4 load=41.68 {"lines":2813,"quietPullMs":121,"finalDiagMs":1164,"completionP50":477,"completionP95":924,"completionMax":924}
+svelte-rs-1d4cb87 N=2000 run4 load=37.45 {"lines":2813,"quietPullMs":123,"finalDiagMs":184,"completionP50":29,"completionP95":55,"completionMax":55}
+svelte-rs-02e6b31 N=1000 run5 load=3.62 {"lines":1413,"quietPullMs":84,"finalDiagMs":156,"completionP50":43,"completionP95":60,"completionMax":60}
+svelte-rs-1d4cb87 N=1000 run5 load=3.81 {"lines":1413,"quietPullMs":68,"finalDiagMs":146,"completionP50":12,"completionP95":26,"completionMax":26}
+svelte-rs-final N=1000 run5 load=4.62 {"lines":1413,"quietPullMs":91,"finalDiagMs":241,"completionP50":239,"completionP95":489,"completionMax":489}
+svelte-rs-02e6b31 N=1500 run5 load=4.73 {"lines":2113,"quietPullMs":126,"finalDiagMs":613,"completionP50":243,"completionP95":443,"completionMax":443}
+svelte-rs-1d4cb87 N=1500 run5 load=6.37 {"lines":2113,"quietPullMs":115,"finalDiagMs":186,"completionP50":18,"completionP95":35,"completionMax":35}
+svelte-rs-final N=1500 run5 load=8.01 {"lines":2113,"quietPullMs":118,"finalDiagMs":662,"completionP50":609,"completionP95":855,"completionMax":855}
+svelte-rs-02e6b31 N=2000 run5 load=7.45 {"lines":2813,"quietPullMs":124,"finalDiagMs":1089,"completionP50":451,"completionP95":855,"completionMax":855}
+svelte-rs-1d4cb87 N=2000 run5 load=8.86 {"lines":2813,"quietPullMs":149,"finalDiagMs":234,"completionP50":25,"completionP95":44,"completionMax":44}
+svelte-rs-final N=2000 run5 load=10.16 {"lines":2813,"quietPullMs":129,"finalDiagMs":1214,"completionP50":1091,"completionP95":1387,"completionMax":1387}
+svelte-rs-02e6b31 N=1000 run6 load=8.90 {"lines":1413,"quietPullMs":56,"finalDiagMs":175,"completionP50":58,"completionP95":67,"completionMax":67}
+svelte-rs-1d4cb87 N=1000 run6 load=8.27 {"lines":1413,"quietPullMs":58,"finalDiagMs":135,"completionP50":13,"completionP95":27,"completionMax":27}
+svelte-rs-final N=1000 run6 load=9.08 {"lines":1413,"quietPullMs":77,"finalDiagMs":247,"completionP50":242,"completionP95":492,"completionMax":492}
+svelte-rs-02e6b31 N=1500 run6 load=8.59 {"lines":2113,"quietPullMs":88,"finalDiagMs":619,"completionP50":235,"completionP95":452,"completionMax":452}
+svelte-rs-1d4cb87 N=1500 run6 load=9.48 {"lines":2113,"quietPullMs":91,"finalDiagMs":223,"completionP50":20,"completionP95":36,"completionMax":36}
+svelte-rs-final N=1500 run6 load=8.64 {"lines":2113,"quietPullMs":87,"finalDiagMs":761,"completionP50":694,"completionP95":940,"completionMax":940}
+svelte-rs-02e6b31 N=2000 run6 load=8.19 {"lines":2813,"quietPullMs":111,"finalDiagMs":998,"completionP50":414,"completionP95":776,"completionMax":776}
+svelte-rs-1d4cb87 N=2000 run6 load=8.57 {"lines":2813,"quietPullMs":155,"finalDiagMs":201,"completionP50":24,"completionP95":42,"completionMax":42}
+svelte-rs-final N=2000 run6 load=8.39 {"lines":2813,"quietPullMs":141,"finalDiagMs":1217,"completionP50":1092,"completionP95":1337,"completionMax":1337}
+(runs 5-6 also run svelte-rs-final, 7793da7, the review's final build)
+
+## lsfuzz.mjs <binary> tpl <seed> 300, THIRD=1 NO_WS=1 INIT_SLEEP=600 LONG_SLEEP=700 CANCEL=1 (timeout = RSVELTE_TSGO_REQUEST_TIMEOUT_MS)
+timeout=30000 {'seed': 22, 'exited': None, 'answered': 286, 'errors': 1, 'timeouts': ['textDocument/signatureHelp id 275 pending 16202 ms params {"textDocument":{"uri":"file://tests/review3/run-kfkeke/src/Parent.svelte"},"position":{"line":5,"character":4}} versions {"src/Parent.svelte":225,"src/Child.svelte":61}', 'later hover: answered', 'later folding: answered', 'background before stall: true; third loaded before: true; after 8 s idle: true; all loaded: true', 'after cancelling it: third loaded true']} panics 5
+timeout=30000 {'seed': 38, 'exited': None, 'answered': 210, 'errors': 1, 'timeouts': ['textDocument/completion id 200 pending 16759 ms params {"textDocument":{"uri":"file://tests/review3/run-8wiyXO/src/Parent.svelte"},"position":{"line":15,"character":68},"context":{"triggerKind":1}} versions {"src/Parent.svelte":179,"src/Child.svelte":34}', 'later hover: answered', 'later folding: answered', 'background before stall: true; third loaded before: true; after 8 s idle: true; all loaded: true', 'after cancelling it: third loaded true']} panics 5
+timeout=10000 {'seed': 22, 'exited': None, 'answered': 287, 'errors': 0, 'timeouts': ['control (no lost request): third loaded before true, after 8 s idle true']} panics 5
+rsvelte-language-server: tsgo did not answer textDocument/signatureHelp (275) in 10000 ms; answering without it
+rsvelte-language-server: restarting tsgo, which is still busy with textDocument/signatureHelp (275)
+timeout=10000 {'seed': 38, 'exited': None, 'answered': 309, 'errors': 0, 'timeouts': ['control (no lost request): third loaded before true, after 8 s idle true']} panics 5
+rsvelte-language-server: tsgo did not answer textDocument/completion (200) in 10000 ms; answering without it
+rsvelte-language-server: restarting tsgo, which is still busy with textDocument/completion (200)

@@ -1,0 +1,5 @@
+# Applies to this workspace and to vendor/rsvelte (a separate workspace below this folder).
+# Full debug info made each test build tens of GB; line tables keep file:line in panics and
+# backtraces. Set `debug = "full"` locally when you need to inspect variables in a debugger.
+[profile.dev]
+debug = "line-tables-only"

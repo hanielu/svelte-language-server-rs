@@ -1,0 +1,3 @@
+[submodule "vendor/rsvelte"]
+	path = vendor/rsvelte
+	url = https://github.com/baseballyama/rsvelte

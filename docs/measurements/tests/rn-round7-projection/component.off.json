@@ -1,0 +1,165 @@
+{
+ "diags": {
+  "Parent.svelte": [
+   "6:2741:Property 'kind' is missing in type '{ children: () => any; }' but required in type '$$ComponentProps"
+  ],
+  "Child.svelte": []
+ },
+ "Parent.svelte@Child from": {
+  "at": "Parent.svelte 1:8",
+  "rename": {
+   "Parent.svelte": [
+    "1:8-1:13 Kid",
+    "5:1-5:6 Kid",
+    "5:22-5:27 Kid",
+    "9:1-9:6 Kid",
+    "9:35-9:40 Kid"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "1: \timport Kid from \"./Child.svelte\";",
+    "5: <Kid kind=\"a\">text</Kid>",
+    "9: <Kid kind=\"b\">{@render cell(2)}</Kid>"
+   ]
+  },
+  "references": [
+   "Parent.svelte 1:8-1:13",
+   "Parent.svelte 5:1-5:6",
+   "Parent.svelte 6:16-6:19",
+   "Parent.svelte 6:4-6:7",
+   "Parent.svelte 9:1-9:6",
+   "ui.ts 0:20-0:23",
+   "ui.ts 0:9-0:16"
+  ],
+  "definition": [
+   "Child.svelte 0:1-0:1"
+  ],
+  "highlights": [
+   "1:8-1:13",
+   "5:1-5:6",
+   "5:22-5:27",
+   "9:1-9:6",
+   "9:35-9:40"
+  ]
+ },
+ "Parent.svelte@cell(n)": {
+  "at": "Parent.svelte 8:9",
+  "rename": {
+   "Parent.svelte": [
+    "7:10-7:14 row",
+    "8:9-8:13 row",
+    "9:25-9:29 row"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "7: {#snippet row(x: number)}<td>{x}</td>{/snippet}",
+    "8: {@render row(n)}",
+    "9: <Child kind=\"b\">{@render row(2)}</Child>"
+   ]
+  },
+  "references": [
+   "Parent.svelte 7:10-7:14",
+   "Parent.svelte 8:9-8:13",
+   "Parent.svelte 9:25-9:29"
+  ],
+  "definition": [
+   "Parent.svelte 7:10-7:14"
+  ],
+  "highlights": [
+   "7:10-7:14",
+   "8:9-8:13",
+   "9:25-9:29"
+  ]
+ },
+ "Parent.svelte@cell(x": {
+  "at": "Parent.svelte 7:10",
+  "rename": {
+   "Parent.svelte": [
+    "7:10-7:14 row",
+    "8:9-8:13 row",
+    "9:25-9:29 row"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "7: {#snippet row(x: number)}<td>{x}</td>{/snippet}",
+    "8: {@render row(n)}",
+    "9: <Child kind=\"b\">{@render row(2)}</Child>"
+   ]
+  },
+  "references": [
+   "Parent.svelte 7:10-7:14",
+   "Parent.svelte 8:9-8:13",
+   "Parent.svelte 9:25-9:29"
+  ],
+  "definition": [
+   "Parent.svelte 7:10-7:14"
+  ],
+  "highlights": [
+   "7:10-7:14",
+   "8:9-8:13",
+   "9:25-9:29"
+  ]
+ },
+ "Parent.svelte@UI from": {
+  "at": "Parent.svelte 2:13",
+  "rename": {
+   "Parent.svelte": [
+    "2:13-2:15 Lib",
+    "6:1-6:3 Lib",
+    "6:13-6:15 Lib"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "2: \timport * as Lib from \"./ui\";",
+    "6: <Lib.Box>{n}</Lib.Box>"
+   ]
+  },
+  "references": [
+   "Parent.svelte 2:13-2:15",
+   "Parent.svelte 6:1-6:3",
+   "Parent.svelte 6:13-6:15"
+  ],
+  "definition": [
+   "ui.ts 0:0-1:0"
+  ],
+  "highlights": [
+   "2:13-2:15",
+   "6:1-6:3",
+   "6:13-6:15"
+  ]
+ },
+ "Parent.svelte@n = $state": {
+  "at": "Parent.svelte 3:5",
+  "rename": {
+   "Parent.svelte": [
+    "3:5-3:6 count",
+    "6:9-6:10 count",
+    "8:14-8:15 count"
+   ]
+  },
+  "after": {
+   "Parent.svelte": [
+    "3: \tlet count = $state(1);",
+    "6: <UI.Box>{count}</UI.Box>",
+    "8: {@render cell(count)}"
+   ]
+  },
+  "references": [
+   "Parent.svelte 3:5-3:6",
+   "Parent.svelte 6:9-6:10",
+   "Parent.svelte 8:14-8:15"
+  ],
+  "definition": [
+   "Parent.svelte 3:5-3:6"
+  ],
+  "highlights": [
+   "3:5-3:6",
+   "6:9-6:10",
+   "8:14-8:15"
+  ]
+ }
+}

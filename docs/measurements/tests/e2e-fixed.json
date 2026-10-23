@@ -1,0 +1,765 @@
+{
+ "label": "patched",
+ "cmd": "/Users/hyprsonic/Developer/adroyt/svelte-rs/target/release/svelte-rs",
+ "env": {
+  "TSGO_BIN": "/Users/hyprsonic/.bun/bin/tsrs"
+ },
+ "workspace": "/Users/hyprsonic/Developer/hyprsonic.uk/.experiments/zeno",
+ "started": "2026-10-21T23:43:01.878Z",
+ "loadavg": [
+  7.6,
+  11.4,
+  14.5
+ ],
+ "steps": [
+  {
+   "id": "1.layout",
+   "title": "open admin/src/app/admin-layout.svelte: no errors or warnings (svelte-check reports 0 errors)",
+   "ok": true,
+   "ms": 1412,
+   "observed": {
+    "canarySeen": true,
+    "canaryMs": 176,
+    "canaryRange": "92:7-92:18",
+    "canaryRangeExpected": "92:7-92:18",
+    "canaryRangeOk": true,
+    "totalMs": 1411,
+    "diags": [],
+    "errors": []
+   }
+  },
+  {
+   "id": "1.renderer",
+   "title": "open admin/src/fields/field-renderer.svelte: no errors or warnings (svelte-check reports 0 errors)",
+   "ok": true,
+   "ms": 1250,
+   "observed": {
+    "canarySeen": true,
+    "canaryMs": 18,
+    "canaryRange": "117:7-117:18",
+    "canaryRangeExpected": "117:7-117:18",
+    "canaryRangeOk": true,
+    "totalMs": 1250,
+    "diags": [],
+    "errors": []
+   }
+  },
+  {
+   "id": "1.radio",
+   "title": "open admin/src/components/ui/radio-group/radio-group.svelte: no errors or warnings (svelte-check reports 0 errors)",
+   "ok": true,
+   "ms": 1219,
+   "observed": {
+    "canarySeen": true,
+    "canaryMs": 8,
+    "canaryRange": "10:7-10:18",
+    "canaryRangeExpected": "10:7-10:18",
+    "canaryRangeOk": true,
+    "totalMs": 1218,
+    "diags": [],
+    "errors": []
+   }
+  },
+  {
+   "id": "1.jsonNode",
+   "title": "open admin/src/components/json-tree/json-tree-node.svelte: no errors or warnings (svelte-check reports 0 errors)",
+   "ok": true,
+   "ms": 1231,
+   "observed": {
+    "canarySeen": true,
+    "canaryMs": 12,
+    "canaryRange": "28:7-28:18",
+    "canaryRangeExpected": "28:7-28:18",
+    "canaryRangeOk": true,
+    "totalMs": 1231,
+    "diags": [],
+    "errors": []
+   }
+  },
+  {
+   "id": "1.dialog",
+   "title": "open packages/ui/src/lib/confirmation-dialog/confirmation-dialog.svelte: no errors or warnings (svelte-check reports 0 errors)",
+   "ok": true,
+   "ms": 1320,
+   "observed": {
+    "canarySeen": true,
+    "canaryMs": 92,
+    "canaryRange": "48:7-48:18",
+    "canaryRangeExpected": "48:7-48:18",
+    "canaryRangeOk": true,
+    "totalMs": 1319,
+    "diags": [],
+    "errors": []
+   }
+  },
+  {
+   "id": "2.script+template",
+   "title": "injected script and template type errors are reported at the right ranges",
+   "ok": true,
+   "ms": 1248,
+   "expected": {
+    "script": "92:7-92:18",
+    "template": "202:15-202:20"
+   },
+   "observed": {
+    "script": [
+     "92:7-92:18"
+    ],
+    "template": [
+     "202:15-202:20"
+    ],
+    "otherErrors": [],
+    "all": [
+     "202:15-202:20 E ts 2345 Argument of type 'string' is not assignable to parameter of type 'number'.",
+     "92:7-92:18 E ts 2322 Type 'string' is not assignable to type 'number'.",
+     "92:7-92:18 H ts 6133 '__e2eScript' is declared but its value is never read.",
+     "92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eScript' is defined but never used."
+    ],
+    "revertedClean": true,
+    "msToReport": 15
+   }
+  },
+  {
+   "id": "3a.wrong-prop",
+   "title": "a wrong-typed prop on an imported child is an error on the prop",
+   "ok": true,
+   "ms": 624,
+   "expected": "error on line 120 inside 120:22-120:37",
+   "observed": {
+    "hits": [
+     "120:22-120:32 E ts 2322 Type 'number' is not assignable to type '() => void'."
+    ],
+    "all": [
+     "120:22-120:32 E ts 2322 Type 'number' is not assignable to type '() => void'."
+    ],
+    "ms": 15
+   }
+  },
+  {
+   "id": "3b.child-buffer-change",
+   "title": "changing the child's Props in an unsaved buffer updates the parent's diagnostics",
+   "ok": true,
+   "ms": 1245,
+   "expected": "no error on line 120; error \"not assignable to type 'number'\" on line 158",
+   "observed": {
+    "line1": [],
+    "line2": [
+     "158:23-158:33 E ts 2322 Type '() => void' is not assignable to type 'number'."
+    ],
+    "all": [
+     "158:23-158:33 E ts 2322 Type '() => void' is not assignable to type 'number'."
+    ],
+    "ms": 15,
+    "diagnosticRefreshRequests": 0
+   }
+  },
+  {
+   "id": "3c.child-close-reverts",
+   "title": "closing the unsaved child reverts the parent to the child on disk",
+   "ok": true,
+   "ms": 1246,
+   "observed": {
+    "line1": [
+     "120:22-120:32 E ts 2322 Type 'number' is not assignable to type '() => void'."
+    ],
+    "line2": [],
+    "ms": 15,
+    "revertedClean": true
+   }
+  },
+  {
+   "id": "4a.hover-identifier",
+   "title": "hover on a script identifier (runtime) shows its type",
+   "ok": true,
+   "ms": 4,
+   "expected": "contains AdminRuntime",
+   "observed": "```typescript\nconst runtime: AdminRuntime\n```"
+  },
+  {
+   "id": "4b.hover-component-tag",
+   "title": "hover on a component tag (<AdminBreadcrumbs />)",
+   "ok": true,
+   "ms": 1,
+   "expected": "mentions AdminBreadcrumbs / Component, not any",
+   "observed": "```typescript\n(alias) const AdminBreadcrumbs: Component<Record<string, never>, {}, \"\">\n```"
+  },
+  {
+   "id": "4c.definition-component-tag",
+   "title": "go-to-definition from a component tag opens the child .svelte file",
+   "ok": true,
+   "ms": 1,
+   "expected": "admin/src/features/navigation/admin-navigation.svelte:*",
+   "observed": [
+    "admin/src/features/navigation/admin-navigation.svelte:0:1"
+   ]
+  },
+  {
+   "id": "4c2.definition-component-import",
+   "title": "go-to-definition on the component's import binding opens the child .svelte file",
+   "ok": true,
+   "ms": 1,
+   "expected": "admin/src/features/navigation/admin-navigation.svelte:*",
+   "observed": [
+    "admin/src/features/navigation/admin-navigation.svelte:0:1"
+   ]
+  },
+  {
+   "id": "4d.definition-import",
+   "title": "go-to-definition on an aliased import (getAdminRuntime) reaches the .svelte.ts module",
+   "ok": true,
+   "ms": 1,
+   "observed": [
+    "admin/src/core/runtime/admin-runtime.svelte.ts:656:7"
+   ]
+  },
+  {
+   "id": "4e.references-small",
+   "title": "references of an exported function (adminPathResource) used by .svelte files",
+   "ok": true,
+   "ms": 398,
+   "expected": {
+    "filesInAdminSrc": [
+     "admin/src/app/admin-layout.svelte",
+     "admin/src/app/admin-page-title.ts",
+     "admin/src/core/bootstrap/admin-bootstrap.ts",
+     "admin/src/core/routing/admin-paths.ts",
+     "admin/src/core/routing/admin-view-selection.ts",
+     "admin/src/features/navigation/admin-breadcrumbs.svelte"
+    ],
+    "allGrepFiles": [
+     "admin/src/app/admin-layout.svelte",
+     "admin/src/app/admin-page-title.ts",
+     "admin/src/core/bootstrap/admin-bootstrap.ts",
+     "admin/src/core/routing/admin-paths.ts",
+     "admin/src/core/routing/admin-view-selection.ts",
+     "admin/src/features/navigation/admin-breadcrumbs.svelte",
+     "admin/tests/admin-paths.test.ts"
+    ],
+    "grepOccurrences": 22
+   },
+   "observed": {
+    "count": 11,
+    "files": [
+     "admin/src/app/admin-layout.svelte",
+     "admin/src/app/admin-page-title.ts",
+     "admin/src/core/bootstrap/admin-bootstrap.ts",
+     "admin/src/core/routing/admin-paths.ts",
+     "admin/src/core/routing/admin-view-selection.ts",
+     "admin/src/features/navigation/admin-breadcrumbs.svelte"
+    ],
+    "missingFromAdminSrc": [],
+    "notInGrep": [],
+    "locations": [
+     "admin/src/app/admin-layout.svelte:11:36",
+     "admin/src/app/admin-layout.svelte:51:19",
+     "admin/src/app/admin-page-title.ts:24:22",
+     "admin/src/app/admin-page-title.ts:5:1",
+     "admin/src/core/bootstrap/admin-bootstrap.ts:15:9",
+     "admin/src/core/bootstrap/admin-bootstrap.ts:81:19",
+     "admin/src/core/routing/admin-paths.ts:39:16",
+     "admin/src/core/routing/admin-view-selection.ts:42:24",
+     "admin/src/core/routing/admin-view-selection.ts:4:9",
+     "admin/src/features/navigation/admin-breadcrumbs.svelte:30:19",
+     "admin/src/features/navigation/admin-breadcrumbs.svelte:7:2"
+    ]
+   }
+  },
+  {
+   "id": "4f.references-large",
+   "title": "references of getAdminRuntime (used by ~60 .svelte files)",
+   "ok": true,
+   "ms": 100,
+   "expected": {
+    "grepFiles": 63
+   },
+   "observed": {
+    "count": 122,
+    "files": 61,
+    "svelteFiles": 60,
+    "missing": [
+     "admin/tests/browser/admin-command-menu.browser.ts",
+     "admin/tests/browser/admin-view-host.browser.ts"
+    ],
+    "extra": []
+   }
+  },
+  {
+   "id": "4g.completion-member",
+   "title": "completions right after typing `runtime.` in the instance script",
+   "ok": false,
+   "ms": 682,
+   "expected": [
+    "i18n",
+    "manifest",
+    "session",
+    "bootstrap",
+    "config"
+   ],
+   "observed": {
+    "count": 0,
+    "missing": [
+     "i18n",
+     "manifest",
+     "session",
+     "bootstrap",
+     "config"
+    ],
+    "unexpectedGlobals": [],
+    "sample": [],
+    "isIncomplete": false,
+    "errorsWhileTyped": [
+     "10:27-10:62 E ts 2307 Cannot find module '@admin/app/not-found-route.svelte' or its corresponding type declarations.",
+     "11:61-11:94 E ts 2307 Cannot find module '@admin/core/routing/admin-paths' or its corresponding type declarations.",
+     "12:43-12:84 E ts 2307 Cannot find module '@admin/core/routing/admin-scroll.svelte' or its corresponding type declarations.",
+     "13:33-13:75 E ts 2307 Cannot find module '@admin/core/runtime/admin-runtime.svelte' or its corresponding type declarations.",
+     "14:25-14:70 E ts 2307 Cannot find module '@admin/features/account/account-menu.svelte' or its corresponding type declarations.",
+     "15:29-15:81 E ts 2307 Cannot find module '@admin/features/navigation/admin-navigation.svelte' or its corresponding type declarations.",
+     "16:44-16:101 E ts 2307 Cannot find module '@admin/features/navigation/navigation-preference.svelte' or its corresponding type declarations.",
+     "17:36-17:90 E ts 2307 Cannot find module '@admin/features/navigation/breadcrumb-context.svelte' or its corresponding type declarations.",
+     "18:30-18:83 E ts 2307 Cannot find module '@admin/features/navigation/admin-breadcrumbs.svelte' or its corresponding type declarations.",
+     "19:30-19:84 E ts 2307 Cannot find module '@admin/features/navigation/admin-command-menu.svelte' or its corresponding type declarations.",
+     "1:61-1:84 E ts 2307 Cannot find module '@hvniel/svelte-router' or its corresponding type declarations.",
+     "20:35-20:96 E ts 2307 Cannot find module '@admin/features/localization/content-locale-switcher.svelte' or its corresponding type declarations.",
+     "78:52-78:61 E ts 7006 Parameter 'component' implicitly has an 'any' type.",
+     "7:30-7:95 E ts 2307 Cannot find module '@admin/components/ui/navigation-drawer/navigation-drawer.svelte' or its corresponding type declarations.",
+     "80:3-80:12 E ts 7006 Parameter 'component' implicitly has an 'any' type.",
+     "93:0-93:0 E svelte parse-error Parsing error: js_parse_error: Unexpected token",
+     "93:0-93:0 E ts 1003 Identifier expected.",
+     "9:32-9:73 E ts 2307 Cannot find module '@admin/app/admin-core-view-route.svelte' or its corresponding type declarations."
+    ]
+   }
+  },
+  {
+   "id": "4h.completion-member-partial",
+   "title": "invoked completion in `runtime.i` (syntactically valid script)",
+   "ok": true,
+   "ms": 642,
+   "expected": [
+    "i18n",
+    "manifest",
+    "session",
+    "bootstrap",
+    "config"
+   ],
+   "observed": {
+    "count": 50,
+    "missing": [],
+    "unexpectedGlobals": [],
+    "sample": [
+     "manifest",
+     "manifestRevision",
+     "documentRevision",
+     "session",
+     "authBootstrapAvailable",
+     "loading",
+     "error",
+     "refreshingManifest",
+     "manifestRefreshError",
+     "collectionOperations",
+     "globalOperations",
+     "preparedPreferences"
+    ],
+    "isIncomplete": false,
+    "errorsWhileTyped": [
+     "92:9-92:10 E ts 2339 Property 'i' does not exist on type 'AdminRuntime'."
+    ]
+   }
+  },
+  {
+   "id": "4i.completion-member-template",
+   "title": "completions after `runtime.` in a template expression",
+   "ok": true,
+   "ms": 637,
+   "expected": [
+    "i18n",
+    "manifest",
+    "session",
+    "bootstrap",
+    "config"
+   ],
+   "observed": {
+    "count": 50,
+    "missing": [],
+    "unexpectedGlobals": [],
+    "sample": [
+     "manifest",
+     "manifestRevision",
+     "documentRevision",
+     "session",
+     "authBootstrapAvailable",
+     "loading",
+     "error",
+     "refreshingManifest",
+     "manifestRefreshError",
+     "collectionOperations",
+     "globalOperations",
+     "preparedPreferences"
+    ],
+    "isIncomplete": false,
+    "errorsWhileTyped": [
+     "201:12-201:12 E svelte parse-error Parsing error: js_parse_error: Unexpected token",
+     "201:12-201:13 E ts 1003 Identifier expected."
+    ]
+   }
+  },
+  {
+   "id": "4j.rename",
+   "title": "rename at an imported function's use in a .svelte file edits exactly the identifier occurrences",
+   "ok": true,
+   "ms": 62,
+   "expected": {
+    "localOnly": "admin/src/app/admin-layout.svelte (2 edits)",
+    "orCrossFile": [
+     "admin/src/app/admin-layout.svelte",
+     "admin/src/app/admin-page-title.ts",
+     "admin/src/core/bootstrap/admin-bootstrap.ts",
+     "admin/src/core/routing/admin-paths.ts",
+     "admin/src/core/routing/admin-view-selection.ts",
+     "admin/src/features/navigation/admin-breadcrumbs.svelte"
+    ]
+   },
+   "observed": {
+    "count": 2,
+    "files": [
+     "admin/src/app/admin-layout.svelte"
+    ],
+    "edits": [
+     "admin/src/app/admin-layout.svelte:11:36-11:53 -> adminPathResource as adminPathResourceE2e",
+     "admin/src/app/admin-layout.svelte:51:19-51:36 -> adminPathResourceE2e"
+    ]
+   }
+  },
+  {
+   "id": "4k.workspace-symbol-loaded",
+   "title": "workspace symbol search finds a function of an opened project",
+   "ok": true,
+   "ms": 9,
+   "observed": [
+    "admin/src/core/routing/admin-paths.ts"
+   ]
+  },
+  {
+   "id": "4l.workspace-symbol-unopened",
+   "title": "workspace symbol search finds functions of projects nothing was opened in",
+   "ok": true,
+   "ms": 6,
+   "observed": {
+    "lengthState": [
+     "packages/plugin-seo/dist/length-indicator.d.ts",
+     "packages/plugin-seo/src/lib/length-indicator.ts",
+     "packages/plugin-seo/tests/seo.test.ts"
+    ],
+    "decodeColor": [
+     "examples/documentation/custom-components/color/admin/src/value.ts"
+    ]
+   }
+  },
+  {
+   "id": "5a.ui-hover-#lib-import",
+   "title": "packages/ui: hover on a #lib (package imports) binding resolves",
+   "ok": true,
+   "ms": 6,
+   "observed": {
+    "importSpecifier": "```typescript\n(alias) const buttonVariants: (props?: (VariantSelection<{\n    readonly variant: {\n        readonly default: \"ridu-button--primary\";\n        readonly outline: \"ridu-button--outline\";\n        readonly secondary: \"ridu-button--secondary\";\n        readonly ghost: \"ridu-button--ghost\";\n        readonly destructive: \"ridu-button--destructive\";\n        readonly link: \"ridu-button--link\";\n    };\n    readonly size: {\n        readonly default: \"ridu-button--medium\";\n        readonly xs: \"ridu-button--xs\";\n        readonly sm: \"ridu-button--small\";\n        readonly lg: \"ridu-button--large\";\n        readonly icon: \"ridu-button--icon\";\n        readonly \"icon-xs\": \"ridu-button--icon-xs\";\n        readonly \"icon-sm\": \"ridu-button--icon-small\";\n        readonly \"icon-lg\": \"ridu-button--icon-large\";\n    };\n}> & ...) | undefined) => string\n```",
+    "usage": "```typescript\n(alias) const buttonVariants: (props?: (VariantSelection<{\n    readonly variant: {\n        readonly default: \"ridu-button--primary\";\n        readonly outline: \"ridu-button--outline\";\n        readonly secondary: \"ridu-button--secondary\";\n        readonly ghost: \"ridu-button--ghost\";\n        readonly destructive: \"ridu-button--destructive\";\n        readonly link: \"ridu-button--link\";\n    };\n    readonly size: {\n        readonly default: \"ridu-button--medium\";\n        readonly xs: \"ridu-button--xs\";\n        readonly sm: \"ridu-button--small\";\n        readonly lg: \"ridu-button--large\";\n        readonly icon: \"ridu-button--icon\";\n        readonly \"icon-xs\": \"ridu-button--icon-xs\";\n        readonly \"icon-sm\": \"ridu-button--icon-small\";\n        readonly \"icon-lg\": \"ridu-button--icon-large\";\n    };\n}> & ...) | undefined) => string\n```"
+   }
+  },
+  {
+   "id": "5b.ui-hover-bits-ui",
+   "title": "packages/ui: hover on a bits-ui namespace import resolves",
+   "ok": true,
+   "ms": 1,
+   "observed": "```typescript\n(alias) module \"../../../node_modules/bits-ui/dist/bits/alert-dialog/exports\"\n```"
+  },
+  {
+   "id": "5c.ui-injected-error",
+   "title": "packages/ui: an injected script error is reported at its range, then clears",
+   "ok": true,
+   "ms": 1239,
+   "expected": "48:7-48:14",
+   "observed": {
+    "got": [
+     "48:7-48:14"
+    ],
+    "ms": 14,
+    "injectedCleared": true,
+    "errorsAfter": []
+   }
+  },
+  {
+   "id": "6.contract",
+   "title": "later open tests/contracts/admin_app/navigation-note.svelte (tests/contracts/admin_app (paths alias to admin/src, @riducms/plugin)): TypeScript answers, no errors, imports resolve",
+   "ok": true,
+   "ms": 1228,
+   "observed": {
+    "canarySeen": true,
+    "canaryMs": 7,
+    "canaryRange": "5:7-5:18",
+    "canaryRangeExpected": "5:7-5:18",
+    "canaryRangeOk": true,
+    "totalMs": 1222,
+    "diags": [],
+    "errors": [],
+    "hover": "```typescript\nlet manifest: SchemaManifest\n```\n---\nResolved Go schema available to this admin session; it may omit inaccessible resources."
+   }
+  },
+  {
+   "id": "6.typesColor",
+   "title": "later open tests/types/svelte/src/ColorField.svelte (tests/types/svelte): TypeScript answers, no errors, imports resolve",
+   "ok": true,
+   "ms": 1224,
+   "observed": {
+    "canarySeen": true,
+    "canaryMs": 7,
+    "canaryRange": "4:7-4:18",
+    "canaryRangeExpected": "4:7-4:18",
+    "canaryRangeOk": true,
+    "totalMs": 1222,
+    "diags": [],
+    "errors": [],
+    "hover": "```typescript\nlet field: PluginFieldBinding<string, \"plugin\", string>\n```\n---\nThis editor's field. Read `field.value` and change it with `field.set(...)`."
+   }
+  },
+  {
+   "id": "6.playground",
+   "title": "later open playground/shadcn-rhea/src/components/ui/sidebar/sidebar-menu-sub.svelte (playground/shadcn-rhea (solution-style tsconfig, @/ alias)): TypeScript answers, no errors, imports resolve",
+   "ok": true,
+   "ms": 1237,
+   "observed": {
+    "canarySeen": true,
+    "canaryMs": 11,
+    "canaryRange": "10:7-10:18",
+    "canaryRangeExpected": "10:7-10:18",
+    "canaryRangeOk": true,
+    "totalMs": 1235,
+    "diags": [],
+    "errors": [],
+    "hover": "```typescript\n(alias) type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & {\n    ref?: U | null;\n}\n```"
+   }
+  },
+  {
+   "id": "6.example",
+   "title": "later open examples/blocks/render/Callout.svelte (examples/blocks (relative component import, paths)): TypeScript answers, no errors, imports resolve",
+   "ok": true,
+   "ms": 1224,
+   "observed": {
+    "canarySeen": true,
+    "canaryMs": 7,
+    "canaryRange": "6:7-6:18",
+    "canaryRangeExpected": "6:7-6:18",
+    "canaryRangeOk": true,
+    "totalMs": 1222,
+    "diags": [],
+    "errors": [],
+    "hover": "```typescript\nlet block: Callout\n```"
+   }
+  },
+  {
+   "id": "6.dist",
+   "title": "later open packages/ui/dist/menu/menu-trigger.svelte (packages/ui/dist, outside its tsconfig include): TypeScript answers, no errors, imports resolve",
+   "ok": true,
+   "ms": 1221,
+   "observed": {
+    "canarySeen": true,
+    "canaryMs": 6,
+    "canaryRange": "8:7-8:18",
+    "canaryRangeExpected": "8:7-8:18",
+    "canaryRangeOk": true,
+    "totalMs": 1218,
+    "diags": [],
+    "errors": [],
+    "hover": "```typescript\n(alias) module \"../../node_modules/bits-ui/dist/bits/dropdown-menu/exports\"\n```"
+   }
+  },
+  {
+   "id": "7a.new-file-diagnostics",
+   "title": "a new unsaved file gets script + prop diagnostics and resolves its imports",
+   "ok": true,
+   "ms": 635,
+   "expected": {
+    "script": "6:7-6:12",
+    "propLine": 9
+   },
+   "observed": {
+    "all": [
+     "6:7-6:12 E ts 2322 Type 'string' is not assignable to type 'number'.",
+     "9:17-9:27 E ts 2322 Type 'number' is not assignable to type '() => void'."
+    ],
+    "ms": 31
+   }
+  },
+  {
+   "id": "7b.parent-sees-new-file",
+   "title": "a parent importing the unsaved new file type-checks its props",
+   "ok": true,
+   "ms": 648,
+   "expected": "2322 on line 202, no 2307",
+   "observed": {
+    "all": [
+     "202:8-202:13 E ts 2322 Type 'string' is not assignable to type 'number'."
+    ],
+    "ms": 41
+   }
+  },
+  {
+   "id": "7c.new-file-fixed",
+   "title": "fixing the new file clears its errors",
+   "ok": true,
+   "ms": 607,
+   "observed": {
+    "all": [],
+    "ms": 6
+   }
+  },
+  {
+   "id": "7d.new-file-discarded",
+   "title": "closing the never-saved file (+ watched delete) makes the parent's import unresolved",
+   "ok": true,
+   "ms": 1297,
+   "expected": "2307 on line 92",
+   "observed": {
+    "all": [
+     "92:20-92:42 E ts 2307 Cannot find module './__e2e_new__.svelte' or its corresponding type declarations."
+    ],
+    "ms": 37,
+    "revertedClean": true
+   }
+  },
+  {
+   "id": "7e.new-file-without-project",
+   "title": "a new unsaved file at the workspace root (no tsconfig above it) gets TypeScript diagnostics",
+   "ok": true,
+   "ms": 638,
+   "expected": "2:7-2:11",
+   "observed": {
+    "all": [
+     "2:7-2:11 E ts 2322 Type 'string' is not assignable to type 'number'."
+    ]
+   }
+  },
+  {
+   "id": "8.layout",
+   "title": "admin/src/app/admin-layout.svelte still reports a fresh error and clears it",
+   "ok": true,
+   "ms": 1250,
+   "observed": {
+    "ms": 17,
+    "after": []
+   }
+  },
+  {
+   "id": "8.renderer",
+   "title": "admin/src/fields/field-renderer.svelte still reports a fresh error and clears it",
+   "ok": true,
+   "ms": 1250,
+   "observed": {
+    "ms": 15,
+    "after": []
+   }
+  },
+  {
+   "id": "9a.event-for-dirty-buffer",
+   "title": "a watched-file change for an open, modified document keeps the editor buffer",
+   "ok": true,
+   "ms": 2744,
+   "expected": "canary still reported on line 92",
+   "observed": {
+    "before": true,
+    "after": [
+     "92:7-92:18 E ts 2322 Type 'string' is not assignable to type 'number'.",
+     "92:7-92:18 H ts 6133 '__e2eCanary' is declared but its value is never read.",
+     "92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eCanary' is defined but never used."
+    ]
+   }
+  },
+  {
+   "id": "9b.echo-own-cache-writes",
+   "title": "echoing the server's own cache writes as watched-file events changes nothing",
+   "ok": true,
+   "ms": 2778,
+   "observed": {
+    "before": {
+     "layout": [
+      "92:7-92:18 E ts 2322 Type 'string' is not assignable to type 'number'.",
+      "92:7-92:18 H ts 6133 '__e2eCanary' is declared but its value is never read.",
+      "92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eCanary' is defined but never used."
+     ],
+     "renderer": []
+    },
+    "layout": [
+     "92:7-92:18 E ts 2322 Type 'string' is not assignable to type 'number'.",
+     "92:7-92:18 H ts 6133 '__e2eCanary' is declared but its value is never read.",
+     "92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eCanary' is defined but never used."
+    ],
+    "renderer": [],
+    "hoverOk": true
+   },
+   "timing": {
+    "events": 660,
+    "writtenThisSession": 0,
+    "firstPullMs": 248,
+    "firstPullHadCanary": true,
+    "settledMs": 7
+   }
+  },
+  {
+   "id": "9c.directory-event",
+   "title": "a directory-level watched-file event (full refresh) keeps buffers and answers",
+   "ok": true,
+   "ms": 2993,
+   "observed": {
+    "layout": [
+     "92:7-92:18 E ts 2322 Type 'string' is not assignable to type 'number'.",
+     "92:7-92:18 H ts 6133 '__e2eCanary' is declared but its value is never read.",
+     "92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eCanary' is defined but never used."
+    ],
+    "revertedClean": true
+   }
+  },
+  {
+   "id": "10.reopen-closed-child",
+   "title": "reopen admin/src/features/navigation/admin-navigation.svelte: TypeScript answers with the disk content, no errors",
+   "ok": true,
+   "ms": 1250,
+   "observed": {
+    "canarySeen": true,
+    "canaryMs": 17,
+    "canaryRange": "57:7-57:18",
+    "canaryRangeExpected": "57:7-57:18",
+    "canaryRangeOk": true,
+    "totalMs": 1250,
+    "diags": [],
+    "errors": []
+   }
+  }
+ ],
+ "initMs": 14,
+ "pullMode": true,
+ "counters": {
+  "diagnosticRefresh": 5,
+  "serverRequests": {
+   "workspace/configuration": 2,
+   "client/registerCapability": 4,
+   "workspace/diagnostic/refresh": 5
+  },
+  "registrations": [
+   "workspace/didChangeWatchedFiles",
+   "workspace/didChangeConfiguration",
+   "workspace/didChangeWatchedFiles",
+   "workspace/didChangeWatchedFiles"
+  ]
+ },
+ "serverExited": null,
+ "workspaceSourceChanges": {
+  "added": [],
+  "removed": []
+ },
+ "cacheDirs": [
+  ".svelte-rs",
+  ".rsvelte-language-server"
+ ],
+ "passed": 40,
+ "failed": [
+  "4g.completion-member"
+ ]
+}

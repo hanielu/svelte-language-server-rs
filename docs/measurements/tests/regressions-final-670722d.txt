@@ -1,0 +1,176 @@
+# tests/regressions at vendor/rsvelte 670722d (the merge of svelte-rs-projection bf0dca5 into svelte-rs 1d4cb87; svelte-rs build of 670722d), 2026-10-22
+# load average 6-24 (other work on the machine); comparison builds: 02e6b31 (patch 27), 7793da7 (round 3, 'svelte-rs-final'), 1d4cb87 (round 4, language server only), bf0dca5 (projection branch alone)
+
+## sh tests/regressions/runall.sh <binary> 670722d
+== s1 @ 670722d
+{ "child0": [], "child1": [], "parentAfterOpen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "parentAfterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s1b @ 670722d
+{ "before": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterConfigChange": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "waitedMs": 124, "afterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s2 @ 670722d
+{ "initial": [], "unsaved": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterSaveEvent": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterReopen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterFullRefresh": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s3 @ 670722d
+{ "freshBeforeCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ], "freshAfterCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ], "existingAfterCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ]}
+== s4 @ 670722d
+{ "initial": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterDelete": [ "1:2307:Cannot find module '../../../../../../b/Child.svelte' or its corresponding type declarations." ], "afterRestore": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterParentKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s7 @ 670722d
+{ "app": [], "libraryComponent": [ "1:2322:Type 'string' is not assignable to type 'number'.", "5:2304:Cannot find name 'svelteHTML'." ], "hover": "\"```typescript\\nconst n: number\\n```\""}
+== s8 @ 670722d
+{ "importerWhileTargetOpen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterTargetClosed": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s10 @ 670722d
+{ "dialog": [ "8:2322:Type 'number' is not assignable to type 'string'." ], "hoverUtil": "\"```typescript\\n(alias) const fromUtil: number\\n```\"", "ok": true}
+== s11 @ 670722d
+{ "closed": { "tag": [ "Child.svelte:0:1" ], "binding": [ "Child.svelte:0:1" ], "specifier": [ "Child.svelte:0:1" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "open": { "tag": [ "Child.svelte:0:1" ], "binding": [ "Child.svelte:0:1" ], "specifier": [ "Child.svelte:0:1" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "ok": true}
+== incomplete-edits @ 670722d
+{ "steps": { "member": { "unresolved": [], "propErrorKept": true, "completions": [ "title", "i18n", "manifest" ], "ok": true }, "call": { "unresolved": [], "propErrorKept": true, "ok": true }, "initializer": { "unresolved": [], "propErrorKept": true, "ok": true }, "import": { "unresolved": [], "propErrorKept": true, "ok": true }, "childBlockOpen": { "parent": [ "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true }, "openingTag": { "parent": [ "8:parse-error:Parsing error: element_invalid_closing_tag: `</p>` attempted to close an element that was not open", "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true } }, "initial": [ "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true}
+== r1-depkill @ 670722d
+{ "appBefore": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "dep": [ "3:2304:Cannot find name 'svelteHTML'." ], "appAfterDepOpen": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "appAfterImportEdit": [ "3:2322:Type 'number' is not assignable to type 'string'.", "1:6196:'Snippet' is declared but never used." ], "shadowLinks": [ "tsgo/dependencies/app/node_modules (real dir)", "tsgo/svelte/app/node_modules -> symlink" ], "ok": true}
+== r1b-close @ 670722d
+{ "appBefore": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "dep": [ "3:2304:Cannot find name 'svelteHTML'." ], "appWhileDepOpen": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "appAfterDepClosed": [ "3:2322:Type 'number' is not assignable to type 'string'.", "1:6196:'Snippet' is declared but never used." ], "link": "symlink"}
+== r2c-format @ 670722d
+{ "formatQuiet": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "tries": 3, "delay": 10, "probeEndedByEdit": true, "formatSentBeforeEdit": [ "0:0-9:0=>\"<!-- top -->\\n<!-- top -->\\n<script lang=\\\"ts\\\">\\n import " ], "expectedForRequestVersion": [ "0:0-9:0=>\"<!-- top -->\\n<!-- top -->\\n<script lang=\\\"ts\\\">\\n import " ], "ok": true}
+== r2d-hover @ 670722d
+{"quiet":["const later: number @7:4","const other: string @8:4"],"probeEndedByEdit":true,"sentBeforeEdit":["const later: number @7:0","const other: string @8:4"],"ok":true}
+== r2e-hover-edit-race @ 670722d
+{"rounds":10,"wrong":0}
+== r5-crash @ 670722d
+{ "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r6-watchers @ 670722d
+{"editorWatchesNodeModules":["<root>/node_modules/**/*"],"ok":true}
+== hashscope @ 670722d
+{ "editor": [ "4:2322:Type '\"nope\"' is not assignable to type 'Kind'.", "4:2322:Type '\"xl\"' is not assignable to type 'Size'." ]}
+== start-of-file @ 670722d
+{ "import {": "3:8-3:8 1005", "import { ": "3:8-3:8 1005", "import { x": "3:10-3:10 1005, 3:10-3:10 6133", "import {}": "3:9-3:9 1005", "import { x }": "3:12-3:12 1005, 3:10-3:11 6133", "import { x } from ''": "3:19-3:20 2307, 3:10-3:11 6133", "import type {": "3:13-3:13 1005", "type T = {": "3:6-3:7 6196", "type T = {}": "3:6-3:7 6196", "interface I {": "3:11-3:12 6196", "enum E {": "4:10-4:12 1357, 4:12-4:13 1357, 4:24-4:25 1005, 8:4-8:6 2304", "const o = {": "4:10-4:12 1005, 4:14-4:15 1005, 4:24-4:25 1005, 4:33-4:34 1005, 4:35-4:36 1005, 4:10-4:12 2304, 4:13-4:14 2448, 4:16-4:22 2693, 4:33-4:34 7031, 7:14-7:19 2304, 8:4-8:6 2304, 2:7-2:12 6133", "export {": ""}
+== start-of-file2 @ 670722d
+{ "import {": "3:8-3:8 1005, 7:7-7:12 2322", "import { ": "3:8-3:8 1005, 7:7-7:12 2322", "import { x": "3:10-3:10 1005, 7:7-7:12 2322, 3:10-3:10 6133", "import {}": "3:9-3:9 1005, 7:7-7:12 2322", "import { x }": "3:12-3:12 1005, 7:7-7:12 2322, 3:10-3:11 6133", "import type {": "3:13-3:13 1005, 7:7-7:12 2322", "type T = {": "7:7-7:12 2322, 3:6-3:7 6196"}
+== style-open @ 670722d
+{"unclosedStyle":["6:parse-error:Parsing error: expected_token: Expected token </style","6:css_unknown_property:Unknown CSS property `colr`.","1:2322:Type 'number' is not assignable to type 'string'."],"closedStyle":["6:css_unknown_property:Unknown CSS property `colr`.","1:2322:Type 'number' is not assignable to type 'string'."],"panics":0}
+== bigtype @ 670722d
+{"lines":2113,"quietPullMs":116,"finalDiagMs":185,"completionP50":19,"completionP95":35,"completionMax":35}
+== r5-crash crash-inputs @ 670722d
+{ "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== recover-pos @ 670722d
+{"states":377,"problems":486,"atStart":0}
+
+## r5-crash.mjs <binary> tpl <dirs>
+# the review's candidates (rev3 cand, cand2, cand3, cand4) and the projection engineer's own cases (proj3/cases): 54 inputs
+670722d { "inputs": 54, "answered": 54, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+1d4cb87 { "inputs": 54, "answered": 54, "unanswered": [], "before": [], "panicsCaught": 7, "ok": true}
+# tests/regressions/crash-inputs ({#each <script </script>, its unminimized original, <div title="<script </script>">)
+670722d { "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+1d4cb87 { "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 3, "ok": true}
+# the second review's saved panicking inputs, 670722d
+allpanics: { "inputs": 165, "answered": 165, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+found-1: { "inputs": 15, "answered": 15, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+found-2: { "inputs": 2, "answered": 2, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+found-3: { "inputs": 12, "answered": 12, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+found-4: { "inputs": 9, "answered": 9, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+sfound-1: { "inputs": 37, "answered": 37, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+sfound-2: { "inputs": 35, "answered": 35, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+sfound-3: { "inputs": 29, "answered": 29, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+sfound-4: { "inputs": 31, "answered": 31, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+real: { "inputs": 70, "answered": 70, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+
+## start-of-file.mjs / start-of-file2.mjs at the earlier builds (670722d above)
+== start-of-file @ svelte-rs-1d4cb87
+{ "import {": "3:8-3:8 1003", "import { ": "3:8-3:8 1003", "import { x": "3:10-3:10 1005, 3:10-3:10 6133", "import {}": "3:9-3:9 1005", "import { x }": "3:12-3:12 1005, 3:10-3:11 6133", "import { x } from ''": "3:19-3:20 2307, 3:10-3:11 6133", "import type {": "3:13-3:13 1003", "type T = {": "4:14-4:15 1005, 4:24-4:25 1005, 4:1-4:9 7008, 4:10-4:12 2304, 4:13-4:14 2304, 4:16-4:22 2693, 4:33-4:34 2304, 8:4-8:6 2304", "type T = {}": "3:6-3:7 6196", "interface I {": "4:1-4:9 1131", "enum E {": "4:10-4:12 1357, 4:12-4:13 1357, 4:24-4:25 1005, 8:4-8:6 2304", "const o = {": "4:10-4:12 1005, 4:14-4:15 1005, 4:24-4:25 1005, 4:33-4:34 1005, 4:35-4:36 1005, 4:10-4:12 2304, 4:13-4:14 2448, 4:16-4:22 2693, 4:33-4:34 7031, 7:14-7:19 2304, 8:4-8:6 2304, 2:7-2:12 6133", "export {": ""}
+== start-of-file2 @ svelte-rs-1d4cb87
+{ "import {": "3:8-3:8 1003", "import { ": "3:8-3:8 1003", "import { x": "3:10-3:10 1005, 3:10-3:10 6133", "import {}": "3:9-3:9 1005, 7:7-7:12 2322", "import { x }": "3:12-3:12 1005, 7:7-7:12 2322, 3:10-3:11 6133", "import type {": "3:13-3:13 1003", "type T = {": "4:14-4:15 1005, 4:24-4:25 1005, 4:1-4:9 7008, 4:10-4:12 2304, 4:13-4:14 2304, 4:16-4:22 2693, 4:33-4:34 2304, 7:7-7:12 2322, 8:4-8:6 2304"}
+== start-of-file @ svelte-rs-final
+{ "import {": "3:8-3:8 1003, 0:1-0:1 1003, 0:1-0:1 1005, 0:1-0:1 1003, 0:1-0:1 1141", "import { ": "3:8-3:8 1003, 0:1-0:1 1003, 0:1-0:1 1005, 0:1-0:1 1003, 0:1-0:1 1141", "import { x": "3:10-3:10 1005, 0:1-0:1 1003, 0:1-0:1 1005, 0:1-0:1 1003, 0:1-0:1 1141, 3:10-3:10 6133", "import {}": "3:9-3:9 1005", "import { x }": "3:12-3:12 1005, 3:10-3:11 6133", "import { x } from ''": "3:19-3:20 2307, 3:10-3:11 6133", "import type {": "3:13-3:13 1003, 0:1-0:1 1003, 0:1-0:1 1005, 0:1-0:1 1003, 0:1-0:1 1141", "type T = {": "0:1-0:1 1131, 0:1-0:1 1131, 4:14-4:15 1005, 4:24-4:25 1005, 4:1-4:9 7008, 4:10-4:12 2304, 4:13-4:14 2304, 4:16-4:22 2693, 4:33-4:34 2304, 8:4-8:6 2304", "type T = {}": "3:6-3:7 6196", "interface I {": "4:1-4:9 1131", "enum E {": "4:10-4:12 1357, 4:12-4:13 1357, 4:24-4:25 1005, 8:4-8:6 2304", "const o = {": "4:10-4:12 1005, 4:14-4:15 1005, 4:24-4:25 1005, 4:33-4:34 1005, 4:35-4:36 1005, 4:10-4:12 2304, 4:13-4:14 2448, 4:16-4:22 2693, 4:33-4:34 7031, 7:14-7:19 2304, 8:4-8:6 2304, 2:7-2:12 6133", "export {": ""}
+== start-of-file2 @ svelte-rs-final
+{ "import {": "3:8-3:8 1003, 0:1-0:1 1003, 0:1-0:1 1005, 0:1-0:1 1003, 0:1-0:1 1141", "import { ": "3:8-3:8 1003, 0:1-0:1 1003, 0:1-0:1 1005, 0:1-0:1 1003, 0:1-0:1 1141", "import { x": "3:10-3:10 1005, 0:1-0:1 1003, 0:1-0:1 1005, 0:1-0:1 1003, 0:1-0:1 1141, 3:10-3:10 6133", "import {}": "3:9-3:9 1005, 7:7-7:12 2322", "import { x }": "3:12-3:12 1005, 7:7-7:12 2322, 3:10-3:11 6133", "import type {": "3:13-3:13 1003, 0:1-0:1 1003, 0:1-0:1 1005, 0:1-0:1 1003, 0:1-0:1 1141", "type T = {": "0:1-0:1 1131, 0:1-0:1 1131, 4:14-4:15 1005, 4:24-4:25 1005, 4:1-4:9 7008, 4:10-4:12 2304, 4:13-4:14 2304, 4:16-4:22 2693, 4:33-4:34 2304, 7:7-7:12 2322, 8:4-8:6 2304"}
+
+## recover-pos.mjs (377 states; atStart = diagnostics at 0:1)
+recover-pos @ svelte-rs-1d4cb87: {"states":377,"problems":487,"atStart":0}
+recover-pos @ svelte-rs-670722d: {"states":377,"problems":486,"atStart":0}
+recover-pos @ svelte-rs-bf0dca5: {"states":377,"problems":486,"atStart":0}
+# node tests/review3/rp-compare.mjs <1d4cb87 records> <670722d records> (extra = only at 1d4cb87, missing = only at 670722d)
+moved 0
+
+
+extra 13
+"import {" 1003 4:8-4:8 "" :: Identifier expected.
+"import { " 1003 4:8-4:8 "" :: Identifier expected.
+"import { x" 1005 4:10-4:10 "" :: ',' expected.
+"import { x " 1005 4:10-4:10 "" :: ',' expected.
+"type T = {" 1005 5:14-5:15 ":" :: ',' expected.
+"type T = {" 1005 5:24-5:25 "{" :: ';' expected.
+"type T = {" 2304 10:12-10:14 "go" :: Cannot find name 'go'.
+"type T = {" 2304 5:10-5:12 "go" :: Cannot find name 'go'.
+"type T = {" 2304 5:13-5:14 "x" :: Cannot find name 'x'.
+"type T = {" 2304 5:33-5:34 "x" :: Cannot find name 'x'.
+"type T = {" 2693 5:16-5:22 "number" :: 'number' only refers to a type, but is being used as a value
+"type T = {" 7008 5:1-5:9 "function" :: Member 'function' implicitly has an 'any' type.
+"type T = {" ?   :: 7027@6:1-6:39 "const missing: string = undef Unreachable code detected.
+
+missing 5
+"import {" 1005 4:8-4:8 "" :: 'from' expected.
+"import { " 1005 4:8-4:8 "" :: 'from' expected.
+"import { x" 1005 4:10-4:10 "" :: 'from' expected.
+"import { x " 1005 4:10-4:10 "" :: 'from' expected.
+"type T = {" 6196 4:6-4:7 "T" :: 'T' is declared but never used.
+
+hover 1
+"type T = {" go(later): "```typescript\nany\n```" @"go" | "```typescript\nfunction go(x: number): number\n```" @"go"
+# bf0dca5 against 670722d: moved 0, extra 0, missing 0, hover 0 (identical)
+
+## bigtype.mjs <binary> tpl <N>, interleaved; load average at the start of each session
+svelte-rs-02e6b31 N=1000 run1 load=6.24 {"lines":1413,"quietPullMs":84,"finalDiagMs":180,"completionP50":60,"completionP95":70,"completionMax":70}
+svelte-rs-final N=1000 run1 load=5.98 {"lines":1413,"quietPullMs":72,"finalDiagMs":270,"completionP50":259,"completionP95":464,"completionMax":464}
+svelte-rs-1d4cb87 N=1000 run1 load=7.91 {"lines":1413,"quietPullMs":58,"finalDiagMs":153,"completionP50":13,"completionP95":31,"completionMax":31}
+svelte-rs-670722d N=1000 run1 load=8.00 {"lines":1413,"quietPullMs":76,"finalDiagMs":142,"completionP50":13,"completionP95":29,"completionMax":29}
+svelte-rs-02e6b31 N=1500 run1 load=9.00 {"lines":2113,"quietPullMs":104,"finalDiagMs":797,"completionP50":397,"completionP95":618,"completionMax":618}
+svelte-rs-final N=1500 run1 load=8.89 {"lines":2113,"quietPullMs":112,"finalDiagMs":781,"completionP50":712,"completionP95":957,"completionMax":957}
+svelte-rs-1d4cb87 N=1500 run1 load=8.18 {"lines":2113,"quietPullMs":118,"finalDiagMs":188,"completionP50":18,"completionP95":38,"completionMax":38}
+svelte-rs-670722d N=1500 run1 load=9.48 {"lines":2113,"quietPullMs":121,"finalDiagMs":194,"completionP50":19,"completionP95":43,"completionMax":43}
+svelte-rs-02e6b31 N=2000 run1 load=10.77 {"lines":2813,"quietPullMs":179,"finalDiagMs":1177,"completionP50":557,"completionP95":947,"completionMax":947}
+svelte-rs-final N=2000 run1 load=10.15 {"lines":2813,"quietPullMs":151,"finalDiagMs":1238,"completionP50":1116,"completionP95":1363,"completionMax":1363}
+svelte-rs-1d4cb87 N=2000 run1 load=10.08 {"lines":2813,"quietPullMs":139,"finalDiagMs":191,"completionP50":28,"completionP95":45,"completionMax":45}
+svelte-rs-670722d N=2000 run1 load=11.14 {"lines":2813,"quietPullMs":119,"finalDiagMs":205,"completionP50":30,"completionP95":47,"completionMax":47}
+svelte-rs-02e6b31 N=1000 run2 load=9.87 {"lines":1413,"quietPullMs":74,"finalDiagMs":202,"completionP50":66,"completionP95":91,"completionMax":91}
+svelte-rs-final N=1000 run2 load=10.44 {"lines":1413,"quietPullMs":64,"finalDiagMs":329,"completionP50":315,"completionP95":512,"completionMax":512}
+svelte-rs-1d4cb87 N=1000 run2 load=10.61 {"lines":1413,"quietPullMs":79,"finalDiagMs":134,"completionP50":12,"completionP95":28,"completionMax":28}
+svelte-rs-670722d N=1000 run2 load=10.00 {"lines":1413,"quietPullMs":57,"finalDiagMs":160,"completionP50":14,"completionP95":27,"completionMax":27}
+svelte-rs-02e6b31 N=1500 run2 load=10.09 {"lines":2113,"quietPullMs":91,"finalDiagMs":733,"completionP50":291,"completionP95":558,"completionMax":558}
+svelte-rs-final N=1500 run2 load=9.76 {"lines":2113,"quietPullMs":119,"finalDiagMs":885,"completionP50":853,"completionP95":1102,"completionMax":1102}
+svelte-rs-1d4cb87 N=1500 run2 load=10.66 {"lines":2113,"quietPullMs":95,"finalDiagMs":209,"completionP50":19,"completionP95":34,"completionMax":34}
+svelte-rs-670722d N=1500 run2 load=13.95 {"lines":2113,"quietPullMs":117,"finalDiagMs":195,"completionP50":19,"completionP95":38,"completionMax":38}
+svelte-rs-02e6b31 N=2000 run2 load=20.47 {"lines":2813,"quietPullMs":132,"finalDiagMs":1346,"completionP50":669,"completionP95":1114,"completionMax":1114}
+svelte-rs-final N=2000 run2 load=19.71 {"lines":2813,"quietPullMs":138,"finalDiagMs":1257,"completionP50":1131,"completionP95":1376,"completionMax":1376}
+svelte-rs-1d4cb87 N=2000 run2 load=18.80 {"lines":2813,"quietPullMs":153,"finalDiagMs":203,"completionP50":24,"completionP95":42,"completionMax":42}
+svelte-rs-670722d N=2000 run2 load=19.21 {"lines":2813,"quietPullMs":192,"finalDiagMs":384,"completionP50":114,"completionP95":188,"completionMax":188}
+svelte-rs-670722d N=2000 run3 load=17.77 {"lines":2813,"quietPullMs":129,"finalDiagMs":300,"completionP50":26,"completionP95":43,"completionMax":43}
+svelte-rs-1d4cb87 N=2000 run3 load=16.43 {"lines":2813,"quietPullMs":133,"finalDiagMs":248,"completionP50":25,"completionP95":45,"completionMax":45}
+svelte-rs-670722d N=2000 run4 load=18.04 {"lines":2813,"quietPullMs":154,"finalDiagMs":292,"completionP50":35,"completionP95":48,"completionMax":48}
+svelte-rs-1d4cb87 N=2000 run4 load=24.04 {"lines":2813,"quietPullMs":129,"finalDiagMs":203,"completionP50":27,"completionP95":46,"completionMax":46}
+svelte-rs-670722d N=2000 run5 load=22.83 {"lines":2813,"quietPullMs":139,"finalDiagMs":253,"completionP50":27,"completionP95":44,"completionMax":44}
+svelte-rs-1d4cb87 N=2000 run5 load=20.73 {"lines":2813,"quietPullMs":149,"finalDiagMs":212,"completionP50":25,"completionP95":43,"completionMax":43}
+svelte-rs-1d4cb87 N=2000 run6 load=15.76 {"lines":2813,"quietPullMs":182,"finalDiagMs":420,"completionP50":51,"completionP95":97,"completionMax":97}
+svelte-rs-670722d N=2000 run6 load=19.69 {"lines":2813,"quietPullMs":116,"finalDiagMs":204,"completionP50":27,"completionP95":50,"completionMax":50}
+svelte-rs-670722d N=2000 run7 load=21.47 {"lines":2813,"quietPullMs":126,"finalDiagMs":201,"completionP50":24,"completionP95":44,"completionMax":44}
+svelte-rs-1d4cb87 N=2000 run7 load=21.49 {"lines":2813,"quietPullMs":151,"finalDiagMs":200,"completionP50":25,"completionP95":43,"completionMax":43}
+svelte-rs-1d4cb87 N=2000 run8 load=19.54 {"lines":2813,"quietPullMs":118,"finalDiagMs":215,"completionP50":26,"completionP95":42,"completionMax":42}
+svelte-rs-670722d N=2000 run8 load=19.10 {"lines":2813,"quietPullMs":149,"finalDiagMs":202,"completionP50":25,"completionP95":44,"completionMax":44}
+svelte-rs-670722d N=2000 run9 load=18.39 {"lines":2813,"quietPullMs":123,"finalDiagMs":242,"completionP50":26,"completionP95":44,"completionMax":44}
+svelte-rs-1d4cb87 N=2000 run9 load=17.08 {"lines":2813,"quietPullMs":155,"finalDiagMs":208,"completionP50":24,"completionP95":44,"completionMax":44}
+svelte-rs-1d4cb87 N=2000 run10 load=16.31 {"lines":2813,"quietPullMs":148,"finalDiagMs":197,"completionP50":25,"completionP95":44,"completionMax":44}
+svelte-rs-670722d N=2000 run10 load=16.26 {"lines":2813,"quietPullMs":150,"finalDiagMs":194,"completionP50":24,"completionP95":43,"completionMax":43}
+svelte-rs-670722d N=2000 run11 load=15.19 {"lines":2813,"quietPullMs":154,"finalDiagMs":198,"completionP50":24,"completionP95":44,"completionMax":44}
+svelte-rs-1d4cb87 N=2000 run11 load=14.56 {"lines":2813,"quietPullMs":122,"finalDiagMs":210,"completionP50":24,"completionP95":41,"completionMax":41}
+(runs 1-2: all four builds in the order 02e6b31, 7793da7, 1d4cb87, 670722d; runs 3-5: 670722d then 1d4cb87; runs 6-11 alternate the order)
+
+## lsfuzz.mjs <binary> tpl <seed> 300, THIRD=1 NO_WS=1 INIT_SLEEP=600 LONG_SLEEP=700 CANCEL=1 (timeout = RSVELTE_TSGO_REQUEST_TIMEOUT_MS)
+timeout=default seed=22 exit=0 {"exited":null,"answered":286,"errors":1,"timeouts":["textDocument/signatureHelp id 275 pending 16200 ms params {\"textDocument\":{\"uri\":\"file:///Users/hyprsonic/Developer/adroyt/svelte-rs/tests/review3/run-6JDJiK/sr","later hover: answered","later folding: answered","background before stall: true; third loaded before: true; after 8 s idle: true; all loaded: true","after cancelling it: third loaded true"],"panics":[]} panicLines=0 
+timeout=default seed=38 exit=0 {"exited":null,"answered":210,"errors":1,"timeouts":["textDocument/completion id 200 pending 16759 ms params {\"textDocument\":{\"uri\":\"file:///Users/hyprsonic/Developer/adroyt/svelte-rs/tests/review3/run-6VrgWG/src/P","later hover: answered","later folding: answered","background before stall: true; third loaded before: true; after 8 s idle: true; all loaded: true","after cancelling it: third loaded true"],"panics":[]} panicLines=0 
+timeout=10000 seed=22 exit=0 {"exited":null,"answered":287,"errors":0,"timeouts":["control (no lost request): third loaded before true, after 8 s idle true"],"panics":[]} panicLines=0 rsvelte-language-server: tsgo did not answer textDocument/signatureHelp (275) in 10000 ms; answering without it rsvelte-language-server: restarting tsgo, which is still busy with textDocument/signatureHelp (275) 
+timeout=10000 seed=38 exit=0 {"exited":null,"answered":309,"errors":0,"timeouts":["control (no lost request): third loaded before true, after 8 s idle true"],"panics":[]} panicLines=0 rsvelte-language-server: tsgo did not answer textDocument/completion (200) in 10000 ms; answering without it rsvelte-language-server: restarting tsgo, which is still busy with textDocument/completion (200) 
+
+## bench/bench.mjs svelte-rs <zeno> <3 files>, through the lock, direct alternating pairs (svelte-rs-final = 7793da7); load average at the start of each session
+svelte-rs-final pair1 load=1.51 {"open":[139,18,25],"edit":[16,20,18],"init":21,"settled":341}
+svelte-rs-670722d pair1 load=1.76 {"open":[136,17,15],"edit":[13,11,10],"init":14,"settled":340}
+svelte-rs-670722d pair2 load=1.63 {"open":[136,15,19],"edit":[13,13,13],"init":2,"settled":337}
+svelte-rs-final pair2 load=1.27 {"open":[179,21,25],"edit":[17,21,18],"init":14,"settled":345}
+svelte-rs-final pair3 load=1.32 {"open":[170,21,22],"edit":[21,20,18],"init":3,"settled":342}
+svelte-rs-670722d pair3 load=1.49 {"open":[183,16,18],"edit":[11,12,13],"init":15,"settled":341}
+svelte-rs-670722d pair4 load=1.94 {"open":[169,16,15],"edit":[13,12,13],"init":3,"settled":341}
+svelte-rs-final pair4 load=2.13 {"open":[178,23,23],"edit":[19,20,19],"init":14,"settled":340}

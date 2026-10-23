@@ -1,0 +1,96 @@
+{
+ "diags": {
+  "Card.svelte": []
+ },
+ "types.ts@Size =": {
+  "at": "types.ts 0:12",
+  "rename": {
+   "Card.svelte": [
+    "1:15-1:19 Dim",
+    "2:36-2:40 Dim"
+   ],
+   "types.ts": [
+    "0:12-0:16 Dim",
+    "1:30-1:34 Dim"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "1: \timport type { Dim, Base } from './types';",
+    "2: \tlet { kind, tone }: Base & { kind: Dim } = $props();"
+   ],
+   "types.ts": [
+    "0: export type Dim = 'sm' | 'lg';",
+    "1: export interface Base { tone: Dim }"
+   ]
+  },
+  "references": [
+   "Card.svelte 1:15-1:19",
+   "Card.svelte 2:36-2:40",
+   "types.ts 0:12-0:16",
+   "types.ts 1:30-1:34"
+  ],
+  "definition": [
+   "types.ts 0:12-0:16"
+  ],
+  "highlights": [
+   "0:12-0:16",
+   "1:30-1:34"
+  ]
+ },
+ "types.ts@tone:": {
+  "at": "types.ts 1:24",
+  "rename": {
+   "Card.svelte": [
+    "2:13-2:17 hue: tone"
+   ],
+   "types.ts": [
+    "1:24-1:28 hue"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "2: \tlet { kind, hue: tone }: Base & { kind: Size } = $props();"
+   ],
+   "types.ts": [
+    "1: export interface Base { hue: Size }"
+   ]
+  },
+  "references": [
+   "Card.svelte 2:13-2:17",
+   "types.ts 1:24-1:28"
+  ],
+  "definition": [
+   "types.ts 1:24-1:28"
+  ],
+  "highlights": [
+   "1:24-1:28"
+  ]
+ },
+ "Size } from": "needle not found",
+ "Card.svelte@kind: Size": {
+  "at": "Card.svelte 2:30",
+  "rename": {
+   "Card.svelte": [
+    "2:30-2:34 variant",
+    "2:7-2:11 variant: kind"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "2: \tlet { variant: kind, tone }: Base & { variant: Size } = $props();"
+   ]
+  },
+  "references": [
+   "Card.svelte 2:30-2:34",
+   "Card.svelte 2:7-2:11"
+  ],
+  "definition": [
+   "Card.svelte 2:30-2:34"
+  ],
+  "highlights": [
+   "2:30-2:34",
+   "2:7-2:11"
+  ]
+ }
+}

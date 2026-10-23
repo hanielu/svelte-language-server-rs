@@ -1,0 +1,148 @@
+{
+ "diags": {
+  "Card.svelte": [
+   "5:state_referenced_locally:This reference only captures the initial value of `kind`. Did you mean to reference it inside a clos"
+  ],
+  "Use.svelte": []
+ },
+ "Card.svelte@s: Size": {
+  "at": "Card.svelte 5:8",
+  "rename": {
+   "Card.svelte": [
+    "1:13-1:17 Dim",
+    "4:23-4:27 Dim",
+    "5:8-5:12 Dim"
+   ],
+   "Use.svelte": [
+    "1:21-1:25 Dim",
+    "2:8-2:12 Dim"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "1: \texport type Dim = 'sm' | 'lg';",
+    "4: \tlet { kind }: { kind: Dim } = $props();",
+    "5: \tlet s: Dim = kind;"
+   ],
+   "Use.svelte": [
+    "1: \timport Card, { type Dim } from './Card.svelte';",
+    "2: \tlet z: Dim = 'sm';"
+   ]
+  },
+  "references": [
+   "Card.svelte 1:13-1:17",
+   "Card.svelte 4:23-4:27",
+   "Card.svelte 5:8-5:12",
+   "Use.svelte 1:21-1:25",
+   "Use.svelte 2:8-2:12"
+  ],
+  "definition": [
+   "Card.svelte 1:13-1:17"
+  ],
+  "highlights": [
+   "1:13-1:17",
+   "4:23-4:27",
+   "5:8-5:12"
+  ]
+ },
+ "Card.svelte@Size =": {
+  "at": "Card.svelte 1:13",
+  "rename": {
+   "Card.svelte": [
+    "1:13-1:17 Dim",
+    "4:23-4:27 Dim",
+    "5:8-5:12 Dim"
+   ],
+   "Use.svelte": [
+    "1:21-1:25 Dim",
+    "2:8-2:12 Dim"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "1: \texport type Dim = 'sm' | 'lg';",
+    "4: \tlet { kind }: { kind: Dim } = $props();",
+    "5: \tlet s: Dim = kind;"
+   ],
+   "Use.svelte": [
+    "1: \timport Card, { type Dim } from './Card.svelte';",
+    "2: \tlet z: Dim = 'sm';"
+   ]
+  },
+  "references": [
+   "Card.svelte 1:13-1:17",
+   "Card.svelte 4:23-4:27",
+   "Card.svelte 5:8-5:12",
+   "Use.svelte 1:21-1:25",
+   "Use.svelte 2:8-2:12"
+  ],
+  "definition": [
+   "Card.svelte 1:13-1:17"
+  ],
+  "highlights": [
+   "1:13-1:17",
+   "4:23-4:27",
+   "5:8-5:12"
+  ]
+ },
+ "Card.svelte@kind }": {
+  "at": "Card.svelte 4:7",
+  "rename": {
+   "Card.svelte": [
+    "4:7-4:11 kind: variant",
+    "5:15-5:19 variant"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "4: \tlet { kind: variant }: { kind: Size } = $props();",
+    "5: \tlet s: Size = variant;"
+   ]
+  },
+  "references": [
+   "Card.svelte 4:17-4:21",
+   "Card.svelte 4:7-4:11",
+   "Card.svelte 5:15-5:19",
+   "Use.svelte 4:6-4:10"
+  ],
+  "definition": [
+   "Card.svelte 4:17-4:21"
+  ],
+  "highlights": [
+   "4:17-4:21",
+   "4:7-4:11",
+   "5:15-5:19"
+  ]
+ },
+ "Use.svelte@kind=": {
+  "at": "Use.svelte 4:6",
+  "rename": {
+   "Card.svelte": [
+    "4:17-4:21 variant",
+    "4:7-4:11 variant: kind"
+   ],
+   "Use.svelte": [
+    "4:6-4:10 variant"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "4: \tlet { variant: kind }: { variant: Size } = $props();"
+   ],
+   "Use.svelte": [
+    "4: <Card variant={z} />"
+   ]
+  },
+  "references": [
+   "Card.svelte 4:17-4:21",
+   "Card.svelte 4:7-4:11",
+   "Use.svelte 4:6-4:10"
+  ],
+  "definition": [
+   "Card.svelte 4:17-4:21"
+  ],
+  "highlights": [
+   "4:6-4:10"
+  ]
+ }
+}

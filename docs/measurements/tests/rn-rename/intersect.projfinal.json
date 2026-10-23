@@ -1,0 +1,92 @@
+{
+ "diags": {
+  "Card.svelte": [
+   "4:state_referenced_locally:This reference only captures the initial value of `a`. Did you mean to reference it inside a closure"
+  ]
+ },
+ "Card.svelte@s: Size": {
+  "at": "Card.svelte 4:8",
+  "rename": {
+   "Card.svelte": [
+    "1:6-1:10 Dim",
+    "2:22-2:26 Dim",
+    "3:28-3:32 Dim",
+    "4:8-4:12 Dim"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "1: \ttype Dim = 'sm' | 'lg';",
+    "2: \tinterface Extra { a: Dim }",
+    "3: \tlet { a, b }: Extra & { b: Dim } = $props();",
+    "4: \tlet s: Dim = a;"
+   ]
+  },
+  "references": [
+   "Card.svelte 1:6-1:10",
+   "Card.svelte 2:22-2:26",
+   "Card.svelte 3:28-3:32",
+   "Card.svelte 4:8-4:12"
+  ],
+  "definition": [
+   "Card.svelte 1:6-1:10"
+  ],
+  "highlights": [
+   "1:6-1:10",
+   "2:22-2:26",
+   "3:28-3:32",
+   "4:8-4:12"
+  ]
+ },
+ "Card.svelte@Extra {": {
+  "at": "Card.svelte 2:11",
+  "rename": {
+   "Card.svelte": [
+    "2:11-2:16 More",
+    "3:15-3:20 More"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "2: \tinterface More { a: Size }",
+    "3: \tlet { a, b }: More & { b: Size } = $props();"
+   ]
+  },
+  "references": [
+   "Card.svelte 2:11-2:16",
+   "Card.svelte 3:15-3:20"
+  ],
+  "definition": [
+   "Card.svelte 2:11-2:16"
+  ],
+  "highlights": [
+   "2:11-2:16",
+   "3:15-3:20"
+  ]
+ },
+ "Card.svelte@b: Size": {
+  "at": "Card.svelte 3:25",
+  "rename": {
+   "Card.svelte": [
+    "3:25-3:26 bee",
+    "3:10-3:11 bee: b"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "3: \tlet { a, bee: b }: Extra & { bee: Size } = $props();"
+   ]
+  },
+  "references": [
+   "Card.svelte 3:10-3:11",
+   "Card.svelte 3:25-3:26"
+  ],
+  "definition": [
+   "Card.svelte 3:25-3:26"
+  ],
+  "highlights": [
+   "3:10-3:11",
+   "3:25-3:26"
+  ]
+ }
+}

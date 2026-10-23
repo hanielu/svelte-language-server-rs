@@ -1,0 +1,62 @@
+{
+ "server": "/private/tmp/claude-501/-Users-hyprsonic-Developer-hyprsonic-uk--experiments-zeno/957f62ce-c5e3-468e-b125-e60c604064fd/scratchpad/tsrsprobe/tsgo.sh",
+ "version": "Version 7.1.0-dev.20260930.4",
+ "results": [
+  {
+   "file": "a.tsx",
+   "text": "<}{",
+   "request": "textDocument/signatureHelp at 0:2",
+   "answeredAfterMs": null,
+   "cpuPercentAfterCancel": 312.4,
+   "otherRequests": "answered"
+  },
+  {
+   "file": "b.tsx",
+   "text": "}i<{",
+   "request": "textDocument/completion at 0:3",
+   "answeredAfterMs": null,
+   "cpuPercentAfterCancel": 177.7,
+   "otherRequests": "answered"
+  },
+  {
+   "file": "c.tsx",
+   "text": "}\nfoo<{",
+   "request": "textDocument/completion at 1:4",
+   "answeredAfterMs": null,
+   "cpuPercentAfterCancel": 173,
+   "otherRequests": "answered"
+  },
+  {
+   "file": "d.ts",
+   "text": "{}i<{",
+   "request": "textDocument/completion at 0:4",
+   "answeredAfterMs": null,
+   "cpuPercentAfterCancel": 170.7,
+   "otherRequests": "answered"
+  },
+  {
+   "file": "e.tsx",
+   "text": "<{",
+   "request": "textDocument/signatureHelp at 0:1",
+   "answeredAfterMs": 22,
+   "cpuPercentAfterCancel": 0,
+   "otherRequests": "answered"
+  },
+  {
+   "file": "f.tsx",
+   "text": "i<{",
+   "request": "textDocument/completion at 0:2",
+   "answeredAfterMs": 33,
+   "cpuPercentAfterCancel": 0.3,
+   "otherRequests": "answered"
+  },
+  {
+   "file": "g.ts",
+   "text": "f();i<{",
+   "request": "textDocument/completion at 0:6",
+   "answeredAfterMs": 33,
+   "cpuPercentAfterCancel": 0.2,
+   "otherRequests": "answered"
+  }
+ ]
+}

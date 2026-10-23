@@ -1,0 +1,31 @@
+{
+ "files": {
+  "Card.svelte": "<script lang=\"ts\">\n\timport Child from \"./Child.svelte\";\n\ttype Size = \"sm\" | \"lg\";\n\ttype Row = { id: string; size: Size };\n\tlet rows: Row[] = $state([]);\n\tlet val: Size = $state(\"sm\");\n\tlet tag = \"div\";\n\tfunction act(node: HTMLElement, p: Size) { return {}; }\n\tconst prom: Promise<Size> = Promise.resolve(\"sm\");\n</script>\n{#each rows as row (row.id)}<p class:big={row.size === val}>{row.id}</p>{/each}\n{#each rows as { id, size } (id)}<p style:width={size}>{id}</p>{/each}\n{#snippet cell(x: Size, r: Row)}<td use:act={x}>{r.id}{x}</td>{/snippet}\n{#snippet inner(y: Size)}{@const z: Size = y}<b>{z}</b>{/snippet}\n{@render cell(val, rows[0])}\n{#await prom then v}<i>{v}{val}</i>{/await}\n<svelte:element this={tag} title={val}>{val}</svelte:element>\n<input bind:value={val} />\n<Child size={val}>{#snippet named(q: Size)}{q}{/snippet}</Child>\n<div>{@render inner(val)}</div>\n",
+  "Child.svelte": "<script lang=\"ts\">\n\timport type { Snippet } from \"svelte\";\n\tlet { size, named }: { size: string; named?: Snippet<[any]> } = $props();\n</script>\n<p>{size}</p>{@render named?.(size)}\n"
+ },
+ "open": [
+  "Card.svelte"
+ ],
+ "queries": [
+  {
+   "file": "Card.svelte",
+   "at": "Size = \"sm\"",
+   "newName": "Dim"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "val: Size",
+   "newName": "cur"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "id: string",
+   "newName": "ident"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "Row = {",
+   "newName": "Line"
+  }
+ ]
+}

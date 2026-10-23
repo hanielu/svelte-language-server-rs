@@ -1,0 +1,47 @@
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+# rsvelte is its own Cargo workspace (a git submodule with our patches on top).
+exclude = ["vendor"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+rust-version = "1.95"
+
+[workspace.dependencies]
+rsvelte_language_server = { path = "vendor/rsvelte/crates/rsvelte_language_server" }
+
+# Fast to build; what bench/ and day-to-day development use.
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 16
+# The language server isolates per-request panics with catch_unwind, which needs unwinding.
+panic = "unwind"
+debug = false
+
+# What `scripts/install.sh` builds: rsvelte's own distribution settings for its language server.
+[profile.dist]
+inherits = "release"
+lto = "fat"
+codegen-units = 1
+strip = "symbols"
+
+# Same oxc pin as vendor/rsvelte/Cargo.toml (patches only apply from the root workspace).
+[patch.crates-io]
+oxc_allocator         = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_parser            = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_ast               = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_ast_macros        = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_ast_visit         = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_span              = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_diagnostics       = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_codegen           = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_syntax            = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_semantic          = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_regular_expression = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_ecmascript        = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_str               = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }
+oxc_data_structures   = { git = "https://github.com/oxc-project/oxc", rev = "60fa13878c3808413268c462ddadbceaf71c38bb" }

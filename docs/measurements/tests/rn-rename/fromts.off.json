@@ -1,0 +1,46 @@
+{
+ "diags": {
+  "Card.svelte": [
+   "1:2306:File '/Users/hyprsonic/Developer/adroyt/svelte-rs/tests/regressions/run-qSp28g/types.ts' is not a mo"
+  ]
+ },
+ "types.ts@Size =": {
+  "at": "types.ts 0:12",
+  "rename": {},
+  "after": {},
+  "references": null,
+  "definition": [],
+  "highlights": null
+ },
+ "types.ts@tone:": {
+  "at": "types.ts 1:24",
+  "rename": {},
+  "after": {},
+  "references": null,
+  "definition": [],
+  "highlights": null
+ },
+ "Size } from": "needle not found",
+ "Card.svelte@kind: Size": {
+  "at": "Card.svelte 2:30",
+  "rename": {
+   "Card.svelte": [
+    "2:30-2:34 variant"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "2: \tlet { kind, tone }: Base & { variant: Size } = $props();"
+   ]
+  },
+  "references": [
+   "Card.svelte 2:30-2:34"
+  ],
+  "definition": [
+   "Card.svelte 2:30-2:34"
+  ],
+  "highlights": [
+   "2:30-2:34"
+  ]
+ }
+}

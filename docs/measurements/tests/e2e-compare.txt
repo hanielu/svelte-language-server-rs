@@ -1,0 +1,77 @@
+compare baseline (e2e-baseline.json) vs patched (e2e-patched.json)
+  init 736 ms vs 15 ms; passed 24/41 vs 35/41
+  same 1.layout                     PASS -> PASS 9593 ms vs 1431 ms
+* DIFF 1.renderer                   FAIL -> PASS 1276 ms vs 1263 ms
+    baseline: {"canarySeen":true,"canaryRange":"117:7-117:18","canaryRangeExpected":"117:7-117:18","canaryRangeOk":true,"diags":["2:34-2:53 E ts 2307 Cannot find module '@riducms/protocol' or its corresponding type declarations."],"errors":["2:34-2:53 E ts 2307 Cannot find module '@riducms/protocol' or its corresponding type declarations."]}
+    patched: {"canarySeen":true,"canaryRange":"117:7-117:18","canaryRangeExpected":"117:7-117:18","canaryRangeOk":true,"diags":[],"errors":[]}
+* DIFF 1.radio                      FAIL -> PASS 1233 ms vs 1225 ms
+    baseline: {"canarySeen":true,"canaryRange":"10:7-10:18","canaryRangeExpected":"10:7-10:18","canaryRangeOk":true,"diags":["1:51-1:60 E ts 2307 Cannot find module 'bits-ui' or its corresponding type declarations."],"errors":["1:51-1:60 E ts 2307 Cannot find module 'bits-ui' or its corresponding type declarations."]}
+    patched: {"canarySeen":true,"canaryRange":"10:7-10:18","canaryRangeExpected":"10:7-10:18","canaryRangeOk":true,"diags":[],"errors":[]}
+* DIFF 1.jsonNode                   FAIL -> PASS 1265 ms vs 1235 ms
+    baseline: {"canarySeen":true,"canaryRange":"28:7-28:18","canaryRangeExpected":"28:7-28:18","canaryRangeOk":true,"diags":["1:26-1:45 E ts 2307 Cannot find module '@riducms/protocol' or its corresponding type declarations.","22:80-22:85 E ts 2769 No overload matches this call."],"errors":["1:26-1:45 E ts 2307 Cannot find module '@riducms/protocol' or its corresponding type declarations.","22:80-22:85 E ts 2769 No overload matches this call."]}
+    patched: {"canarySeen":true,"canaryRange":"28:7-28:18","canaryRangeExpected":"28:7-28:18","canaryRangeOk":true,"diags":[],"errors":[]}
+* DIFF 1.dialog                     FAIL -> FAIL 1272 ms vs 1308 ms
+    baseline: {"canarySeen":true,"canaryRange":"48:7-48:18","canaryRangeExpected":"48:7-48:18","canaryRangeOk":true,"diags":["1:53-1:62 E ts 2307 Cannot find module 'bits-ui' or its corresponding type declarations.","4:32-4:59 E ts 2307 Cannot find module '#lib/button/button.svelte' or its corresponding type declarations.","60:21-60:26 E ts 7006 Parameter 'event' implicitly has an 'any' type."],"errors":["1:53-1:62 E ts 2307 Cannot find module 'bits-ui' or its corresponding type declarations.","4:32-4:59 E ts 2307 Cannot find module '#lib/button/button.svelte' or its corresponding type declarations.","60:21-60:26 E ts 7006 Parameter 'event' implicitly has an 'any' type."]}
+    patched: {"canarySeen":true,"canaryRange":"48:7-48:18","canaryRangeExpected":"48:7-48:18","canaryRangeOk":true,"diags":["4:32-4:59 E ts 2307 Cannot find module '#lib/button/button.svelte' or its corresponding type declarations."],"errors":["4:32-4:59 E ts 2307 Cannot find module '#lib/button/button.svelte' or its corresponding type declarations."]}
+  same 2.script+template            PASS -> PASS 1286 ms vs 1251 ms
+  same 3a.wrong-prop                PASS -> PASS 645 ms vs 626 ms
+  same 3b.child-buffer-change       PASS -> PASS 1282 ms vs 1270 ms
+  same 3c.child-close-reverts       PASS -> PASS 1284 ms vs 1268 ms
+  same 4a.hover-identifier          PASS -> PASS 9 ms vs 4 ms
+  same 4b.hover-component-tag       PASS -> PASS 2 ms vs 1 ms
+  same 4c.definition-component-tag  FAIL -> FAIL 3 ms vs 2 ms
+  same 4c2.definition-component-import FAIL -> FAIL 3 ms vs 1 ms
+  same 4d.definition-import         PASS -> PASS 2 ms vs 1 ms
+  same 4e.references-small          PASS -> PASS 67 ms vs 62 ms
+  same 4f.references-large          PASS -> PASS 101 ms vs 59 ms
+  same 4g.completion-member         FAIL -> FAIL 696 ms vs 684 ms
+  same 4h.completion-member-partial PASS -> PASS 668 ms vs 639 ms
+  same 4i.completion-member-template PASS -> PASS 656 ms vs 642 ms
+  same 4j.rename                    PASS -> PASS 84 ms vs 58 ms
+  same 4k.workspace-symbol-loaded   PASS -> PASS 17 ms vs 5 ms
+* DIFF 4l.workspace-symbol-unopened PASS -> FAIL 11 ms vs 2 ms
+    baseline: {"lengthState":["packages/plugin-seo/dist/length-indicator.d.ts","packages/plugin-seo/src/lib/length-indicator.ts","packages/plugin-seo/tests/seo.test.ts"],"decodeColor":["examples/documentation/custom-components/color/admin/src/value.ts"]}
+    patched: {"lengthState":[],"decodeColor":[]}
+  same 5a.ui-hover-#lib-import      FAIL -> FAIL 2 ms vs 1 ms
+* DIFF 5b.ui-hover-bits-ui          FAIL -> PASS 1 ms vs 1 ms
+    baseline: null
+    patched: "```typescript\n(alias) module \"../../../node_modules/bits-ui/dist/bits/alert-dialog/exports\"\n```"
+* DIFF 5c.ui-injected-error         PASS -> PASS 1266 ms vs 1252 ms
+    baseline: {"got":["48:7-48:14"],"injectedCleared":true,"errorsAfter":["1:53-1:62 E ts 2307 Cannot find module 'bits-ui' or its corresponding type declarations.","4:32-4:59 E ts 2307 Cannot find module '#lib/button/button.svelte' or its corresponding type declarations.","60:21-60:26 E ts 7006 Parameter 'event' implicitly has an 'any' type."]}
+    patched: {"got":["48:7-48:14"],"injectedCleared":true,"errorsAfter":["4:32-4:59 E ts 2307 Cannot find module '#lib/button/button.svelte' or its corresponding type declarations."]}
+  same 6.contract                   PASS -> PASS 1255 ms vs 1260 ms
+  same 6.typesColor                 PASS -> PASS 1239 ms vs 1228 ms
+  same 6.playground                 PASS -> PASS 1238 ms vs 1266 ms
+  same 6.example                    PASS -> PASS 1245 ms vs 1252 ms
+* DIFF 6.dist                       FAIL -> PASS 1245 ms vs 1221 ms
+    baseline: {"canarySeen":true,"canaryRange":"8:7-8:18","canaryRangeExpected":"8:7-8:18","canaryRangeOk":true,"diags":["1:30-1:39 E ts 2307 Cannot find module 'bits-ui' or its corresponding type declarations."],"errors":["1:30-1:39 E ts 2307 Cannot find module 'bits-ui' or its corresponding type declarations."],"hover":null}
+    patched: {"canarySeen":true,"canaryRange":"8:7-8:18","canaryRangeExpected":"8:7-8:18","canaryRangeOk":true,"diags":[],"errors":[],"hover":"```typescript\n(alias) module \"../../node_modules/bits-ui/dist/bits/dropdown-menu/exports\"\n```"}
+* DIFF 7a.new-file-diagnostics      FAIL -> PASS 60117 ms vs 637 ms
+    baseline: {"all":[]}
+    patched: {"all":["6:7-6:12 E ts 2322 Type 'string' is not assignable to type 'number'.","9:17-9:27 E ts 2322 Type 'number' is not assignable to type '() => void'."]}
+* DIFF 7b.parent-sees-new-file      FAIL -> PASS 60157 ms vs 651 ms
+    baseline: {"all":["92:20-92:42 E ts 2307 Cannot find module './__e2e_new__.svelte' or its corresponding type declarations."]}
+    patched: {"all":["202:8-202:13 E ts 2322 Type 'string' is not assignable to type 'number'."]}
+  same 7c.new-file-fixed            PASS -> PASS 647 ms vs 611 ms
+* DIFF 7d.new-file-discarded        FAIL -> PASS 60674 ms vs 1302 ms
+    baseline: {"all":[],"revertedClean":true}
+    patched: {"all":["92:20-92:42 E ts 2307 Cannot find module './__e2e_new__.svelte' or its corresponding type declarations."],"revertedClean":true}
+* DIFF 7e.new-file-without-project  FAIL -> PASS 30016 ms vs 640 ms
+    baseline: {"all":[]}
+    patched: {"all":["2:7-2:11 E ts 2322 Type 'string' is not assignable to type 'number'."]}
+  same 8.layout                     PASS -> PASS 1565 ms vs 1263 ms
+* DIFF 8.renderer                   FAIL -> PASS 1278 ms vs 1255 ms
+    baseline: {"after":["2:34-2:53 E ts 2307 Cannot find module '@riducms/protocol' or its corresponding type declarations."]}
+    patched: {"after":[]}
+* DIFF 9a.event-for-dirty-buffer    FAIL -> PASS 7169 ms vs 2771 ms
+    baseline: {"before":true,"after":["92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eCanary' is defined but never used."]}
+    patched: {"before":true,"after":["92:7-92:18 E ts 2322 Type 'string' is not assignable to type 'number'.","92:7-92:18 H ts 6133 '__e2eCanary' is declared but its value is never read.","92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eCanary' is defined but never used."]}
+         timing baseline {"events":57,"writtenThisSession":0,"firstPullMs":8958,"firstPullHadCanary":true,"settledMs":12} vs patched {"events":660,"writtenThisSession":0,"firstPullMs":199,"firstPullHadCanary":true,"settledMs":7}
+* DIFF 9b.echo-own-cache-writes     PASS -> PASS 11535 ms vs 2767 ms
+    baseline: {"before":{"layout":["92:7-92:18 E ts 2322 Type 'string' is not assignable to type 'number'.","92:7-92:18 H ts 6133 '__e2eCanary' is declared but its value is never read.","92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eCanary' is defined but never used."],"renderer":["2:34-2:53 E ts 2307 Cannot find module '@riducms/protocol' or its corresponding type declarations."]},"layout":["92:7-92:18 E ts 2322 Type 'string' is not assignable to type 'number'.","92:7-92:18 H ts 6133 '__e2eCanary' is declared but its value is never read.","92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eCanary' is defined but never used."],"renderer":["2:34-2:53 E ts 2307 Cannot find module '@riducms/protocol' or its corresponding type declarations."],"hoverOk":true}
+    patched: {"before":{"layout":["92:7-92:18 E ts 2322 Type 'string' is not assignable to type 'number'.","92:7-92:18 H ts 6133 '__e2eCanary' is declared but its value is never read.","92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eCanary' is defined but never used."],"renderer":[]},"layout":["92:7-92:18 E ts 2322 Type 'string' is not assignable to type 'number'.","92:7-92:18 H ts 6133 '__e2eCanary' is declared but its value is never read.","92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eCanary' is defined but never used."],"renderer":[],"hoverOk":true}
+* DIFF 9c.directory-event           FAIL -> PASS 62518 ms vs 3001 ms
+    baseline: {"layout":["92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eCanary' is defined but never used."],"revertedClean":true}
+    patched: {"layout":["92:7-92:18 E ts 2322 Type 'string' is not assignable to type 'number'.","92:7-92:18 H ts 6133 '__e2eCanary' is declared but its value is never read.","92:7-92:18 W rsvelte svelte/no-unused-vars '__e2eCanary' is defined but never used."],"revertedClean":true}
+  same 10.reopen-closed-child       PASS -> PASS 1269 ms vs 1256 ms
+16 step(s) differ

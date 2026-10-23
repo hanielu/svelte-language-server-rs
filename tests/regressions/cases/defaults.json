@@ -1,0 +1,31 @@
+{
+ "files": {
+  "Card.svelte": "<script lang=\"ts\">\n\ttype Size = 'sm' | 'lg';\n\tlet s: Size = 'sm';\n\tlet { kind = 'sm', value = $bindable('lg'), ...rest }: { kind?: Size; value?: Size; other?: Size } = $props();\n</script>\n<p>{s}{kind}{value}{rest.other}</p>\n"
+ },
+ "open": [
+  "Card.svelte"
+ ],
+ "queries": [
+  {
+   "file": "Card.svelte",
+   "at": "s: Size",
+   "offset": 3,
+   "newName": "Dim"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "kind?:",
+   "newName": "variant"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "kind =",
+   "newName": "variant"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "value?:",
+   "newName": "val"
+  }
+ ]
+}

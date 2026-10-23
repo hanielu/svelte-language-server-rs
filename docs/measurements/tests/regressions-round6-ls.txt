@@ -1,0 +1,435 @@
+# tests/regressions at vendor/rsvelte 245dbfb (patches 55-64 on 7179942), 2026-10-22
+# Fifth review, language server. Load average 10-35 throughout (another engineer's builds and tests ran
+# beside these): latencies are noisy, the outcomes are not. Comparison builds: 7179942 (round 5 final),
+# and for loopstorm 90199fd/254c785 (patches 55-61) against fc9d016/1d849ed (55-62; same code).
+
+## sh tests/regressions/runall.sh <binary> 245dbfb
+== s1 @ 245dbfb
+{ "child0": [], "child1": [], "parentAfterOpen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "parentAfterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s1b @ 245dbfb
+{ "before": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterConfigChange": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "waitedMs": 109, "afterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s2 @ 245dbfb
+{ "initial": [], "unsaved": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterSaveEvent": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterReopen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterFullRefresh": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s3 @ 245dbfb
+{ "freshBeforeCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ], "freshAfterCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ], "existingAfterCopy": [ "1:7006:Parameter 'x' implicitly has an 'any' type." ]}
+== s4 @ 245dbfb
+{ "initial": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterDelete": [ "1:2307:Cannot find module '../../../../../../b/Child.svelte' or its corresponding type declarations." ], "afterRestore": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterParentKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s7 @ 245dbfb
+{ "app": [], "libraryComponent": [ "1:2322:Type 'string' is not assignable to type 'number'.", "5:2304:Cannot find name 'svelteHTML'." ], "hover": "\"```typescript\\nconst n: number\\n```\""}
+== s8 @ 245dbfb
+{ "importerWhileTargetOpen": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterTargetClosed": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+== s10 @ 245dbfb
+{ "dialog": [ "8:2322:Type 'number' is not assignable to type 'string'." ], "hoverUtil": "\"```typescript\\n(alias) const fromUtil: number\\n```\"", "ok": true}
+== s11 @ 245dbfb
+{ "closed": { "tag": [ "Child.svelte:0:0" ], "binding": [ "Child.svelte:0:0" ], "specifier": [ "Child.svelte:0:0" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "open": { "tag": [ "Child.svelte:0:0" ], "binding": [ "Child.svelte:0:0" ], "specifier": [ "Child.svelte:0:0" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "ok": true}
+== incomplete-edits @ 245dbfb
+{ "steps": { "member": { "unresolved": [], "propErrorKept": true, "completions": [ "title", "i18n", "manifest" ], "ok": true }, "call": { "unresolved": [], "propErrorKept": true, "ok": true }, "initializer": { "unresolved": [], "propErrorKept": true, "ok": true }, "import": { "unresolved": [], "propErrorKept": true, "ok": true }, "childBlockOpen": { "parent": [ "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true }, "openingTag": { "parent": [ "8:parse-error:Parsing error: element_invalid_closing_tag: `</p>` attempted to close an element that was not open", "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true } }, "initial": [ "6:2322:Type 'string' is not assignable to type 'number'." ], "ok": true}
+== r1-depkill @ 245dbfb
+{ "appBefore": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "dep": [ "3:2304:Cannot find name 'svelteHTML'." ], "appAfterDepOpen": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "appAfterImportEdit": [ "3:2322:Type 'number' is not assignable to type 'string'.", "1:6196:'Snippet' is declared but never used." ], "shadowLinks": [ "tsgo/dependencies/app/node_modules (real dir)", "tsgo/svelte/app/node_modules -> symlink" ], "ok": true}
+== r1b-close @ 245dbfb
+{ "appBefore": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "dep": [ "3:2304:Cannot find name 'svelteHTML'." ], "appWhileDepOpen": [ "2:2322:Type 'number' is not assignable to type 'string'." ], "appAfterDepClosed": [ "3:2322:Type 'number' is not assignable to type 'string'.", "1:6196:'Snippet' is declared but never used." ], "link": "symlink"}
+== r2c-format @ 245dbfb
+{ "formatQuiet": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "tries": 3, "delay": 10, "probeEndedByEdit": true, "formatSentBeforeEdit": [ "0:0-9:0=>\"<!-- top -->\\n<!-- top -->\\n<script lang=\\\"ts\\\">\\n import " ], "expectedForRequestVersion": [ "0:0-9:0=>\"<!-- top -->\\n<!-- top -->\\n<script lang=\\\"ts\\\">\\n import " ], "ok": true}
+== r2d-hover @ 245dbfb
+{"quiet":["const later: number @7:4","const other: string @8:4"],"probeEndedByEdit":true,"sentBeforeEdit":["const later: number @7:0","const other: string @8:4"],"ok":true}
+== r2e-hover-edit-race @ 245dbfb
+{"rounds":10,"wrong":0}
+== r5-crash @ 245dbfb
+{ "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== r6-watchers @ 245dbfb
+{"editorWatchesNodeModules":["<root>/node_modules/**/*"],"ok":true}
+== hashscope @ 245dbfb
+{ "editor": [ "4:2322:Type '\"nope\"' is not assignable to type 'Kind'.", "4:2322:Type '\"xl\"' is not assignable to type 'Size'." ]}
+== start-of-file @ 245dbfb
+{ "import {": "3:8-3:8 1005", "import { ": "3:8-3:8 1005", "import { x": "3:10-3:10 1005, 3:10-3:10 6133", "import {}": "3:9-3:9 1005", "import { x }": "3:12-3:12 1005, 3:10-3:11 6133", "import { x } from ''": "3:19-3:20 2307, 3:10-3:11 6133", "import type {": "3:13-3:13 1005", "type T = {": "3:6-3:7 6196", "type T = {}": "3:6-3:7 6196", "interface I {": "3:11-3:12 6196", "enum E {": "4:10-4:12 1357, 4:12-4:13 1357, 4:24-4:25 1005, 8:4-8:6 2304", "const o = {": "4:10-4:12 1005, 4:14-4:15 1005, 4:24-4:25 1005, 4:33-4:34 1005, 4:35-4:36 1005, 4:10-4:12 2304, 4:13-4:14 2448, 4:16-4:22 2693, 4:33-4:34 7031, 7:14-7:19 2304, 8:4-8:6 2304, 2:7-2:12 6133", "export {": ""}
+== start-of-file2 @ 245dbfb
+{ "import {": "3:8-3:8 1005, 7:7-7:12 2322", "import { ": "3:8-3:8 1005, 7:7-7:12 2322", "import { x": "3:10-3:10 1005, 7:7-7:12 2322, 3:10-3:10 6133", "import {}": "3:9-3:9 1005, 7:7-7:12 2322", "import { x }": "3:12-3:12 1005, 7:7-7:12 2322, 3:10-3:11 6133", "import type {": "3:13-3:13 1005, 7:7-7:12 2322", "type T = {": "7:7-7:12 2322, 3:6-3:7 6196"}
+== style-open @ 245dbfb
+{"unclosedStyle":["6:parse-error:Parsing error: expected_token: Expected token </style","6:css_unknown_property:Unknown CSS property `colr`.","1:2322:Type 'number' is not assignable to type 'string'."],"closedStyle":["6:css_unknown_property:Unknown CSS property `colr`.","1:2322:Type 'number' is not assignable to type 'string'."],"panics":0}
+== bigtype @ 245dbfb
+{"lines":2113,"quietPullMs":123,"finalDiagMs":215,"completionP50":19,"completionP95":37,"completionMax":37}
+== r5-crash crash-inputs @ 245dbfb
+{ "inputs": 3, "answered": 3, "unanswered": [], "before": [], "panicsCaught": 0, "ok": true}
+== recover-pos @ 245dbfb
+{"states":377,"problems":486,"atStart":0}
+== slow @ 245dbfb
+{ "aliases": 6, "firstTs2322Ms": 6777, "events": [ "open at 0 -> 6777 ms ts2322=true n=1", "edit1 at 8004 -> 14821 ms ts2322=true n=1", "edit2 at 16012 -> 22714 ms ts2322=true n=1", "edit3 at 24015 -> 30751 ms ts2322=true n=1", "edit4 at 32016 -> 38743 ms ts2322=true n=1" ], "didNotAnswer": [], "restarts": 0}
+== burst folding @ 245dbfb
+{"kind":"folding","lines":2106,"quietMs":31,"kindP50":37,"kindMax":43,"compP50":37,"compMax":53,"answered":60,"errors":[],"restarts":[]}
+== burst symbol @ 245dbfb
+{"kind":"symbol","lines":2106,"quietMs":83,"kindP50":1344,"kindMax":1464,"compP50":1278,"compMax":1464,"answered":40,"errors":[],"restarts":[]}
+== propsrename @ 245dbfb
+{ "edits": [ "1:6-1:10 Dim", "2:8-2:12 Dim" ], "after": [ "<script lang=\"ts\">", "\ttype Dim = 'sm' | 'lg';", "\tlet s: Dim = 'sm';", "\tlet { kind }: { kind: Size } = $props();" ], "references": [ "1:6-1:10", "2:8-2:12" ]}
+== hashrename @ 245dbfb
+{ "editor": [], "backgroundDone": true, "references": [ "ui/src/lib/util.ts 0:12-0:16" ], "rename": [ "ui/src/lib/util.ts 0:12-0:16 Dim" ], "duplicateEdits": 0, "cardDiags": [], "cardReferences": [ "ui/src/lib/Button.svelte 2:15-2:19", "ui/src/lib/util.ts 0:12-0:16", "ui/src/routes/deep/Card.svelte 1:15-1:19", "ui/src/routes/deep/Card.svelte 1:50-1:54", "ui/src/routes/deep/Card.svelte 1:70-1:74" ], "cardRename": [ "ui/src/routes/deep/Card.svelte 1:15-1:19 Size as Dim", "ui/src/routes/deep/Card.svelte 1:50-1:54 Dim", "ui/src/routes/deep/Card.svelte 1:70-1:74 Dim" ], "cardRenameDuplicates": 0, "cardDefinition": [ "ui/src/lib/util.ts {\"line\":0,\"character\":12}" ], "specifierDefinition": [ "ui/src/lib/util.ts {\"line\":0,\"character\":0}" ], "cardAfterRename": [ "\timport type { Size as Dim } from '#lib/util.js'; let s: Dim = 'sm'; let t: Dim = 'lg';", "\tlet { kind }: { kind: Size } = $props();" ], "fileRename": []}
+== generics @ 245dbfb
+{ "missingType": [ "0:1-0:1 ts 2304 Cannot find name 'T'." ], "strayComma": [ "0:1-0:1 ts 2304 Cannot find name 'T'." ], "unclosedBrace": [ "0:1-0:1 ts 2304 Cannot find name 'T'." ], "semanticOnly": [ "0:1-0:1 ts 2304 Cannot find name 'Missing'." ]}
+== slowsig signature @ 245dbfb
+{ "aliases": 6, "mode": "signature", "firstTs2322s": 15, "ev": [ "signature@2s -> 5s null", "open@0s -> 15s ts2322=true", "refresh1@2s -> 15s ts2322=true" ], "didNotAnswer": [ "tsgo did not answer textDocument/signatureHelp (3) in 3000 ms; answering without it" ], "restarts": [], "refreshes": 1}
+== slowsig definition @ 245dbfb
+{ "aliases": 6, "mode": "definition", "firstTs2322s": 15, "ev": [ "definition@2s -> 5s []", "open@0s -> 15s ts2322=true", "refresh1@2s -> 15s ts2322=true" ], "didNotAnswer": [ "tsgo did not answer textDocument/definition (3) in 3000 ms; answering without it" ], "restarts": [], "refreshes": 1}
+== slowmix @ 245dbfb
+{ "aliases": 6, "ev": [ "inlay: 3 ms null", "codeActionQuick: 3 ms []", "codeActionPlain: 4 ms []", "semantic: 9 ms {\"data\":[]}", "organizeImports: 9 ms []", "codeActionFixAll: 3002 ms []", "signature: 3003 ms null", "definition: 3003 ms []", "completionMember: 3004 ms {\"isIncomplete\":false,\"items\":[]}", "hoverAll: 3004 ms null" ], "hovers": "1s:3002ms:null 5s:3005ms:null 9s:3007ms:null 13s:3006ms:null 17s:3005ms:null", "didNotAnswer": [ "tsgo did not answer textDocument/codeAction (5) in 3000 ms; answering without it", "tsgo did not answer textDocument/signatureHelp (9) in 3000 ms; answering without it", "tsgo did not answer textDocument/definition (11) in 3000 ms; answering without it", "tsgo did not answer textDocument/completion (10) in 3000 ms; answering without it", "tsgo did not answer textDocument/hover (12) in 3000 ms; answering without it", "tsgo did not answer textDocument/hover (13) in 3000 ms; answering without it", "tsgo did not answer textDocument/hover (14) in 3000 ms; answering without it", "tsgo did not answer textDocument/hover (15) in 3000 ms; answering without it", "tsgo did not answer textDocument/hover (16) in 3000 ms; answering without it", "tsgo did not answer textDocument/hover (17) in 3000 ms; answering without it" ], "restarts": null, "refresh": 0}
+== loopstorm @ 245dbfb
+{"sigRequests":20,"restarts":3,"hovers":["0s:2ms:ok:cpu16.0","1s:17ms:ok:cpu0.1","2s:3ms:ok:cpu34.3","3s:2ms:ok:cpu58.0","4s:16ms:ok:cpu62.1","5s:6ms:ok:cpu29.9","7s:1ms:ok:cpu58.6","8s:36ms:ok:cpu2.0","9s:2ms:ok:cpu54.8","10s:1ms:ok:cpu67.3","11s:1ms:ok:cpu63.4","12s:2ms:ok:cpu66.6","13s:1ms:ok:cpu64.9","14s:3ms:ok:cpu59.4","15s:2ms:ok:cpu66.4","16s:1ms:ok:cpu67.2","17s:1ms:ok:cpu68.2","18s:3ms:ok:cpu8.7","19s:1ms:ok:cpu0.0","20s:3ms:ok:cpu54.2","21s:1ms:ok:cpu69.3","23s:1ms:ok:cpu64.5","24s:1ms:ok:cpu59.5","25s:19ms:ok:cpu39.9","26s:3ms:ok:cpu59.9","27s:1ms:ok:cpu62.5","28s:1ms:ok:cpu67.4","29s:2ms:ok:cpu45.5","30s:7ms:ok:cpu75.1","31s:3ms:ok:cpu79.1","32s:15ms:ok:cpu58.8","33s:2ms:ok:cpu70.2","34s:8ms:ok:cpu59.1","35s:1ms:ok:cpu65.1","36s:1ms:ok:cpu31.5","37s:1ms:ok:cpu75.4","38s:2ms:ok:cpu69.8","39s:2ms:ok:cpu54.0"],"ev":["sig2 answered after 18 ms","sig3 answered after 1 ms","sig3 answered after 5010 ms","sig5 answered after 6 ms","sig6 answered after 1 ms","sig6 answered after 5037 ms","sig7 answered after 1 ms","sig8 answered after 1 ms","sig9 answered after 1 ms","sig11 answered after 1 ms","sig12 answered after 1 ms","sig12 answered after 5006 ms","sig13 answered after 1 ms","sig14 answered after 1 ms","sig15 answered after 0 ms","sig16 answered after 1 ms","sig17 answered after 1 ms","sig18 answered after 1 ms","sig19 answered after 1 ms"]}
+
+## the same against 7179942's record (tests/results/regressions-final.txt), script by script
+same  s1
+DIFF  s1b
+   was: { "before": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterConfigChange": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "waitedMs": 116, "afterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+   now: { "before": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "afterConfigChange": [ "5:2322:Type 'number' is not assignable to type 'string'." ], "waitedMs": 109, "afterChildKeystroke": [ "5:2322:Type 'number' is not assignable to type 'string'." ]}
+same  s2
+same  s3
+same  s4
+same  s7
+same  s8
+same  s10
+DIFF  s11
+   was: { "closed": { "tag": [ "Child.svelte:0:1" ], "binding": [ "Child.svelte:0:1" ], "specifier": [ "Child.svelte:0:1" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "open": { "tag": [ "Child.svelte:0:1" ], "binding": [ "Child.svelte:0:1" ], "specifier": [ "Child.svelte:0:1" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "ok": true}
+   now: { "closed": { "tag": [ "Child.svelte:0:0" ], "binding": [ "Child.svelte:0:0" ], "specifier": [ "Child.svelte:0:0" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "open": { "tag": [ "Child.svelte:0:0" ], "binding": [ "Child.svelte:0:0" ], "specifier": [ "Child.svelte:0:0" ], "typeDefinitionTag": [ "index.d.ts:140:18" ], "implementationTag": [] }, "ok": true}
+same  incomplete-edits
+same  r1-depkill
+same  r1b-close
+DIFF  r2c-format
+   was: { "formatQuiet": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "tries": 1, "delay": 12, "probeEndedByEdit": true, "formatSentBeforeEdit": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "expectedForRequestVersion": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "ok": true}
+   now: { "formatQuiet": [ "0:0-7:0=>\"<script lang=\\\"ts\\\">\\n import Child from \\\"./Child.svelte\\" ], "tries": 3, "delay": 10, "probeEndedByEdit": true, "formatSentBeforeEdit": [ "0:0-9:0=>\"<!-- top -->\\n<!-- top -->\\n<script lang=\\\"ts\\\">\\n import " ], "expectedForRequestVersion": [ "0:0-9:0=>\"<!-- top -->\\n<!-- top -->\\n<script lang=\\\"ts\\\">\\n import " ], "ok": true}
+same  r2d-hover
+same  r2e-hover-edit-race
+same  r5-crash
+same  r6-watchers
+same  hashscope
+same  start-of-file
+same  start-of-file2
+same  style-open
+DIFF  bigtype
+   was: {"lines":2113,"quietPullMs":110,"finalDiagMs":218,"completionP50":20,"completionP95":39,"completionMax":39}
+   now: {"lines":2113,"quietPullMs":123,"finalDiagMs":215,"completionP50":19,"completionP95":37,"completionMax":37}
+same  r5-crash crash-inputs
+same  recover-pos
+DIFF  slow
+   was: { "aliases": 6, "firstTs2322Ms": 6954, "events": [ "open at 0 -> 6954 ms ts2322=true n=1", "edit1 at 8001 -> 14928 ms ts2322=true n=1", "edit2 at 16003 -> 22954 ms ts2322=true n=1", "edit3 at 24004 -> 31013 ms ts2322=true n=1", "edit4 at 32006 -> 38922 ms ts2322=true n=1" ], "didNotAnswer": [], "restarts": 0}
+   now: { "aliases": 6, "firstTs2322Ms": 6777, "events": [ "open at 0 -> 6777 ms ts2322=true n=1", "edit1 at 8004 -> 14821 ms ts2322=true n=1", "edit2 at 16012 -> 22714 ms ts2322=true n=1", "edit3 at 24015 -> 30751 ms ts2322=true n=1", "edit4 at 32016 -> 38743 ms ts2322=true n=1" ], "didNotAnswer": [], "restarts": 0}
+DIFF  burst folding
+   was: {"kind":"folding","lines":2106,"quietMs":41,"kindP50":37,"kindMax":54,"compP50":37,"compMax":64,"answered":60,"errors":[],"restarts":[]}
+   now: {"kind":"folding","lines":2106,"quietMs":31,"kindP50":37,"kindMax":43,"compP50":37,"compMax":53,"answered":60,"errors":[],"restarts":[]}
+DIFF  burst symbol
+   was: {"kind":"symbol","lines":2106,"quietMs":63,"kindP50":112,"kindMax":127,"compP50":114,"compMax":140,"answered":40,"errors":[],"restarts":[]}
+load after: 3.14
+   now: {"kind":"symbol","lines":2106,"quietMs":83,"kindP50":1344,"kindMax":1464,"compP50":1278,"compMax":1464,"answered":40,"errors":[],"restarts":[]}
+NEW   propsrename: { "edits": [ "1:6-1:10 Dim", "2:8-2:12 Dim" ], "after": [ "<script lang=\"ts\">", "\ttype Dim = 'sm' | 'lg';", "\tlet s: Dim = 'sm';", "\tlet { kind }: { kind: Size } = $props();" ], "references": [ "1:6-1:10", "2:8-2:12" ]}
+NEW   hashrename: { "editor": [], "backgroundDone": true, "references": [ "ui/src/lib/util.ts 0:12-0:16" ], "rename": [ "ui/src/lib/util.ts 0:12-0:16 Dim" ], "duplicateEdits": 0, "cardDiags": [], "cardReferences": [ "ui/src/lib/Button.svelte 2:15-2:19", "ui/src/lib/util.ts 0:12-0:16", "ui/src/routes/deep/Card.svelte 
+NEW   generics: { "missingType": [ "0:1-0:1 ts 2304 Cannot find name 'T'." ], "strayComma": [ "0:1-0:1 ts 2304 Cannot find name 'T'." ], "unclosedBrace": [ "0:1-0:1 ts 2304 Cannot find name 'T'." ], "semanticOnly": [ "0:1-0:1 ts 2304 Cannot find name 'Missing'." ]}
+NEW   slowsig signature: { "aliases": 6, "mode": "signature", "firstTs2322s": 15, "ev": [ "signature@2s -> 5s null", "open@0s -> 15s ts2322=true", "refresh1@2s -> 15s ts2322=true" ], "didNotAnswer": [ "tsgo did not answer textDocument/signatureHelp (3) in 3000 ms; answering without it" ], "restarts": [], "refreshes": 1}
+NEW   slowsig definition: { "aliases": 6, "mode": "definition", "firstTs2322s": 15, "ev": [ "definition@2s -> 5s []", "open@0s -> 15s ts2322=true", "refresh1@2s -> 15s ts2322=true" ], "didNotAnswer": [ "tsgo did not answer textDocument/definition (3) in 3000 ms; answering without it" ], "restarts": [], "refreshes": 1}
+NEW   slowmix: { "aliases": 6, "ev": [ "inlay: 3 ms null", "codeActionQuick: 3 ms []", "codeActionPlain: 4 ms []", "semantic: 9 ms {\"data\":[]}", "organizeImports: 9 ms []", "codeActionFixAll: 3002 ms []", "signature: 3003 ms null", "definition: 3003 ms []", "completionMember: 3004 ms {\"isIncomplete\":false,\"it
+NEW   loopstorm: {"sigRequests":20,"restarts":3,"hovers":["0s:2ms:ok:cpu16.0","1s:17ms:ok:cpu0.1","2s:3ms:ok:cpu34.3","3s:2ms:ok:cpu58.0","4s:16ms:ok:cpu62.1","5s:6ms:ok:cpu29.9","7s:1ms:ok:cpu58.6","8s:36ms:ok:cpu2.0","9s:2ms:ok:cpu54.8","10s:1ms:ok:cpu67.3","11s:1ms:ok:cpu63.4","12s:2ms:ok:cpu66.6","13s:1ms:ok:cpu
+
+## burst.mjs <bin> tpl 1500 symbol 20, interleaved with 7179942 after the runall pass (whose burst symbol ran at a load of 150)
+== burst symbol @ 7179942 (round 1, load { 159.74 93.21 49.74 })
+{"kind":"symbol","lines":2106,"quietMs":42,"kindP50":108,"kindMax":120,"compP50":99,"compMax":138,"answered":40,"errors":[],"restarts":[]}
+== burst symbol @ 245dbfb (round 1, load { 39.95 70.86 45.71 })
+{"kind":"symbol","lines":2106,"quietMs":60,"kindP50":104,"kindMax":131,"compP50":104,"compMax":149,"answered":40,"errors":[],"restarts":[]}
+== burst symbol @ 7179942 (round 2, load { 20.23 56.11 42.53 })
+{"kind":"symbol","lines":2106,"quietMs":53,"kindP50":94,"kindMax":107,"compP50":90,"compMax":128,"answered":40,"errors":[],"restarts":[]}
+== burst symbol @ 245dbfb (round 2, load { 12.66 44.10 39.33 })
+{"kind":"symbol","lines":2106,"quietMs":55,"kindP50":91,"kindMax":122,"compP50":92,"compMax":137,"answered":40,"errors":[],"restarts":[]}
+
+## lsfuzz2.mjs <binary> tests/regressions/tpl <seed> 300, seeds 1-20, four at a time, default timeout (245dbfb)
+ok  1 answered 431 errors 4 cancels 5 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  2 answered 448 errors 4 cancels 8 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  3 answered 438 errors 7 cancels 8 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  4 answered 465 errors 1 cancels 1 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  5 answered 422 errors 7 cancels 9 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  6 answered 482 errors 5 cancels 7 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  7 answered 479 errors 7 cancels 8 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  8 answered 443 errors 5 cancels 5 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  9 answered 424 errors 6 cancels 8 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  10 answered 454 errors 6 cancels 8 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  11 answered 441 errors 5 cancels 9 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  12 answered 456 errors 8 cancels 9 ok nonCancelErrors [] restarts 1 didNotAnswer 1 
+ok  13 answered 467 errors 4 cancels 5 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  14 answered 470 errors 3 cancels 5 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  15 answered 418 errors 6 cancels 8 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  16 answered 451 errors 2 cancels 3 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  17 answered 445 errors 10 cancels 12 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  18 answered 446 errors 8 cancels 10 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  19 answered 487 errors 9 cancels 10 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  20 answered 432 errors 7 cancels 7 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+# seed 12 at 245dbfb (server stderr):
+rsvelte-language-server: tsgo did not answer textDocument/completion (343) in 30000 ms; answering without it (a request tsrs loops on)
+rsvelte-language-server: restarting tsgo, which is still busy with textDocument/completion (343)
+
+## the same at 841697a (patches 55-63, before 64)
+ok  1 answered 429 errors 6 cancels 7 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  2 answered 444 errors 8 cancels 10 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  3 answered 439 errors 6 cancels 7 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  4 answered 464 errors 2 cancels 3 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  5 answered 423 errors 6 cancels 7 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  6 answered 482 errors 5 cancels 8 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  7 answered 479 errors 7 cancels 8 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  8 answered 446 errors 2 cancels 4 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  9 answered 425 errors 5 cancels 6 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  10 answered 456 errors 4 cancels 6 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  11 answered 441 errors 5 cancels 8 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  12 answered 457 errors 7 cancels 8 ok nonCancelErrors [] restarts 0 didNotAnswer 1 
+ok  13 answered 471 errors 0 cancels 1 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  14 answered 470 errors 3 cancels 3 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  15 answered 419 errors 5 cancels 6 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  16 answered 449 errors 4 cancels 5 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  17 answered 445 errors 10 cancels 10 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  18 answered 447 errors 7 cancels 10 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  19 answered 491 errors 5 cancels 7 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+ok  20 answered 434 errors 5 cancels 6 ok nonCancelErrors [] restarts 0 didNotAnswer 0 
+# seed 12 at 841697a: the completion tsrs never answered (tee of tsrs's traffic) was not counted as a loop:
+rsvelte-language-server: tsgo did not answer textDocument/completion (343) in 30000 ms; answering without it
+
+## slowsig.mjs <bin> tpl 36 signature|definition 120000 (default timeout; the check takes about 40 s), build of 55-63
+{
+ "aliases": 36,
+ "mode": "signature",
+ "firstTs2322s": 42,
+ "ev": [
+  "signature@2s -> 32s null",
+  "open@0s -> 42s ts2322=true",
+  "refresh1@2s -> 42s ts2322=true"
+ ],
+ "didNotAnswer": [
+  "tsgo did not answer textDocument/signatureHelp (3) in 30000 ms; answering without it"
+ ],
+ "restarts": [],
+ "refreshes": 1
+}
+{
+ "aliases": 36,
+ "mode": "definition",
+ "firstTs2322s": 42,
+ "ev": [
+  "definition@2s -> 32s []",
+  "open@0s -> 42s ts2322=true",
+  "refresh1@2s -> 42s ts2322=true"
+ ],
+ "didNotAnswer": [
+  "tsgo did not answer textDocument/definition (3) in 30000 ms; answering without it"
+ ],
+ "restarts": [],
+ "refreshes": 1
+}
+# review 5's records of the same at 7179942 and 7793da7:
+# slowsig-signature-7179942
+{
+ "aliases": 36,
+ "mode": "signature",
+ "firstTs2322s": 76,
+ "ev": [
+  "signature@2s -> 32s null",
+  "refresh1@2s -> 32s ts2322=false",
+  "open@0s -> 32s ts2322=false",
+  "refresh2@32s -> 76s ts2322=true"
+ ],
+ "didNotAnswer": [
+  "tsgo did not answer textDocument/signatureHelp (3) in 30000 ms; answering without it"
+ ],
+ "restarts": [
+  "restarting tsgo, which is still busy with textDocument/signatureHelp (3)"
+ ],
+ "refreshes": 2
+}
+# slowsig-definition-7179942
+{
+ "aliases": 36,
+ "mode": "definition",
+ "firstTs2322s": 76,
+ "ev": [
+  "definition@2s -> 32s []",
+  "open@0s -> 32s ts2322=false",
+  "refresh1@2s -> 32s ts2322=false",
+  "refresh2@32s -> 76s ts2322=true"
+ ],
+ "didNotAnswer": [
+  "tsgo did not answer textDocument/definition (3) in 30000 ms; answering without it"
+ ],
+ "restarts": [
+  "restarting tsgo, which is still busy with textDocument/definition (3)"
+ ],
+ "refreshes": 2
+}
+# slowsig-signature-7793da7
+{
+ "aliases": 36,
+ "mode": "signature",
+ "firstTs2322s": 50,
+ "ev": [
+  "open@0s -> 50s ts2322=true",
+  "refresh1@2s -> 50s ts2322=true",
+  "signature@2s -> 52s {\"signatures\":[{\"label\":\"take(r: Record<string, nu"
+ ],
+ "didNotAnswer": [],
+ "restarts": [],
+ "refreshes": 1
+}
+
+## slowmix.mjs <bin> tpl 6 all 25000 with RSVELTE_TSGO_REQUEST_TIMEOUT_MS=3000: 7179942, then 55-63
+{
+ "aliases": 6,
+ "ev": [
+  "inlay: 2 ms null",
+  "codeActionPlain: 38 ms []",
+  "codeActionQuick: 38 ms []",
+  "semantic: 41 ms {\"data\":[]}",
+  "organizeImports: 43 ms []",
+  "hoverAll: 3005 ms null",
+  "completionMember: 3006 ms {\"isIncomplete\":false,\"items\":[]}",
+  "signature: 3006 ms null",
+  "definition: 3006 ms []",
+  "codeActionFixAll: 3006 ms []",
+  "pull: 3209 ms {\"kind\":\"full\",\"items\":[]}"
+ ],
+ "hovers": "err 4s:5ms:ok 5s:1ms:ok 6s:1ms:ok 7s:2ms:ok 8s:1ms:ok 9s:1ms:ok 10s:1ms:ok 11s:1ms:ok 12s:2ms:ok 13s:1ms:ok 14s:1ms:ok 15s:1ms:ok 16s:1ms:ok 17s:1ms:ok 18s:1ms:ok 19s:1ms:ok 20s:1ms:ok 21s:1ms:ok 22s:1ms:ok 23s:1ms:ok 24s:1ms:ok 25s:1ms:ok",
+ "didNotAnswer": [
+  "tsgo did not answer textDocument/hover (12) in 3000 ms; answering without it",
+  "tsgo did not answer textDocument/completion (10) in 3000 ms; answering without it",
+  "tsgo did not answer textDocument/signatureHelp (9) in 3000 ms; answering without it",
+  "tsgo did not answer textDocument/definition (11) in 3000 ms; answering without it",
+  "tsgo did not answer textDocument/codeAction (5) in 3000 ms; answering without it"
+ ],
+ "restarts": [
+  "restarting tsgo, which is still busy with textDocument/completion (10), textDocument/signatureHelp (9), textDocument/codeAction (5)"
+ ],
+ "refresh": 0
+}
+{
+ "aliases": 6,
+ "ev": [
+  "inlay: 1 ms null",
+  "codeActionQuick: 1 ms []",
+  "codeActionPlain: 2 ms []",
+  "semantic: 3 ms {\"data\":[]}",
+  "organizeImports: 4 ms []",
+  "signature: 3003 ms null",
+  "hoverAll: 3003 ms null",
+  "codeActionFixAll: 3003 ms []",
+  "definition: 3003 ms []",
+  "completionMember: 3004 ms {\"isIncomplete\":false,\"items\":[]}",
+  "pull: 8197 ms {\"kind\":\"full\",\"items\":[{\"range\":{\"start\":{\"line\":3,\"charact"
+ ],
+ "hovers": "1s:3006ms:null 5s:3004ms:null 9s:3ms:ok 10s:1ms:ok 11s:1ms:ok 12s:1ms:ok 13s:1ms:ok 14s:2ms:ok 15s:1ms:ok 16s:1ms:ok 17s:1ms:ok 18s:2ms:ok 19s:1ms:ok 20s:2ms:ok 21s:1ms:ok 22s:1ms:ok 23s:1ms:ok 24s:1ms:ok 25s:2ms:ok",
+ "didNotAnswer": [
+  "tsgo did not answer textDocument/signatureHelp (9) in 3000 ms; answering without it",
+  "tsgo did not answer textDocument/hover (12) in 3000 ms; answering without it",
+  "tsgo did not answer textDocument/codeAction (5) in 3000 ms; answering without it",
+  "tsgo did not answer textDocument/definition (11) in 3000 ms; answering without it",
+  "tsgo did not answer textDocument/completion (10) in 3000 ms; answering without it",
+  "tsgo did not answer textDocument/hover (13) in 3000 ms; answering without it",
+  "tsgo did not answer textDocument/hover (14) in 3000 ms; answering without it"
+ ],
+ "restarts": null,
+ "refresh": 0
+}
+# default timeout, 55-63:
+{
+ "aliases": 6,
+ "ev": [
+  "inlay: 1 ms null",
+  "codeActionQuick: 1 ms []",
+  "codeActionPlain: 1 ms []",
+  "semantic: 2 ms {\"data\":[]}",
+  "organizeImports: 3 ms []",
+  "pull: 7158 ms {\"kind\":\"full\",\"items\":[{\"range\":{\"start\":{\"line\":3,\"charact",
+  "definition: 7069 ms [{\"uri\":\"file:///Users/hyprsonic/Developer/adroyt/svelte-rs/",
+  "completionMember: 7069 ms {\"isIncomplete\":false,\"items\":[]}",
+  "hoverAll: 7069 ms {\"contents\":\"```typescript\\nconst all: Record<string, number",
+  "signature: 7079 ms {\"signatures\":[{\"label\":\"take(r: Record<string, number>): Re",
+  "codeActionFixAll: 7099 ms []"
+ ],
+ "hovers": "1s:6068ms:ok 8s:1ms:ok 9s:1ms:ok 10s:4ms:ok 11s:1ms:ok 12s:1ms:ok 13s:1ms:ok 14s:1ms:ok 15s:1ms:ok 16s:1ms:ok 17s:1ms:ok 18s:1ms:ok 19s:1ms:ok 20s:1ms:ok 21s:1ms:ok 22s:3ms:ok 23s:1ms:ok 24s:2ms:ok 25s:1ms:ok",
+ "didNotAnswer": null,
+ "restarts": null,
+ "refresh": 0
+}
+
+## loopstorm.mjs <bin> tpl loop-inputs/loop22.svelte 120000 2000, RSVELTE_TSGO_REQUEST_TIMEOUT_MS=10000: 55-61 (254c785), then 55-62 (1d849ed)
+{"sigRequests":60,"restarts":3,"hovers":["0s:1ms:ok:cpu20.9","1s:1ms:ok:cpu0.0","2s:2ms:ok:cpu0.0","3s:1ms:ok:cpu97.3","4s:1ms:ok:cpu134.4","5s:1ms:ok:cpu187.2","6s:5783ms:err:cpu0.0","13s:1ms:ok:cpu96.3","14s:1ms:ok:cpu99.7","15s:1ms:ok:cpu182.3","16s:10006ms:null:cpu222.8","27s:4824ms:err:cpu0.0","33s:1ms:ok:cpu96.0","34s:1ms:ok:cpu100.0","35s:1ms:ok:cpu192.1","36s:10003ms:null:cpu244.6","47s:10012ms:null:cpu39.5","58s:10005ms:null:cpu248.4","69s:2710ms:err:cpu0.0","73s:1ms:ok:cpu95.9","74s:1ms:ok:cpu115.7","75s:1ms:ok:cpu194.1","76s:10005ms:null:cpu246.4","87s:10003ms:null:cpu243.6","98s:10005ms:null:cpu251.1","109s:10004ms:null:cpu252.6"],"ev":["sig6 answered after 10004 ms","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig11 answered after 10005 ms","sig12 answered after 10005 ms","sig12 answered after 10003 ms","sig14 answered after 10004 ms","sig15 answered after 10004 ms","sig15 answered after 10001 ms","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig21 answered after 10004 ms","sig22 answered after 10004 ms","sig23 answered after 10003 ms","sig24 answered after 10004 ms","sig25 answered after 10004 ms","sig26 answered after 10004 ms","sig27 answered after 10004 ms","sig27 answered after 10003 ms","sig29 answered after 10005 ms","sig29 answered after 10002 ms","sig31 answered after 10002 ms","sig32 answered after 10002 ms","sig33 answered after 10003 ms","sig34 answered after 10003 ms","sig35 answered after 10004 ms","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig41 answered after 10005 ms","sig42 answered after 10004 ms","sig43 answered after 10004 ms","sig44 answered after 10004 ms","sig45 answered after 10004 ms"]}
+
+{"sigRequests":60,"restarts":3,"hovers":["0s:1ms:ok:cpu15.4","1s:1ms:ok:cpu0.0","2s:1ms:ok:cpu36.7","3s:1ms:ok:cpu95.7","4s:1ms:ok:cpu100.0","5s:1ms:ok:cpu99.5","6s:1ms:ok:cpu99.0","7s:1ms:ok:cpu100.0","8s:1ms:ok:cpu99.7","9s:1ms:ok:cpu100.0","10s:1ms:ok:cpu100.0","11s:1ms:ok:cpu99.9","12s:1ms:ok:cpu69.7","13s:1ms:ok:cpu98.4","15s:1ms:ok:cpu100.0","16s:1ms:ok:cpu99.3","17s:1ms:ok:cpu99.6","18s:1ms:ok:cpu99.5","19s:1ms:ok:cpu98.8","20s:1ms:ok:cpu99.7","21s:1ms:ok:cpu99.6","22s:1ms:ok:cpu99.1","23s:1ms:ok:cpu99.5","24s:1ms:ok:cpu98.8","25s:1ms:ok:cpu99.7","26s:1ms:ok:cpu99.9","27s:1ms:ok:cpu99.7","28s:1ms:ok:cpu99.7","29s:1ms:ok:cpu99.3","30s:1ms:ok:cpu99.4","31s:1ms:ok:cpu98.8","32s:1ms:ok:cpu0.0","33s:1ms:ok:cpu97.3","34s:1ms:ok:cpu100.0","35s:1ms:ok:cpu100.0","36s:1ms:ok:cpu99.0","37s:1ms:ok:cpu99.7","38s:1ms:ok:cpu99.1","39s:1ms:ok:cpu98.8","40s:1ms:ok:cpu98.9","41s:1ms:ok:cpu99.6","42s:1ms:ok:cpu99.2","43s:1ms:ok:cpu98.8","45s:1ms:ok:cpu98.5","46s:1ms:ok:cpu99.4","47s:1ms:ok:cpu98.7","48s:1ms:ok:cpu98.5","49s:1ms:ok:cpu98.9","50s:1ms:ok:cpu98.8","51s:1ms:ok:cpu100.0","52s:1ms:ok:cpu99.7","53s:1ms:ok:cpu99.3","54s:1ms:ok:cpu99.4","55s:1ms:ok:cpu99.7","56s:1ms:ok:cpu100.0","57s:1ms:ok:cpu99.4","58s:1ms:ok:cpu98.1","59s:1ms:ok:cpu99.7","60s:0ms:ok:cpu99.8","61s:1ms:ok:cpu100.0","62s:1ms:ok:cpu100.0","63s:1ms:ok:cpu100.0","64s:5ms:ok:cpu98.7","65s:1ms:ok:cpu99.5","66s:1ms:ok:cpu93.4","67s:1ms:ok:cpu99.2","68s:1ms:ok:cpu99.4","69s:1ms:ok:cpu99.7","70s:1ms:ok:cpu98.5","71s:1ms:ok:cpu98.7","72s:1ms:ok:cpu71.3","74s:1ms:ok:cpu97.8","75s:1ms:ok:cpu99.1","76s:1ms:ok:cpu99.4","77s:1ms:ok:cpu100.0","78s:1ms:ok:cpu98.9","79s:1ms:ok:cpu99.7","80s:1ms:ok:cpu100.0","81s:1ms:ok:cpu99.4","82s:1ms:ok:cpu99.4","83s:1ms:ok:cpu99.7","84s:1ms:ok:cpu99.1","85s:1ms:ok:cpu99.6","86s:1ms:ok:cpu100.0","87s:1ms:ok:cpu99.1","88s:1ms:ok:cpu100.0","89s:1ms:ok:cpu99.2","90s:1ms:ok:cpu99.4","91s:1ms:ok:cpu99.3","92s:1ms:ok:cpu97.8","93s:1ms:ok:cpu99.1","94s:1ms:ok:cpu99.8","95s:1ms:ok:cpu100.0","96s:1ms:ok:cpu99.6","97s:1ms:ok:cpu100.0","98s:1ms:ok:cpu99.9","99s:1ms:ok:cpu99.4","100s:1ms:ok:cpu99.6","101s:1ms:ok:cpu100.0","102s:1ms:ok:cpu99.3","104s:1ms:ok:cpu99.6","105s:1ms:ok:cpu99.6","106s:1ms:ok:cpu100.0","107s:1ms:ok:cpu98.9","108s:1ms:ok:cpu99.0","109s:1ms:ok:cpu99.5","110s:1ms:ok:cpu97.4","111s:1ms:ok:cpu99.3","112s:1ms:ok:cpu97.2","113s:1ms:ok:cpu98.3","114s:1ms:ok:cpu99.1","115s:1ms:ok:cpu99.7","116s:1ms:ok:cpu100.0","117s:1ms:ok:cpu99.1","118s:1ms:ok:cpu99.9","119s:1ms:ok:cpu99.0"],"ev":["sig2 answered after 0 ms","sig3 answered after 0 ms","sig4 answered after 0 ms","sig5 answered after 0 ms","sig6 answered after 10005 ms","sig7 answered after 0 ms","sig8 answered after 0 ms","sig9 answered after 0 ms","sig10 answered after 0 ms","sig11 answered after 0 ms","sig11 answered after 10004 ms","sig12 answered after 0 ms","sig13 answered after 0 ms","sig14 answered after 0 ms","sig15 answered after 0 ms","sig17 answered after 0 ms","sig18 answered after 0 ms","sig19 answered after 0 ms","sig20 answered after 0 ms","sig20 answered after 10001 ms","sig21 answered after 0 ms","sig22 answered after 0 ms","sig23 answered after 0 ms","sig24 answered after 0 ms","sig25 answered after 0 ms","sig26 answered after 0 ms","sig27 answered after 0 ms","sig28 answered after 0 ms","sig29 answered after 0 ms","sig30 answered after 0 ms","sig31 answered after 0 ms","sig32 answered after 0 ms","sig33 answered after 0 ms","sig34 answered after 0 ms","sig35 answered after 0 ms","sig37 answered after 0 ms","sig38 answered after 0 ms","sig39 answered after 0 ms","sig40 answered after 0 ms","sig41 answered after 10005 ms"]}
+# review 5 at 7179942 (default timeout, 330 s):
+{"sigRequests":69,"restarts":3,"hovers":["0s:1ms:ok:cpu16.5","1s:3ms:ok:cpu0.1","2s:1ms:ok:cpu0.0","3s:2ms:ok:cpu0.0","4s:2ms:ok:cpu0.0","5s:2ms:ok:cpu63.1","6s:2ms:ok:cpu97.6","7s:1ms:ok:cpu79.9","8s:1ms:ok:cpu99.3","9s:1ms:ok:cpu99.3","10s:6ms:ok:cpu131.6","12s:1ms:ok:cpu188.1","13s:1ms:ok:cpu190.6","14s:1ms:ok:cpu190.9","15s:1ms:ok:cpu192.1","16s:19298ms:err:cpu5.5","36s:2ms:ok:cpu92.0","37s:1ms:ok:cpu97.5","38s:1ms:ok:cpu100.0","39s:1ms:ok:cpu99.1","40s:2ms:ok:cpu138.0","41s:9ms:ok:cpu136.4","42s:1ms:ok:cpu189.7","43s:1ms:ok:cpu192.4","44s:1ms:ok:cpu191.6","45s:30009ms:null:cpu232.6","76s:18566ms:err:cpu4.0","96s:1ms:ok:cpu96.3","97s:0ms:ok:cpu99.1","98s:1ms:ok:cpu100.0","99s:1ms:ok:cpu99.3","100s:1ms:ok:cpu128.7","101s:1ms:ok:cpu186.2","102s:1ms:ok:cpu190.6","103s:1ms:ok:cpu186.4","104s:1ms:ok:cpu187.7","105s:30010ms:null:cpu244.5","136s:30002ms:null:cpu244.8","167s:30009ms:null:cpu243.1","199s:16558ms:err:cpu0.0","216s:1ms:ok:cpu95.1","217s:1ms:ok:cpu99.4","218s:1ms:ok:cpu99.7","219s:0ms:ok:cpu100.0","220s:1ms:ok:cpu120.6","221s:1ms:ok:cpu185.2","222s:1ms:ok:cpu191.1","223s:1ms:ok:cpu178.7","224s:1ms:ok:cpu179.8","225s:30013ms:null:cpu162.2","256s:30001ms:null:cpu218.5","288s:30010ms:null:cpu240.8","319s:30007ms:null:cpu239.9"],"ev":["sig7 answered after 30011 ms","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig13 answered after 30010 ms","sig14 answered after 30010 ms","sig14 answered after 30006 ms","sig15 answered after 30007 ms","sig17 answered after 30009 ms","sig18 answered after 30007 ms","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig24 answered after 30010 ms","sig25 answered after 30010 ms","sig26 answered after 30011 ms","sig28 answered after 30008 ms","sig28 answered after 30003 ms","sig30 answered after 30007 ms","sig30 answered after 30008 ms","sig31 answered after 30001 ms","sig33 answered after 30010 ms","sig34 answered after 30009 ms","sig34 answered after 30004 ms","sig35 answered after 30002 ms","sig37 answered after 30010 ms","sig38 answered after 30010 ms","sig39 answered after 30008 ms","sig39 answered after 30002 ms","sig40 answered after 30006 ms","sig42 answered after 30006 ms","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re","sig error {\"code\":-32603,\"message\":\"TypeScript service restarted: a re"]}
+
+## each commit 7179942..245dbfb: cargo test -p rsvelte_language_server --lib --test protocol --test robustness (worktree)
+== 9d1475b fix(language-server): keep rename edits and locations out of a script's opening tag
+test result: ok. 485 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 2.01s
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.51s
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.81s
+== abc01ae fix(language-server): never return two different rename edits for one stretch of text
+test result: ok. 486 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.93s
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.47s
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.46s
+== 7d96446 fix(language-server): keep syntax errors in a script's generics value
+test result: ok. 487 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.82s
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.50s
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.77s
+== e5fa58c fix(language-server): restart tsgo only for a request tsrs is known to loop on
+test result: ok. 491 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 2.11s
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.54s
+test a_request_tsgo_never_answers_is_answered_without_it_and_holds_nothing_back ... FAILED
+thread 'a_request_tsgo_never_answers_is_answered_without_it_and_holds_nothing_back' (17613841) panicked at crates/rsvelte_language_server/tests/robustness.rs:1452:9:
+test result: FAILED. 22 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.85s
+error: test failed, to rerun pass `-p rsvelte_language_server --test robustness`
+== 889791d test(language-server): write each line of the fake tsgo's log at once
+test result: ok. 491 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.87s
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.51s
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.72s
+== 0e90e59 fix(language-server): never count a request as a loop while a pull of its document runs
+test result: ok. 491 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.77s
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.64s
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.84s
+== b9b6a49 fix(language-server): reset the restart backoff after a quiet period
+test result: ok. 492 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.79s
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.56s
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.72s
+== fc9d016 fix(language-server): send tsgo one request it loops on per document at a time
+test result: ok. 492 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 2.01s
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.55s
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.90s
+== 6eb5698 fix(language-server): drop a rename edit whose source text is not the name it renames
+test result: ok. 493 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.80s
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.46s
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.66s
+done
+# This run predates the last rewrite of the branch. 55-57 kept their hashes. e5fa58c was 59 before
+# 889791d (58, the fake tsgo's log race) was moved in front of it; its robustness failure is that race.
+# Now: 58 = 2aa020e (57 + the log fix; its run below), 59-61 = 843a85d, f91e003, 254c785 with the trees of
+# 889791d, 0e90e59, b9b6a49 above; 62-63 = 1d849ed, 841697a differ from fc9d016, 6eb5698 only in comments
+# of tsgo_loop.rs; 64 = 245dbfb (the full suite: 494 unit, 31 protocol, 25 robustness, 2+2+3).
+== 2aa020e test(language-server): write each line of the fake tsgo's log at once
+test result: ok. 487 passed; 0 failed; 1 ignored (lib)
+test result: ok. 31 passed; 0 failed (protocol)
+test result: ok. 23 passed; 0 failed (robustness)
+
+## integration check: 245dbfb merged with svelte-rs-projection (1862ff2) in a throwaway worktree, debug build of
+## rsvelte-language-server, run directly with TSGO_BIN=tsrs (no commit was made on either branch)
+Preparing worktree (detached HEAD 245dbfb)
+HEAD is now at 245dbfb fix(language-server): read a template's substitutions as tsgo does when deciding it loops
+Merge made by the 'ort' strategy.
+ .../src/svelte2tsx/magic_string.rs                 | 123 +++++++++++++++++
+ .../src/svelte2tsx/nodes/generics.rs               |  41 +++---
+ .../src/svelte2tsx/process_instance_script_tag.rs  | 149 ++++++++++++++++----
+ .../src/svelte2tsx/script/exported_names.rs        |   5 +
+ .../src/svelte2tsx/script/props_rune.rs            |  18 +++
+ .../tests/svelte2tsx_generics_attribute_map.rs     | 117 ++++++++++++++++
+ .../tests/svelte2tsx_props_alias_map.rs            | 152 +++++++++++++++++++++
+ 7 files changed, 555 insertions(+), 50 deletions(-)
+ create mode 100644 crates/rsvelte_projection/tests/svelte2tsx_generics_attribute_map.rs
+ create mode 100644 crates/rsvelte_projection/tests/svelte2tsx_props_alias_map.rs
+== merged: 918bb60 Merge branch 'svelte-rs-projection' into HEAD
+   Compiling rsvelte_language_server v0.7.13 (/private/tmp/claude-501/-Users-hyprsonic-Developer-hyprsonic-uk--experiments-zeno/957f62ce-c5e3-468e-b125-e60c604064fd/scratchpad/ls6/int/crates/rsvelte_language_server)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1m 32s
+== propsrename
+{ "edits": [ "1:6-1:10 Dim", "3:23-3:27 Dim", "2:8-2:12 Dim" ], "after": [ "<script lang=\"ts\">", "\ttype Dim = 'sm' | 'lg';", "\tlet s: Dim = 'sm';", "\tlet { kind }: { kind: Dim } = $props();" ], "references": [ "1:6-1:10", "3:23-3:27", "2:8-2:12" ]}
+== hashrename
+{ "editor": [], "backgroundDone": true, "references": [ "ui/src/lib/util.ts 0:12-0:16" ], "rename": [ "ui/src/lib/util.ts 0:12-0:16 Dim" ], "duplicateEdits": 0, "cardDiags": [], "cardReferences": [ "ui/src/lib/Button.svelte 2:15-2:19", "ui/src/lib/Button.svelte 3:41-3:45", "ui/src/lib/util.ts 0:12-0:16", "ui/src/routes/deep/Card.svelte 1:15-1:19", "ui/src/routes/deep/Card.svelte 1:50-1:54", "ui/src/routes/deep/Card.svelte 1:70-1:74", "ui/src/routes/deep/Card.svelte 2:23-2:27" ], "cardRename": [ "ui/src/routes/deep/Card.svelte 1:15-1:19 Size as Dim", "ui/src/routes/deep/Card.svelte 1:50-1:54 Dim", "ui/src/routes/deep/Card.svelte 1:70-1:74 Dim", "ui/src/routes/deep/Card.svelte 2:23-2:27 Dim" ], "cardRenameDuplicates": 0, "cardDefinition": [ "ui/src/lib/util.ts {\"line\":0,\"character\":12}" ], "specifierDefinition": [ "ui/src/lib/util.ts {\"line\":0,\"character\":0}" ], "cardAfterRename": [ "\timport type { Size as Dim } from '#lib/util.js'; let s: Dim = 'sm'; let t: Dim = 'lg';", "\tlet { kind }: { kind: Dim } = $props();" ], "fileRename": []}
+== genericsrename
+{ "diagnostics": [ "3:state_referenced_locally:This reference only captures the initial value of `item`. Did you mean to reference it inside a clos" ], "T": { "edits": [ "0:28-0:29 T2", "2:32-2:33 T2", "3:8-3:9 T2" ], "after": [ "<script lang=\"ts\" generics=\"T2 extends string, U = number\">", "\ttype Size = 'sm' | 'lg';", "\tlet { item, n, size }: { item: T2; n: U; size: Size } = $props();", "\tlet x: T2 = item;" ], "references": [ "0:28-0:29", "2:32-2:33", "3:8-3:9" ], "definition": [ "0:28-0:29" ] }, "Size": { "edits": [ "1:6-1:10 Size2", "2:47-2:51 Size2" ], "after": [ "<script lang=\"ts\" generics=\"T extends string, U = number\">", "\ttype Size2 = 'sm' | 'lg';", "\tlet { item, n, size }: { item: T; n: U; size: Size2 } = $props();", "\tlet x: T = item;" ], "references": [ "1:6-1:10", "2:47-2:51" ], "definition": [ "1:6-1:10" ] }}
+== generics
+{ "missingType": [ "0:38-0:38 ts 1109 Expression expected.", "1:23-1:24 ts 2304 Cannot find name 'T'." ], "strayComma": [ "0:45-0:46 ts 1139 Type parameter declaration expected.", "1:23-1:24 ts 2304 Cannot find name 'T'." ], "unclosedBrace": [ "0:50-0:50 ts 1005 ';' expected.", "1:23-1:24 ts 2304 Cannot find name 'T'." ], "semanticOnly": [ "0:38-0:45 ts 2304 Cannot find name 'Missing'." ]}
+== propsfeatures
+{ "Card.svelte": { "diagnostics": [ "2:2304:Cannot find name 'Missing'." ], "hovers": { "kind@2:20": "(property) kind: Size", "Size@1:6": "type Size = \"lg\" | \"sm\"", "Missing@2:35": "type Missing = /*unresolved*/ any" } }, "List.svelte": { "diagnostics": [ "0:2304:Cannot find name 'Unknown'." ], "hovers": { "T@0:28": "(type parameter) T extends Unknown in $$render<T extends Unk", "Unknown@0:38": "type Unknown = /*unresolved*/ any", "item@1:17": "(property) item: T" } }}

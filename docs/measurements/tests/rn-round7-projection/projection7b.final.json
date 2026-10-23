@@ -1,0 +1,218 @@
+{
+ "diags": {
+  "Card.svelte": [
+   "13:svelte/require-each-key:Each block should have a key",
+   "7:6133:'group' is declared but its value is never read.",
+   "9:6133:'node' is declared but its value is never read.",
+   "9:6133:'p' is declared but its value is never read."
+  ]
+ },
+ "Card.svelte@{idx}": {
+  "at": "Card.svelte 11:37",
+  "rename": {
+   "Card.svelte": [
+    "11:20-11:23 n",
+    "11:37-11:40 n"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "11: {#each rows as row, n (row.id)}<p>{n}{row.id}</p>{/each}"
+   ]
+  },
+  "references": [
+   "Card.svelte 11:20-11:23",
+   "Card.svelte 11:37-11:40"
+  ],
+  "definition": [
+   "Card.svelte 11:20-11:23"
+  ],
+  "highlights": [
+   "11:20-11:23",
+   "11:37-11:40"
+  ]
+ },
+ "Card.svelte@{val.id}": {
+  "at": "Card.svelte 12:26",
+  "rename": {
+   "Card.svelte": [
+    "12:18-12:21 value",
+    "12:26-12:29 value"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "12: {#await prom then value}<i>{value.id}</i>{:catch err}<b>{String(err)}</b>{/await}"
+   ]
+  },
+  "references": [
+   "Card.svelte 12:18-12:21",
+   "Card.svelte 12:26-12:29"
+  ],
+  "definition": [
+   "Card.svelte 12:18-12:21"
+  ],
+  "highlights": [
+   "12:18-12:21",
+   "12:26-12:29"
+  ]
+ },
+ "Card.svelte@(err)": {
+  "at": "Card.svelte 12:60",
+  "rename": {
+   "Card.svelte": [
+    "12:45-12:48 e",
+    "12:60-12:63 e"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "12: {#await prom then val}<i>{val.id}</i>{:catch e}<b>{String(e)}</b>{/await}"
+   ]
+  },
+  "references": [
+   "Card.svelte 12:45-12:48",
+   "Card.svelte 12:60-12:63"
+  ],
+  "definition": [
+   "Card.svelte 12:45-12:48"
+  ],
+  "highlights": [
+   "12:45-12:48",
+   "12:60-12:63"
+  ]
+ },
+ "Card.svelte@{ident}": {
+  "at": "Card.svelte 13:45",
+  "rename": {
+   "Card.svelte": [
+    "13:25-13:30 key",
+    "13:45-13:50 key"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "13: {#each rows as r}{@const key = r.id}<span>{key}</span>{/each}"
+   ]
+  },
+  "references": [
+   "Card.svelte 13:25-13:30",
+   "Card.svelte 13:45-13:50"
+  ],
+  "definition": [
+   "Card.svelte 13:25-13:30"
+  ],
+  "highlights": [
+   "13:25-13:30",
+   "13:45-13:50"
+  ]
+ },
+ "Card.svelte@{item}": {
+  "at": "Card.svelte 14:29",
+  "rename": {
+   "Card.svelte": [
+    "14:29-14:33 entry"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "14: <List items={rows} let:item>{entry}</List>"
+   ]
+  },
+  "references": [
+   "Card.svelte 14:17-14:17",
+   "Card.svelte 14:29-14:33"
+  ],
+  "definition": [
+   "Card.svelte 14:17-14:17"
+  ],
+  "highlights": [
+   "14:17-14:17",
+   "14:29-14:33"
+  ]
+ },
+ "Card.svelte@group = $state": {
+  "at": "Card.svelte 7:5",
+  "rename": {
+   "Card.svelte": [
+    "7:5-7:10 choice",
+    "15:32-15:37 choice"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "7: \tlet choice = $state(\"a\");",
+    "15: <input type=\"radio\" bind:group={choice} value=\"a\" />"
+   ]
+  },
+  "references": [
+   "Card.svelte 15:32-15:37",
+   "Card.svelte 7:5-7:10"
+  ],
+  "definition": [
+   "Card.svelte 7:5-7:10"
+  ],
+  "highlights": [
+   "15:32-15:37",
+   "7:5-7:10"
+  ]
+ },
+ "Card.svelte@dur = 100": {
+  "at": "Card.svelte 6:5",
+  "rename": {
+   "Card.svelte": [
+    "6:5-6:8 ms",
+    "16:57-16:60 ms",
+    "16:41-16:44 ms"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "6: \tlet ms = 100;",
+    "16: {#key k}<em transition:fade={{ duration: ms }} use:act={ms}>{k}</em>{/key}"
+   ]
+  },
+  "references": [
+   "Card.svelte 16:41-16:44",
+   "Card.svelte 16:57-16:60",
+   "Card.svelte 6:5-6:8"
+  ],
+  "definition": [
+   "Card.svelte 6:5-6:8"
+  ],
+  "highlights": [
+   "16:41-16:44",
+   "16:57-16:60",
+   "6:5-6:8"
+  ]
+ },
+ "Card.svelte@k = $state": {
+  "at": "Card.svelte 8:5",
+  "rename": {
+   "Card.svelte": [
+    "8:5-8:6 tick",
+    "16:6-16:7 tick",
+    "16:63-16:64 tick"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "8: \tlet tick = $state(0);",
+    "16: {#key tick}<em transition:fade={{ duration: dur }} use:act={dur}>{tick}</em>{/key}"
+   ]
+  },
+  "references": [
+   "Card.svelte 16:6-16:7",
+   "Card.svelte 16:63-16:64",
+   "Card.svelte 8:5-8:6"
+  ],
+  "definition": [
+   "Card.svelte 8:5-8:6"
+  ],
+  "highlights": [
+   "16:6-16:7",
+   "16:63-16:64",
+   "8:5-8:6"
+  ]
+ }
+}

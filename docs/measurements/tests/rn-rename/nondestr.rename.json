@@ -1,0 +1,63 @@
+{
+ "diags": {
+  "Card.svelte": [
+   "3:state_referenced_locally:This reference only captures the initial value of `props`. Did you mean to reference it inside a clo"
+  ]
+ },
+ "Card.svelte@s: Size": {
+  "at": "Card.svelte 3:8",
+  "rename": {
+   "Card.svelte": [
+    "1:6-1:10 Dim",
+    "2:20-2:24 Dim",
+    "3:8-3:12 Dim"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "1: \ttype Dim = 'sm' | 'lg';",
+    "2: \tlet props: { kind: Dim } = $props();",
+    "3: \tlet s: Dim = props.kind;"
+   ]
+  },
+  "references": [
+   "Card.svelte 1:6-1:10",
+   "Card.svelte 2:20-2:24",
+   "Card.svelte 3:8-3:12"
+  ],
+  "definition": [
+   "Card.svelte 1:6-1:10"
+  ],
+  "highlights": [
+   "1:6-1:10",
+   "2:20-2:24",
+   "3:8-3:12"
+  ]
+ },
+ "Card.svelte@props.kind": {
+  "at": "Card.svelte 3:21",
+  "rename": {
+   "Card.svelte": [
+    "2:14-2:18 variant",
+    "3:21-3:25 variant"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "2: \tlet props: { variant: Size } = $props();",
+    "3: \tlet s: Size = props.variant;"
+   ]
+  },
+  "references": [
+   "Card.svelte 2:14-2:18",
+   "Card.svelte 3:21-3:25"
+  ],
+  "definition": [
+   "Card.svelte 2:14-2:18"
+  ],
+  "highlights": [
+   "2:14-2:18",
+   "3:21-3:25"
+  ]
+ }
+}

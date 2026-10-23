@@ -1,0 +1,101 @@
+{
+ "bin": "svelte-rs-p6",
+ "results": [
+  {
+   "label": "A clean parent has no errors",
+   "ok": true,
+   "ms": 96,
+   "items": []
+  },
+  {
+   "label": "B wrong prop type for a TS child is reported",
+   "ok": true,
+   "ms": 3,
+   "items": [
+    "6:svelte/no-useless-mustaches:Unexpected mustache interpolation with a string literal value.",
+    "6:2322:Type 'string' is not assignable to type 'number'."
+   ]
+  },
+  {
+   "label": "C wrong prop type for a JS (JSDoc) child is reported",
+   "ok": true,
+   "ms": 2,
+   "items": [
+    "6:svelte/no-useless-mustaches:Unexpected mustache interpolation with a string literal value.",
+    "6:2322:Type 'string' is not assignable to type 'number'.",
+    "7:2322:Type 'number' is not assignable to type 'string'."
+   ]
+  },
+  {
+   "label": "D a closed child edited on disk reaches the parent",
+   "ok": true,
+   "ms": 3,
+   "items": [
+    "6:svelte/no-useless-mustaches:Unexpected mustache interpolation with a string literal value.",
+    "7:2322:Type 'number' is not assignable to type 'string'."
+   ]
+  },
+  {
+   "label": "E an unsaved child buffer reaches the parent",
+   "ok": true,
+   "ms": 2,
+   "items": [
+    "6:svelte/no-useless-mustaches:Unexpected mustache interpolation with a string literal value.",
+    "6:2322:Type 'string' is not assignable to type 'boolean'.",
+    "7:2322:Type 'number' is not assignable to type 'string'."
+   ]
+  },
+  {
+   "label": "F closing the unsaved child reverts the parent to the disk version",
+   "ok": true,
+   "ms": 2,
+   "items": [
+    "6:svelte/no-useless-mustaches:Unexpected mustache interpolation with a string literal value.",
+    "7:2322:Type 'number' is not assignable to type 'string'."
+   ]
+  },
+  {
+   "label": "G a component created on disk resolves",
+   "ok": true,
+   "ms": 5,
+   "items": [
+    "7:svelte/no-useless-mustaches:Unexpected mustache interpolation with a string literal value.",
+    "7:2322:Type 'string' is not assignable to type 'number'."
+   ]
+  },
+  {
+   "label": "H a component deleted on disk stops resolving",
+   "ok": true,
+   "ms": 4,
+   "items": [
+    "7:svelte/no-useless-mustaches:Unexpected mustache interpolation with a string literal value.",
+    "3:2307:Cannot find module './NewChild.svelte' or its corresponding type declarations."
+   ]
+  },
+  {
+   "label": "I an indexed access is a number by default",
+   "ok": true,
+   "ms": 5,
+   "items": []
+  },
+  {
+   "label": "J a tsconfig change reaches the project",
+   "ok": true,
+   "ms": 102,
+   "items": [
+    "2:2322:Type 'number | undefined' is not assignable to type 'number'."
+   ]
+  },
+  {
+   "label": "K a project still answers after the restart",
+   "ok": true,
+   "ms": 4,
+   "items": []
+  }
+ ],
+ "cacheFiles": [
+  ".svelte-rs/tsgo/svelte/src/Child.svelte.tsx",
+  ".svelte-rs/tsgo/svelte/src/JsChild.svelte.tsx",
+  ".svelte-rs/tsgo/svelte/src/Parent.svelte.tsx"
+ ]
+}

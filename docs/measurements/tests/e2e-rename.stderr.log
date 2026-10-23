@@ -1,0 +1,5 @@
+rsvelte-language-server: loaded TypeScript project /Users/hyprsonic/Developer/hyprsonic.uk/.experiments/zeno/admin/src/tsconfig.json (166 components) in 105 ms
+rsvelte-language-server: loaded TypeScript project /Users/hyprsonic/Developer/hyprsonic.uk/.experiments/zeno/packages/ui/tsconfig.json (83 components) in 122 ms
+rsvelte-language-server: loaded 10 more TypeScript projects for a workspace-wide request in 465 ms
+rsvelte-language-server: loaded TypeScript project /Users/hyprsonic/Developer/hyprsonic.uk/.experiments/zeno (0 components) in 26 ms
+error handling method 'exit': EOF

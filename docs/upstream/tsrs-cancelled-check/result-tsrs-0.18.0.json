@@ -1,0 +1,86 @@
+{
+ "server": "/Users/hyprsonic/.bun/bin/tsrs",
+ "aliases": 6,
+ "leftAlone": {
+  "cancelledAtMs": null,
+  "pull": {
+   "method": "textDocument/diagnostic",
+   "id": 2,
+   "sentMs": 95,
+   "answeredMs": 6961,
+   "answer": "result"
+  },
+  "meanwhile": [
+   {
+    "method": "textDocument/hover",
+    "id": 3,
+    "sentMs": 397,
+    "answeredMs": 398,
+    "answer": "result"
+   },
+   {
+    "method": "textDocument/codeAction",
+    "id": 4,
+    "sentMs": 397,
+    "answeredMs": 397,
+    "answer": "result"
+   },
+   {
+    "method": "textDocument/inlayHint",
+    "id": 5,
+    "sentMs": 397,
+    "answeredMs": 397,
+    "answer": "result"
+   },
+   {
+    "method": "textDocument/diagnostic",
+    "id": 6,
+    "sentMs": 397,
+    "answeredMs": 6961,
+    "answer": "result"
+   }
+  ],
+  "nextPullTookMs": 1
+ },
+ "cancelledAt1500ms": {
+  "cancelledAtMs": 1583,
+  "pull": {
+   "method": "textDocument/diagnostic",
+   "id": 2,
+   "sentMs": 79,
+   "answeredMs": 6895,
+   "answer": "error -32800"
+  },
+  "meanwhile": [
+   {
+    "method": "textDocument/hover",
+    "id": 3,
+    "sentMs": 381,
+    "answeredMs": 382,
+    "answer": "result"
+   },
+   {
+    "method": "textDocument/codeAction",
+    "id": 4,
+    "sentMs": 381,
+    "answeredMs": 382,
+    "answer": "result"
+   },
+   {
+    "method": "textDocument/inlayHint",
+    "id": 5,
+    "sentMs": 381,
+    "answeredMs": 382,
+    "answer": "result"
+   },
+   {
+    "method": "textDocument/diagnostic",
+    "id": 6,
+    "sentMs": 382,
+    "answeredMs": 6894,
+    "answer": "result"
+   }
+  ],
+  "nextPullTookMs": 6753
+ }
+}

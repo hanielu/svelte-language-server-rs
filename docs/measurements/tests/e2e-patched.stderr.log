@@ -1,0 +1,8 @@
+rsvelte-language-server: loaded TypeScript project /Users/hyprsonic/Developer/hyprsonic.uk/.experiments/zeno/admin/src/tsconfig.json (166 components) in 123 ms
+rsvelte-language-server: loaded TypeScript project /Users/hyprsonic/Developer/hyprsonic.uk/.experiments/zeno/packages/ui/tsconfig.json (83 components) in 38 ms
+rsvelte-language-server: loaded TypeScript project /Users/hyprsonic/Developer/hyprsonic.uk/.experiments/zeno/tests/contracts/admin_app/tsconfig.json (21 components) in 9 ms
+rsvelte-language-server: loaded TypeScript project /Users/hyprsonic/Developer/hyprsonic.uk/.experiments/zeno/tests/types/svelte/tsconfig.json (3 components) in 4 ms
+rsvelte-language-server: loaded TypeScript project /Users/hyprsonic/Developer/hyprsonic.uk/.experiments/zeno/playground/shadcn-rhea/tsconfig.json (103 components) in 33 ms
+rsvelte-language-server: loaded TypeScript project /Users/hyprsonic/Developer/hyprsonic.uk/.experiments/zeno/examples/blocks/tsconfig.json (6 components) in 6 ms
+rsvelte-language-server: loaded TypeScript project /Users/hyprsonic/Developer/hyprsonic.uk/.experiments/zeno (0 components) in 28 ms
+error handling method 'exit': EOF

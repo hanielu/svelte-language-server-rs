@@ -1,0 +1,22 @@
+{
+ "files": {
+  "Card.svelte": "<script lang=\"ts\">\n\ttype Size = 'sm' | 'lg';\n\tlet props: { kind: Size } = $props();\n\tlet s: Size = props.kind;\n</script>\n<p>{s}</p>\n"
+ },
+ "open": [
+  "Card.svelte"
+ ],
+ "queries": [
+  {
+   "file": "Card.svelte",
+   "at": "s: Size",
+   "offset": 3,
+   "newName": "Dim"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "props.kind",
+   "offset": 6,
+   "newName": "variant"
+  }
+ ]
+}

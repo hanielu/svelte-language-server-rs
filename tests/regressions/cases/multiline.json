@@ -1,0 +1,21 @@
+{
+ "files": {
+  "Card.svelte": "<script lang=\"ts\">\n\timport type { Snippet } from 'svelte';\n\ttype Size = 'sm' | 'lg';\n\tlet {\n\t\tkind,\n\t\tchildren,\n\t}: {\n\t\t/** the size */\n\t\tkind: Size; // trailing\n\t\tchildren?: Snippet<[Size]>;\n\t} = $props();\n\tlet s: Size = kind;\n</script>\n{#snippet row(x: Size)}<td>{x}</td>{/snippet}\n{@render children?.(s)}{@render row(s)}\n"
+ },
+ "open": [
+  "Card.svelte"
+ ],
+ "queries": [
+  {
+   "file": "Card.svelte",
+   "at": "s: Size",
+   "offset": 3,
+   "newName": "Dim"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "kind: Size",
+   "newName": "variant"
+  }
+ ]
+}

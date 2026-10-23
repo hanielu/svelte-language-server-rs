@@ -1,0 +1,45 @@
+compare patched (e2e-round4-ls.json) vs patched (e2e-final-670722d.json)
+  init 13 ms vs 646 ms; passed 41/41 vs 41/41
+  same 1.layout                     PASS -> PASS 1561 ms vs 1474 ms
+  same 1.renderer                   PASS -> PASS 1320 ms vs 1251 ms
+  same 1.radio                      PASS -> PASS 1261 ms vs 1218 ms
+  same 1.jsonNode                   PASS -> PASS 1252 ms vs 1228 ms
+  same 1.dialog                     PASS -> PASS 1569 ms vs 1328 ms
+  same 2.script+template            PASS -> PASS 1358 ms vs 1240 ms
+  same 3a.wrong-prop                PASS -> PASS 635 ms vs 620 ms
+  same 3b.child-buffer-change       PASS -> PASS 1268 ms vs 1247 ms
+  same 3c.child-close-reverts       PASS -> PASS 1260 ms vs 1238 ms
+  same 4a.hover-identifier          PASS -> PASS 9 ms vs 4 ms
+  same 4b.hover-component-tag       PASS -> PASS 3 ms vs 1 ms
+  same 4c.definition-component-tag  PASS -> PASS 3 ms vs 2 ms
+  same 4c2.definition-component-import PASS -> PASS 3 ms vs 1 ms
+  same 4d.definition-import         PASS -> PASS 2 ms vs 1 ms
+  same 4e.references-small          PASS -> PASS 810 ms vs 553 ms
+  same 4f.references-large          PASS -> PASS 140 ms vs 105 ms
+  same 4g.completion-member         PASS -> PASS 655 ms vs 633 ms
+  same 4h.completion-member-partial PASS -> PASS 659 ms vs 635 ms
+  same 4i.completion-member-template PASS -> PASS 658 ms vs 636 ms
+  same 4j.rename                    PASS -> PASS 95 ms vs 56 ms
+  same 4k.workspace-symbol-loaded   PASS -> PASS 22 ms vs 10 ms
+  same 4l.workspace-symbol-unopened PASS -> PASS 13 ms vs 7 ms
+  same 5a.ui-hover-#lib-import      PASS -> PASS 14 ms vs 7 ms
+  same 5b.ui-hover-bits-ui          PASS -> PASS 11 ms vs 1 ms
+  same 5c.ui-injected-error         PASS -> PASS 1264 ms vs 1236 ms
+  same 6.contract                   PASS -> PASS 1253 ms vs 1232 ms
+  same 6.typesColor                 PASS -> PASS 1241 ms vs 1222 ms
+  same 6.playground                 PASS -> PASS 1367 ms vs 1254 ms
+  same 6.example                    PASS -> PASS 1240 ms vs 1235 ms
+  same 6.dist                       PASS -> PASS 1249 ms vs 1232 ms
+  same 7a.new-file-diagnostics      PASS -> PASS 790 ms vs 641 ms
+  same 7b.parent-sees-new-file      PASS -> PASS 674 ms vs 656 ms
+  same 7c.new-file-fixed            PASS -> PASS 615 ms vs 610 ms
+  same 7d.new-file-discarded        PASS -> PASS 1402 ms vs 1305 ms
+  same 7e.new-file-without-project  PASS -> PASS 732 ms vs 640 ms
+  same 8.layout                     PASS -> PASS 1325 ms vs 1239 ms
+  same 8.renderer                   PASS -> PASS 1267 ms vs 1256 ms
+  same 9a.event-for-dirty-buffer    PASS -> PASS 2764 ms vs 2746 ms
+         timing patched {"events":660,"writtenThisSession":0,"firstPullMs":378,"firstPullHadCanary":true,"settledMs":8} vs patched {"events":663,"writtenThisSession":0,"firstPullMs":265,"firstPullHadCanary":true,"settledMs":6}
+  same 9b.echo-own-cache-writes     PASS -> PASS 2959 ms vs 2816 ms
+  same 9c.directory-event           PASS -> PASS 3022 ms vs 2997 ms
+  same 10.reopen-closed-child       PASS -> PASS 1265 ms vs 1241 ms
+0 step(s) differ

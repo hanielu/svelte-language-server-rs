@@ -1,0 +1,119 @@
+{
+ "diags": {
+  "Card.svelte": []
+ },
+ "Card.svelte@Size =": {
+  "at": "Card.svelte 1:6",
+  "rename": {
+   "Card.svelte": [
+    "1:6-1:10 Dim",
+    "3:23-3:27 Dim",
+    "3:45-3:49 Dim",
+    "2:8-2:12 Dim",
+    "2:42-2:46 Dim"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "1: \ttype Dim = \"sm\" | \"lg\"; // café ☕ 😀\r",
+    "2: \tlet s: Dim = \"sm\"; let é = \"😀\"; let t: Dim = \"lg\";\r",
+    "3: \tlet { kind }: { kind: Dim; /* ü */ other?: Dim } = $props();\r"
+   ]
+  },
+  "references": [
+   "Card.svelte 1:6-1:10",
+   "Card.svelte 2:42-2:46",
+   "Card.svelte 2:8-2:12",
+   "Card.svelte 3:23-3:27",
+   "Card.svelte 3:45-3:49"
+  ],
+  "definition": [
+   "Card.svelte 1:6-1:10"
+  ],
+  "highlights": [
+   "1:6-1:10",
+   "2:42-2:46",
+   "2:8-2:12",
+   "3:23-3:27",
+   "3:45-3:49"
+  ]
+ },
+ "Card.svelte@t: Size": {
+  "at": "Card.svelte 2:39",
+  "rename": {
+   "Card.svelte": [
+    "2:39-2:40 tt",
+    "5:23-5:24 tt",
+    "6:11-6:12 tt"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "2: \tlet s: Size = \"sm\"; let é = \"😀\"; let tt: Size = \"lg\";\r",
+    "5: <p title=\"😀 {s}\">é😀 {tt}{kind}{é}</p>\r",
+    "6: {#each [s, tt] as x}😀{x}{/each}\r"
+   ]
+  },
+  "references": [
+   "Card.svelte 2:39-2:40",
+   "Card.svelte 5:23-5:24",
+   "Card.svelte 6:11-6:12"
+  ],
+  "definition": [
+   "Card.svelte 2:39-2:40"
+  ],
+  "highlights": [
+   "2:39-2:40",
+   "5:23-5:24",
+   "6:11-6:12"
+  ]
+ },
+ "Card.svelte@é =": {
+  "at": "Card.svelte 2:25",
+  "rename": {
+   "Card.svelte": [
+    "2:25-2:26 e2",
+    "5:32-5:33 e2"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "2: \tlet s: Size = \"sm\"; let e2 = \"😀\"; let t: Size = \"lg\";\r",
+    "5: <p title=\"😀 {s}\">é😀 {t}{kind}{e2}</p>\r"
+   ]
+  },
+  "references": [
+   "Card.svelte 2:25-2:26",
+   "Card.svelte 5:32-5:33"
+  ],
+  "definition": [
+   "Card.svelte 2:25-2:26"
+  ],
+  "highlights": [
+   "2:25-2:26",
+   "5:32-5:33"
+  ]
+ },
+ "Card.svelte@other?": {
+  "at": "Card.svelte 3:37",
+  "rename": {
+   "Card.svelte": [
+    "3:37-3:42 more"
+   ]
+  },
+  "after": {
+   "Card.svelte": [
+    "3: \tlet { kind }: { kind: Size; /* ü */ more?: Size } = $props();\r"
+   ]
+  },
+  "references": [
+   "Card.svelte 3:37-3:42"
+  ],
+  "definition": [
+   "Card.svelte 3:37-3:42"
+  ],
+  "highlights": [
+   "3:37-3:42"
+  ]
+ }
+}

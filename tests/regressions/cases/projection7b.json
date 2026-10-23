@@ -1,0 +1,56 @@
+{
+ "files": {
+  "Card.svelte": "<script lang=\"ts\">\n\timport { fade } from \"svelte/transition\";\n\timport List from \"./List.svelte\";\n\ttype Row = { id: string };\n\tlet rows: Row[] = $state([]);\n\tconst prom: Promise<Row> = Promise.resolve({ id: \"a\" });\n\tlet dur = 100;\n\tlet group = $state(\"a\");\n\tlet k = $state(0);\n\tfunction act(node: HTMLElement, p: number) {}\n</script>\n{#each rows as row, idx (row.id)}<p>{idx}{row.id}</p>{/each}\n{#await prom then val}<i>{val.id}</i>{:catch err}<b>{String(err)}</b>{/await}\n{#each rows as r}{@const ident = r.id}<span>{ident}</span>{/each}\n<List items={rows} let:item>{item}</List>\n<input type=\"radio\" bind:group={group} value=\"a\" />\n{#key k}<em transition:fade={{ duration: dur }} use:act={dur}>{k}</em>{/key}\n",
+  "List.svelte": "<script lang=\"ts\">\n\tlet { items }: { items: unknown[] } = $props();\n</script>\n{#each items as item}<slot {item} />{/each}\n"
+ },
+ "open": [
+  "Card.svelte"
+ ],
+ "queries": [
+  {
+   "file": "Card.svelte",
+   "at": "{idx}",
+   "offset": 1,
+   "newName": "n"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "{val.id}",
+   "offset": 1,
+   "newName": "value"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "(err)",
+   "offset": 1,
+   "newName": "e"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "{ident}",
+   "offset": 1,
+   "newName": "key"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "{item}",
+   "offset": 1,
+   "newName": "entry"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "group = $state",
+   "newName": "choice"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "dur = 100",
+   "newName": "ms"
+  },
+  {
+   "file": "Card.svelte",
+   "at": "k = $state",
+   "newName": "tick"
+  }
+ ]
+}
