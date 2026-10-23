@@ -1,4 +1,4 @@
-# Testing and measuring svelte-rs
+# Testing and measuring svelte-language-server-rs
 
 ## The reference workspace
 
@@ -21,7 +21,7 @@ rich-text package (a Vite-config preprocessor for `$`-prefixed imports).
 | rsvelte's suites | `vendor/rsvelte/crates/*/src`, `tests/` | unit behaviour, LSP protocol (`tests/protocol.rs`), robustness against fake/stalled tsgo (`tests/robustness.rs`) |
 | regression scripts | `tests/regressions/` | every bug a reviewer reproduced, against a real binary and real tsrs, on throwaway projects built from `tests/regressions/tpl` (a project with `svelte` installed) |
 | review tools | `tests/review3/` | keystroke fuzzers (`lsfuzz.mjs`), large-component typing (`bigtype.mjs`), diagnostic-position sweeps |
-| comparison | `tests/diagproj.mjs` | every diagnostic of a file under svelte-rs vs the official server |
+| comparison | `tests/diagproj.mjs` | every diagnostic of a file under svelte-language-server-rs vs the official server |
 | end to end | `tests/e2e.mjs` | 41 scenarios as Zed drives the server (diagnostics, cross-component props, hover, definition, references, completion, other projects, new files) |
 | benchmarks | `bench/` | open → diagnostics, edit → diagnostics, typing/completion latency, memory |
 
@@ -34,24 +34,24 @@ CARGO_TARGET_DIR=../../target-tests cargo test -p rsvelte_language_server --lib 
 # 5 tests in tests/upstream_fixture_manifest.rs need the language-tools submodule and fail without it.
 
 # Regression scripts against a build
-cargo build --release -p svelte_rs
-sh tests/regressions/runall.sh target/release/svelte-rs dev
+cargo build --release -p svelte_language_server_rs
+sh tests/regressions/runall.sh target/release/svelte-language-server-rs dev
 
-# Diagnostics of real files, svelte-rs vs the official server (Zed's install)
-node tests/diagproj.mjs svelte-rs <project> <file.svelte>...
+# Diagnostics of real files, svelte-language-server-rs vs the official server (Zed's install)
+node tests/diagproj.mjs svelte-language-server-rs <project> <file.svelte>...
 node tests/diagproj.mjs svelte-ls <project> <file.svelte>...
 
 # End to end (scenarios name the reference workspace's files; adapt them for another project)
 E2E_WORKSPACE=<repository root> node tests/e2e.mjs run patched --out tests/results/e2e-dev.json
 
 # Benchmarks
-node bench/bench.mjs svelte-rs <project> <file.svelte>...
+node bench/bench.mjs svelte-language-server-rs <project> <file.svelte>...
 BENCH_PROJECT=<project> BENCH_FILES="a.svelte b.svelte" bench/final.sh 3
 ```
 
 Sessions against a project that another language-server session also uses must go through
-`bench/with-lock.sh`: both write the overlay cache under `<project>/.svelte-rs/`. When the project is
-open in your editor with svelte-rs running, test on a copy instead (rsync it without
+`bench/with-lock.sh`: both write the overlay cache under `<project>/.svelte-language-server-rs/`. When the project is
+open in your editor with svelte-language-server-rs running, test on a copy instead (rsync it without
 `node_modules`, then symlink each `node_modules` back).
 
 ## Recorded measurements
@@ -60,7 +60,9 @@ open in your editor with svelte-rs running, test on a copy instead (rsync it wit
 the first baseline of the official server, svelte-check's run on the admin app, and the evidence
 tools of the first patch round. `docs/measurements/tests/` holds every end-to-end run and
 comparison, and the regression-script outputs per round. `docs/reviews/` keeps the findings of each
-review round that the patches answer.
+review round that the patches answer. Records made before 2026-10-23 name the project, its binary and
+its cache folder svelte-rs (`.svelte-rs/`), its former name, as do the vendor branch names
+`svelte-rs` and `svelte-rs-projection` in `docs/patches.md`'s history.
 
 Notes on the numbers:
 

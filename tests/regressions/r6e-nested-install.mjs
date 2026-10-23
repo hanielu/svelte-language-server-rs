@@ -22,7 +22,7 @@ s.write("app/node_modules/nested-later/package.json", '{"name":"nested-later","t
 s.write("app/node_modules/nested-later/index.d.ts", "export declare const later: number;\n");
 const files = ["app/node_modules/nested-later", "app/node_modules/nested-later/package.json", "app/node_modules/nested-later/index.d.ts"];
 if (mode === "real") s.watched(files.map((f) => [f, 1]));
-if (mode === "link") s.watched(files.map((f) => [".svelte-rs/tsgo/svelte/" + f, 1]));
+if (mode === "link") s.watched(files.map((f) => [".svelte-language-server-rs/tsgo/svelte/" + f, 1]));
 await s.sleep(1500);
 s.change("app/src/App.svelte", app + "\n");
 out.afterInstall = await s.settle("app/src/App.svelte", 5000);

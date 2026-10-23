@@ -1,4 +1,4 @@
-// Minimal LSP session against svelte-rs for review experiments (scratch projects only).
+// Minimal LSP session against svelte-language-server-rs for review experiments (scratch projects only).
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";

@@ -22,7 +22,7 @@ fn options(path: &Path, root: &Path, source: &str) -> Svelte2TsxOptions {
         rewrite_external_imports: Some(RewriteExternalImportsOptions {
             source_path: path.display().to_string(),
             generated_path: root
-                .join(".svelte-rs/shadow")
+                .join(".svelte-language-server-rs/shadow")
                 .join(path.strip_prefix(root).unwrap_or(path))
                 .with_extension("svelte.tsx")
                 .display()

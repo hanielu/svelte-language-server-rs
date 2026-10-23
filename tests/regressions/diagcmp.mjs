@@ -16,4 +16,4 @@ for (const [n, t] of Object.entries(cases)) {
   out[n] = (r?.items ?? []).map((d) => `${d.range.start.line}:${d.range.start.character}-${d.range.end.line}:${d.range.end.character} ${d.source ?? ""} ${d.code ?? ""} ${String(d.message).split("\n")[0].slice(0, 70)}`);
 }
 console.log(JSON.stringify(out, null, 1));
-await s.end(); if (process.env.KEEP) { fs.cpSync(root + "/.svelte-rs", process.env.KEEP, { recursive: true }); } fs.rmSync(root, { recursive: true, force: true }); process.exit(0);
+await s.end(); if (process.env.KEEP) { fs.cpSync(root + "/.svelte-language-server-rs", process.env.KEEP, { recursive: true }); } fs.rmSync(root, { recursive: true, force: true }); process.exit(0);

@@ -1,7 +1,7 @@
 # tsrs: a cancelled diagnostic pull is checked to the end and thrown away
 
 Not filed; possibly by design (typescript-go's checker may not poll cancellation inside a check).
-Found while answering the fourth review (a component whose check takes 41 s), which made svelte-rs
+Found while answering the fourth review (a component whose check takes 41 s), which made svelte-language-server-rs
 stop cancelling and restarting tsgo for slow pulls (docs/patches.md, patch 50).
 
 ## Repro
@@ -27,8 +27,8 @@ So a `$/cancelRequest` does not stop the check, the cancelled pull is answered o
 done, and nothing of the check is kept: the next pull pays for it again, where after an uncancelled
 pull it is instant. Pulls of other files wait for the slow one meanwhile.
 
-## What svelte-rs does about it
+## What svelte-language-server-rs does about it
 
 A diagnostic pull is never cancelled, answered without tsgo or restarted for taking long (patch 50):
 the editor gets tsgo's answer when the check is done. An editor that cancels its own stale pulls
-still costs tsgo the check; svelte-rs forwards that cancellation as before.
+still costs tsgo the check; svelte-language-server-rs forwards that cancellation as before.

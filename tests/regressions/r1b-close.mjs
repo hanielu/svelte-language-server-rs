@@ -28,7 +28,7 @@ s.watched([["app/src/Other.svelte", 2]]);
 await s.sleep(500);
 s.change("app/src/App.svelte", app.replace("<script lang=\"ts\">\n", "<script lang=\"ts\">\n\timport type { Snippet } from 'svelte';\n"));
 out.appAfterDepClosed = await s.settle("app/src/App.svelte", 6000);
-const p = root + "/.svelte-rs/tsgo/svelte/app/node_modules";
+const p = root + "/.svelte-language-server-rs/tsgo/svelte/app/node_modules";
 out.link = fs.existsSync(p) ? (fs.lstatSync(p).isSymbolicLink() ? "symlink" : "real dir: " + fs.readdirSync(p, { recursive: true }).join(",")) : "absent";
 console.log(JSON.stringify(out, null, 1));
 await s.end();

@@ -13,7 +13,7 @@
 //   E2E_WORKSPACE=<repository root> node tests/e2e.mjs both     # baseline, then patched, then compare
 //   node tests/e2e.mjs compare <a.json> <b.json>
 //
-//   patched  = target/release/svelte-rs                          (SVELTE_RS_BIN overrides)
+//   patched  = target/release/svelte-language-server-rs                          (SVELTE_LANGUAGE_SERVER_RS_BIN overrides)
 //   baseline = an unpatched rsvelte-language-server               (RSVELTE_BIN; default
 //              target-rsvelte/release/rsvelte-language-server)
 //   Both use TSGO_BIN = tsrs (TSRS_BIN overrides, default ~/.bun/bin/tsrs). LOG=1 echoes the
@@ -39,7 +39,7 @@ const WORKSPACE = path.resolve(process.env.E2E_WORKSPACE ?? ".");
 const TSRS = process.env.TSRS_BIN ?? path.join(os.homedir(), ".bun/bin/tsrs");
 const RESULTS = path.join(HERE, "results");
 const SERVERS = {
-	patched: { cmd: process.env.SVELTE_RS_BIN ?? path.join(REPO, "target/release/svelte-rs"), args: ["--stdio"], env: { TSGO_BIN: TSRS } },
+	patched: { cmd: process.env.SVELTE_LANGUAGE_SERVER_RS_BIN ?? path.join(REPO, "target/release/svelte-language-server-rs"), args: ["--stdio"], env: { TSGO_BIN: TSRS } },
 	baseline: { cmd: process.env.RSVELTE_BIN ?? path.join(REPO, "target-rsvelte/release/rsvelte-language-server"), args: ["--stdio"], env: { TSGO_BIN: TSRS } },
 };
 
@@ -455,7 +455,7 @@ async function run(label, outPath) {
 		const expectedFiles = grepFiles.filter((f) => f.startsWith("admin/src/"));
 		const missing = expectedFiles.filter((f) => !files.includes(f));
 		return {
-			ok: missing.length === 0 && files.some((f) => f.endsWith(".svelte")) && locs.every((l) => !l.includes(".svelte-rs") && !l.includes(".rsvelte-language-server") && !l.includes(".svelte.tsx")),
+			ok: missing.length === 0 && files.some((f) => f.endsWith(".svelte")) && locs.every((l) => !l.includes(".svelte-language-server-rs") && !l.includes(".rsvelte-language-server") && !l.includes(".svelte.tsx")),
 			expected: { filesInAdminSrc: expectedFiles, allGrepFiles: grepFiles, grepOccurrences: grep.length },
 			observed: { count: locs.length, files, missingFromAdminSrc: missing, notInGrep: files.filter((f) => !grepFiles.includes(f)), locations: locs },
 		};
@@ -524,7 +524,7 @@ async function run(label, outPath) {
 		const crossFile = [...new Set(grepRefs("adminPathResource").map((l) => l.split(":")[0]))].filter((f) => f.startsWith("admin/src/")).sort();
 		const localOnly = files.length === 1 && files[0] === F.layout && locs.length === 2;
 		return {
-			ok: bad.length === 0 && (localOnly || crossFile.every((f) => files.includes(f))) && files.every((f) => !f.includes(".svelte-rs") && !f.includes(".rsvelte-language-server")),
+			ok: bad.length === 0 && (localOnly || crossFile.every((f) => files.includes(f))) && files.every((f) => !f.includes(".svelte-language-server-rs") && !f.includes(".rsvelte-language-server")),
 			expected: { localOnly: `${F.layout} (2 edits)`, orCrossFile: crossFile }, observed: { count: locs.length, files, edits: edits.map((e) => `${relOf(e.uri)}:${rangeStr(e.range)} -> ${e.newText}`).sort() },
 		};
 	});
@@ -689,7 +689,7 @@ async function run(label, outPath) {
 			}
 		};
 		// Only this server's own cache directory (the other server's may exist from an earlier run).
-		const cache = label === "baseline" ? ".rsvelte-language-server" : ".svelte-rs";
+		const cache = label === "baseline" ? ".rsvelte-language-server" : ".svelte-language-server-rs";
 		if (fs.existsSync(path.join(WORKSPACE, cache))) walk(path.join(WORKSPACE, cache));
 		const line = instanceScriptEndLine(layoutText.split("\n"));
 		if (!(await retypeCanary())) throw new Error("canary not reported before the echo");
@@ -736,7 +736,7 @@ async function run(label, outPath) {
 	await lsp.closeStderr();
 	const statusAfter = gitStatus();
 	result.workspaceSourceChanges = diffLines(statusBefore, statusAfter);
-	result.cacheDirs = [".svelte-rs", ".rsvelte-language-server"].filter((d) => fs.existsSync(path.join(WORKSPACE, d)));
+	result.cacheDirs = [".svelte-language-server-rs", ".rsvelte-language-server"].filter((d) => fs.existsSync(path.join(WORKSPACE, d)));
 	result.passed = result.steps.filter((s) => s.ok).length;
 	result.failed = result.steps.filter((s) => !s.ok).map((s) => s.id);
 	fs.writeFileSync(outPath, JSON.stringify(result, null, 1));
@@ -807,11 +807,11 @@ async function main() {
 		if (!SERVERS[label]) throw new Error(`unknown server ${label} (patched|baseline)`);
 		const outIdx = rest.indexOf("--out");
 		const out = outIdx >= 0 ? path.resolve(rest[outIdx + 1]) : path.join(RESULTS, `e2e-${label}.json`);
-		if (!process.env.SVELTE_RS_E2E_LOCKED) {
+		if (!process.env.SVELTE_LANGUAGE_SERVER_RS_E2E_LOCKED) {
 			// Hold the machine-wide session lock for the whole run.
 			const r = spawnSync(path.join(REPO, "bench/with-lock.sh"), [process.execPath, fileURLToPath(import.meta.url), ...process.argv.slice(2)], {
 				stdio: "inherit",
-				env: { ...process.env, SVELTE_RS_E2E_LOCKED: "1" },
+				env: { ...process.env, SVELTE_LANGUAGE_SERVER_RS_E2E_LOCKED: "1" },
 			});
 			process.exit(r.status ?? 1);
 		}

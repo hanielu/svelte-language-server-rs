@@ -1,7 +1,7 @@
 // Typing benchmark: single-character edits at typing speed, then member-expression completions.
 //
 // Usage: [BACKGROUND=0] [SETTLE_MS=3000] bench/with-lock.sh node bench/typing.mjs <server> <projectRoot> <file.svelte>
-//   server: "svelte-ls" or "svelte-rs" (same table and Zed initialization options as bench/bench.mjs)
+//   server: "svelte-ls" or "svelte-language-server-rs" (same table and Zed initialization options as bench/bench.mjs)
 // Prints one JSON line.
 //
 // 1. Opens the file with a canary type error on a new line right before the instance script's
@@ -52,7 +52,7 @@ const inlay = {
 const zedInit = { provideFormatter: true, dontFilterIncompleteCompletions: true, configuration: { typescript: { inlayHints: inlay }, javascript: { inlayHints: inlay } } };
 const servers = {
 	"svelte-ls": { cmd: "node", args: [`${ZED}/extensions/work/svelte/node_modules/svelte-language-server/bin/server.js`, "--stdio"] },
-	"svelte-rs": { cmd: process.env.SVELTE_RS_BIN ?? path.join(HERE, "../target/release/svelte-rs"), args: ["--stdio"] },
+	"svelte-language-server-rs": { cmd: process.env.SVELTE_LANGUAGE_SERVER_RS_BIN ?? path.join(HERE, "../target/release/svelte-language-server-rs"), args: ["--stdio"] },
 };
 const spec = servers[serverName];
 if (!spec) throw new Error(`unknown server ${serverName}`);

@@ -1,6 +1,6 @@
 # tsrs: a completion or signature help request is never answered and spins a core
 
-Not filed. Found by `tests/review3/lsfuzz.mjs` (seeds 22 and 38) through svelte-rs; minimized here
+Not filed. Found by `tests/review3/lsfuzz.mjs` (seeds 22 and 38) through svelte-language-server-rs; minimized here
 to a one-file project that talks to tsrs directly.
 
 ## Repro
@@ -66,7 +66,7 @@ rejects is answered from, and a plain TypeScript buffer, can meet all three. All
 rejected documents. For upstream: `findPrecedingMatchingToken`'s `lastIndexOf` calls need the
 `tokenFullStart` bound (the `<` check in `getPossibleTypeArgumentsInfo` too).
 
-## How svelte-rs copes
+## How svelte-language-server-rs copes
 
 `crates/rsvelte_language_server/src/tsgo_loop.rs` models the walk on the text tsgo has
 (`tests/data/tsrs-lost-requests.json` there holds every measured request: every loop is found, and no

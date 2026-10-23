@@ -1,7 +1,7 @@
 # Patches to rsvelte
 
-svelte-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `c921b00`).
+svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `389817e`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -14,7 +14,7 @@ on `7793da7`; 47–49 were developed on `svelte-rs-projection` (on `7793da7`) an
 sixth review, projection) were developed on `svelte-rs-projection` (on `8c8c100`) and merged into
 `3c82cbc` with `c921b00`. None of the five merges had a conflict. Round 5's final integration's `git
 merge --no-ff svelte-rs-projection` found nothing to merge (the projection branch was still at
-`670722d`, already in `svelte-rs`) and made no commit, so that final build is `7179942` itself.
+`670722d`, already in `svelte-language-server-rs`) and made no commit, so that final build is `7179942` itself.
 
 | # | commit | patch |
 |---|---|---|
@@ -176,7 +176,7 @@ the style (`class:on`).
 `git merge --no-ff svelte-rs-projection` brought 73–80 (`476f489`) into `3c82cbc` as `c921b00`, without a
 conflict (the branches share no file: the merged tree's language-server crate is `3c82cbc`'s, its
 projection, parser and check crates are `476f489`'s). Nothing needed fixing after the merge. The release
-`svelte-rs` rebuilt from it has sha1 `e180f229…`. Load average 4–15 during the sessions (6–9 during the
+`svelte-language-server-rs` rebuilt from it has sha1 `e180f229…`. Load average 4–15 during the sessions (6–9 during the
 benchmarks; up to 117 while the test suites compiled, with other projects' work). Every zeno session
 through `bench/with-lock.sh`. Records: `docs/measurements/tests/regressions-rename.txt` (runall, its
 comparison with both branches' records, the rename and diagnostic matrices, the initialize probe,
@@ -248,14 +248,14 @@ on (flagged) is the only restart, as at `3c82cbc` and `8c8c100`.
 **Benchmarks** (`VARIANT=rename bench/final.sh 3`, zeno root, load 6–9; the `final` columns are the final
 set's, at a load of 4–7):
 
-| `bench/bench.mjs`, 3 files across 2 projects | official 0.18.5 | **svelte-rs `c921b00`** | svelte-rs `7179942` (final) |
+| `bench/bench.mjs`, 3 files across 2 projects | official 0.18.5 | **svelte-language-server-rs `c921b00`** | svelte-language-server-rs `7179942` (final) |
 |---|---|---|---|
 | first diagnostics | 2,629–2,880 / 275–283 / 1,069–1,433 ms | **205–254 / 13–14 / 15–18 ms** | 210–220 / 13–17 / 15–33 ms |
 | edit → diagnostics (median of 5) | 265–278 / 261–281 / 254–256 ms | **10–11 / 10 / 10–11 ms** | 12 / 10–11 / 11–12 ms |
-| memory, ps RSS, settled | 762–810 MB | **342 MB** (svelte-rs 73–74, tsrs 269), two runs | 341–344 MB (72–73, 269–272) |
+| memory, ps RSS, settled | 762–810 MB | **342 MB** (svelte-language-server-rs 73–74, tsrs 269), two runs | 341–344 MB (72–73, 269–272) |
 | initialize | 443–466 ms | 24–26 ms | 15–16 ms |
 
-| `bench/typing.mjs` | official 0.18.5 | **svelte-rs `c921b00`** | svelte-rs `7179942` (final) |
+| `bench/typing.mjs` | official 0.18.5 | **svelte-language-server-rs `c921b00`** | svelte-language-server-rs `7179942` (final) |
 |---|---|---|---|
 | final diagnostics, after the last keystroke | 263–308 ms | **14–16 ms** | 14–18 ms |
 | completion while typing, p50 / p95 (max) | 175–309 / 348–444 ms (366–482) | **6.2–7.0 / 16.4–19.2 ms (21–23)** | 6.7–7.1 / 16.4–19.3 ms (21–22) |
@@ -264,8 +264,8 @@ set's, at a load of 4–7):
 | memory before typing → peak (settled) | 599–601 → 670–678 MB (799–845) | **316 → 360–366 MB (362–370)** | 314–317 → 363–367 MB (366–369) |
 
 Both servers offer the expected member on 20 of 20 keystrokes and in 20 of 20 member rounds in every
-run, no request fails, and both end on the single TS2339. In the second bench run the whole svelte-rs
-tree's ps RSS was 186 MB (svelte-rs 26, tsrs 160): macOS paged it out, as in the ship set's second typing
+run, no request fails, and both end on the single TS2339. In the second bench run the whole svelte-language-server-rs
+tree's ps RSS was 186 MB (svelte-language-server-rs 26, tsrs 160): macOS paged it out, as in the ship set's second typing
 run (no restart; ps RSS, see follow-ups). The initialize time is the only number off the final set's,
 and it is not the build: an initialize-only probe of `8c8c100`, `3c82cbc`, the projection branch and
 `c921b00`, interleaved five times at the zeno root (`tests/regressions/initprobe.mjs`, through the lock),
@@ -299,7 +299,7 @@ The machine was busy throughout (load average 20–95: other projects' builds), 
 what they show does not depend on them. Every zeno session through `bench/with-lock.sh`. Records:
 `docs/measurements/tests/regressions-round7-ls.txt` (runall, the other `missedloop.mjs` runs, `pullwhileloop.mjs`,
 `slowsig.mjs` with 36 aliases, lsfuzz2, and the first build of 68), `e2e-round7-ls.json` and
-`e2e-compare-ship-vs-round7-ls.txt`. The release `svelte-rs` built from `3c82cbc` has sha1 `3eac201f…`.
+`e2e-compare-ship-vs-round7-ls.txt`. The release `svelte-language-server-rs` built from `3c82cbc` has sha1 `3eac201f…`.
 
 **A loop the model misses** (review 6's problem 1; patches 67–68). `missedloop.mjs`: components
 svelte2tsx rejects (`<p>{aN.</p>`, so tsgo has the script body), a completion at `}c|{` in each (or
@@ -374,7 +374,7 @@ Every other query of `shorthand.json` and `component.json`, and every query of t
 `git merge --no-ff svelte-rs-projection` brought 65–66 (`1862ff2`) into `245dbfb` as `8c8c100`, without
 a conflict (the branches share no file; the merged tree's language-server crate is `245dbfb`'s, its
 projection, parser and check crates are `1862ff2`'s). Nothing needed fixing after the merge. The release
-`svelte-rs` rebuilt from it has sha1 `0d7a6912…`. The machine was busy throughout (load average 13–57,
+`svelte-language-server-rs` rebuilt from it has sha1 `0d7a6912…`. The machine was busy throughout (load average 13–57,
 13–34 during the benchmarks; other projects' builds, simulators and an emulator, 7 GB of swap in use),
 so latencies are noisier than in the final set below; what they show does not depend on them. Every zeno
 session through `bench/with-lock.sh`. Records: `docs/measurements/tests/regressions-ship.txt`, `e2e-ship.json`,
@@ -415,14 +415,14 @@ on is again the only restart, as at `245dbfb`.
 **Benchmarks** (`VARIANT=ship bench/final.sh 3`, zeno root, load 13–34; the `final` columns are the
 final set's below, at a load of 4–7):
 
-| `bench/bench.mjs`, 3 files across 2 projects | official 0.18.5 | **svelte-rs `8c8c100`** | svelte-rs `7179942` (final) |
+| `bench/bench.mjs`, 3 files across 2 projects | official 0.18.5 | **svelte-language-server-rs `8c8c100`** | svelte-language-server-rs `7179942` (final) |
 |---|---|---|---|
 | first diagnostics | 2,262–2,304 / 276–287 / 935–1,167 ms | **220–283 / 13–18 / 17–18 ms** | 210–220 / 13–17 / 15–33 ms |
 | edit → diagnostics (median of 5) | 273–276 / 263–265 / 263–274 ms | **11–13 / 10–11 / 11–13 ms** | 12 / 10–11 / 11–12 ms |
-| memory, ps RSS, settled | 747–782 MB | **340–342 MB** (svelte-rs 73–74, tsrs 268–269) | 341–344 MB (72–73, 269–272) |
+| memory, ps RSS, settled | 747–782 MB | **340–342 MB** (svelte-language-server-rs 73–74, tsrs 268–269) | 341–344 MB (72–73, 269–272) |
 | initialize | 414–460 ms | **13–15 ms** | 15–16 ms |
 
-| `bench/typing.mjs` | official 0.18.5 | **svelte-rs `8c8c100`** | svelte-rs `7179942` (final) |
+| `bench/typing.mjs` | official 0.18.5 | **svelte-language-server-rs `8c8c100`** | svelte-language-server-rs `7179942` (final) |
 |---|---|---|---|
 | final diagnostics, after the last keystroke | 265–321 ms | **15–17 ms** | 14–18 ms |
 | completion while typing, p50 / p95 (max) | 65–291 / 298–435 ms (311–454) | **6.8–7.1 / 17.9–27.6 ms (20–40)** | 6.7–7.1 / 16.4–19.3 ms (21–22) |
@@ -433,7 +433,7 @@ final set's below, at a load of 4–7):
 Both servers offer the expected member on 20 of 20 keystrokes and in 20 of 20 member rounds in every
 run, no request fails, and both end on the single TS2339. The 283 ms first open and the wider p95s come
 from single runs at the busiest moments; the other runs are within a few milliseconds of the final
-set's. In the second svelte-rs typing run the whole tree's ps RSS fell to 161 MB (svelte-rs 35, tsrs 126
+set's. In the second svelte-language-server-rs typing run the whole tree's ps RSS fell to 161 MB (svelte-language-server-rs 35, tsrs 126
 MB; both at about 44% of the other runs) and stayed flat while typing: macOS paged the processes out
 under the memory pressure (ps RSS, see follow-ups), not a tsgo restart, which needs a request 30 s
 overdue (no completion took more than 40 ms). So the merge moves none of these numbers;
@@ -536,13 +536,13 @@ completion was answered and cancelled but not counted as a loop (patch 64).
 ### Final: patches 1–54 (`7179942`) against the official server
 
 The final integration merged nothing new (see above), so the build is `7179942`'s: the release
-`svelte-rs` rebuilt from it is byte-identical to the one round 5 measured (sha1 `45c7ad02…`). zeno root
+`svelte-language-server-rs` rebuilt from it is byte-identical to the one round 5 measured (sha1 `45c7ad02…`). zeno root
 (476 components in 12 projects), every session through `bench/with-lock.sh`; official
-svelte-language-server 0.18.5 (Zed's install, TypeScript 5.9.3), svelte-rs with tsrs 0.18.0
+svelte-language-server 0.18.5 (Zed's install, TypeScript 5.9.3), svelte-language-server-rs with tsrs 0.18.0
 (TypeScript 7.1.0-dev.20260930.4). `VARIANT=final bench/final.sh 3` at a load average of 3.8–5.3
 (the `final` lines of `docs/measurements/bench/final.jsonl` with build `7179942` and the official lines dated
 after 11:43Z, interleaved with them; the earlier `final` lines are `670722d`'s and `1d4cb87`'s),
-plus three direct svelte-rs sessions (`final-direct`), the smaller workspaces and the all-projects
+plus three direct svelte-language-server-rs sessions (`final-direct`), the smaller workspaces and the all-projects
 memory at 2–4. The other records are in `docs/measurements/tests/regressions-final.txt`.
 
 `bench/bench.mjs`, 3 files across 2 projects (admin-layout / field-renderer / confirmation-dialog):
@@ -550,26 +550,26 @@ memory at 2–4. The other records are in `docs/measurements/tests/regressions-f
 | | first diagnostics | edit → diagnostics (median of 5) | memory, ps RSS, settled | initialize |
 |---|---|---|---|---|
 | official 0.18.5 | 1,917–2,288 / 279–286 / 956–1,022 ms | 272–279 / 264–267 / 258–262 ms | 820–826 MB | 364–416 ms |
-| **svelte-rs `7179942`** | **210–220 / 13–17 / 15–33 ms** | **12 / 10–11 / 11–12 ms** | **341–344 MB** (svelte-rs 72–73, tsrs 269–272) | **15–16 ms** |
-| svelte-rs `7179942`, not right after the official server | 156–169 / 15–18 / 15–16 ms | 12 / 11 / 11–12 ms | 335–339 MB (tsrs 264–267) | 2–4 ms |
+| **svelte-language-server-rs `7179942`** | **210–220 / 13–17 / 15–33 ms** | **12 / 10–11 / 11–12 ms** | **341–344 MB** (svelte-language-server-rs 72–73, tsrs 269–272) | **15–16 ms** |
+| svelte-language-server-rs `7179942`, not right after the official server | 156–169 / 15–18 / 15–16 ms | 12 / 11 / 11–12 ms | 335–339 MB (tsrs 264–267) | 2–4 ms |
 
-The first file's 210–220 ms is `final.sh`'s order again (svelte-rs always starts right after the
+The first file's 210–220 ms is `final.sh`'s order again (svelte-language-server-rs always starts right after the
 official server); the 33 ms is one run's third file. Patches 50–54 change nothing here (round 5:
 153–167 ms first, edits 10–14 ms, against `670722d`'s 138–173 ms and 10–13 ms).
 
 **Memory with every project loaded** (`bench/allprojects.mjs <bin> <zeno> background 40000`, 3 runs;
 one component opened, a hover every 2.5 s while the background loads the rest, then three
 `workspace/symbol` queries): all 12 projects load, idle hovers answer in 1–5 ms (median 2),
-`workspace/symbol` finds all three (5 files) in 2–11 ms; **288–291 MB phys_footprint** (svelte-rs 56,
+`workspace/symbol` finds all three (5 files) in 2–11 ms; **288–291 MB phys_footprint** (svelte-language-server-rs 56,
 tsrs 232–235; ps RSS 309–314 MB). The official server in the same set holds one project, finds none
 of the three, and takes 567 MB before the queries and 598 MB after (RSS 583/611). Alternating
-`670722d` and `7179942` in two pairs: 286–289 MB (svelte-rs 55) against 289–291 MB (56–57), so
+`670722d` and `7179942` in two pairs: 286–289 MB (svelte-language-server-rs 55) against 289–291 MB (56–57), so
 patches 50–54 cost about 1–2 MB with everything loaded (round 4 measured `670722d` at 284–287, its
-svelte-rs process at 52–53, in another session).
+svelte-language-server-rs process at 52–53, in another session).
 
 **Smaller workspaces** (admin-layout and field-renderer, 3 runs, load 2.2–3.9): workspace =
-zeno/admin, official 1,988–2,141 / 272–295 ms, edits 265–276 ms, 622–642 MB; svelte-rs 176–223 /
-12–15 ms, edits 9–11 ms, 164 MB (tsrs 113–115). Workspace = zeno/admin/src, svelte-rs 161–164 /
+zeno/admin, official 1,988–2,141 / 272–295 ms, edits 265–276 ms, 622–642 MB; svelte-language-server-rs 176–223 /
+12–15 ms, edits 9–11 ms, 164 MB (tsrs 113–115). Workspace = zeno/admin/src, svelte-language-server-rs 161–164 /
 12–15 ms, edits 8–12 ms, 163–166 MB (tsrs 113–115).
 
 Typing (`bench/typing.mjs`, admin-layout.svelte):
@@ -577,10 +577,10 @@ Typing (`bench/typing.mjs`, admin-layout.svelte):
 | | final diagnostics, after the last keystroke | completion while typing, p50 / p95 (max) | member completion after a keystroke, p50 / p95 (max) | unchanged document, p50 / p95 | memory before typing → peak (settled) |
 |---|---|---|---|---|---|
 | official 0.18.5 | 233–272 ms | 127–227 / 332–360 ms (359–364) | 17.5–18.2 / 21.1–22.7 ms (21–26) | 1.4–1.7 / 1.6–1.8 ms | 608–609 → 686–696 MB (863–866) |
-| **svelte-rs `7179942`** | **14–18 ms** | **6.7–7.1 / 16.4–19.3 ms (21–22)** | **5.6–6.4 / 6.2–7.9 ms (6.5–8.1)** | 1.6–1.7 / 2.0–2.2 ms | **314–317 → 363–367 MB (366–369)** |
+| **svelte-language-server-rs `7179942`** | **14–18 ms** | **6.7–7.1 / 16.4–19.3 ms (21–22)** | **5.6–6.4 / 6.2–7.9 ms (6.5–8.1)** | 1.6–1.7 / 2.0–2.2 ms | **314–317 → 363–367 MB (366–369)** |
 
 * Both end on the single TS2339 (`Property 'exten' does not exist on type 'ResolvedAdminConfig'`),
-  964–968 ms after the first keystroke on svelte-rs and 1,184–1,221 ms on the official server (the
+  964–968 ms after the first keystroke on svelte-language-server-rs and 1,184–1,221 ms on the official server (the
   typing takes 950 ms). The expected member was offered on 20 of 20 keystrokes and in 20 of 20 member
   rounds, in every run of both; no request failed.
 * **Against the official server** (medians of the runs): first diagnostics about 10× faster in
@@ -644,7 +644,7 @@ all 5 pulls, no "did not answer", no restart.
 
 ### Round 5, language server: patches 50–54 (`7179942`) against `670722d`
 
-Every zeno session through `bench/with-lock.sh`, load average 2–10. The svelte-rs build measured is
+Every zeno session through `bench/with-lock.sh`, load average 2–10. The svelte-language-server-rs build measured is
 `738b7fa`'s, byte-identical to `7179942`'s (the amend that made it changed only a test's string
 building). Records: `docs/measurements/tests/regressions-round5-ls.txt`, `e2e-round5-ls.json`,
 `e2e-compare-final-670722d-vs-round5-ls.txt`, and the `round5-ls` lines of `docs/measurements/bench/final.jsonl`.
@@ -661,14 +661,14 @@ projects; `bench/typing.mjs`, admin-layout), plus four direct alternating typing
 | | first diagnostics | edit → diagnostics (median) | memory, settled | initialize |
 |---|---|---|---|---|
 | official 0.18.5 | 1,842–2,380 / 275–284 / 871–956 ms | 273–275 / 263–266 / 261–262 ms | 818–821 MB | 333–404 ms |
-| **svelte-rs `7179942`** | **153–167 / 13–15 / 14–19 ms** | **12–14 / 10–11 / 11–12 ms** | **336–341 MB** | **3–4 ms** |
-| svelte-rs `670722d` | 138–173 / 14–18 / 15–18 ms | 12–13 / 10–11 / 11–13 ms | 336–339 MB | 2–14 ms |
+| **svelte-language-server-rs `7179942`** | **153–167 / 13–15 / 14–19 ms** | **12–14 / 10–11 / 11–12 ms** | **336–341 MB** | **3–4 ms** |
+| svelte-language-server-rs `670722d` | 138–173 / 14–18 / 15–18 ms | 12–13 / 10–11 / 11–13 ms | 336–339 MB | 2–14 ms |
 
 | | final diagnostics | completion while typing, p50 / p95 | member completion, p50 / p95 | memory before typing → peak (settled) |
 |---|---|---|---|---|
 | official 0.18.5 | 253–364 ms | 222–294 / 355–445 ms | 16.3–18.8 / 20.6–22.1 ms | 606–612 → 692–706 MB (743–872) |
-| **svelte-rs `7179942`** | **13–15 ms** (88 in one run) | **6.2–7.2 / 15.3–17.5 ms** | **5.5–6.7 / 6.7–11.3 ms** | **314–315 → 359–364 MB (362–368)** |
-| svelte-rs `670722d` | 13–18 ms | 6.8–7.8 / 16.5–21.9 ms | 5.9–6.6 / 6.4–8.6 ms | 314–315 → 363–365 MB (366–368) |
+| **svelte-language-server-rs `7179942`** | **13–15 ms** (88 in one run) | **6.2–7.2 / 15.3–17.5 ms** | **5.5–6.7 / 6.7–11.3 ms** | **314–315 → 359–364 MB (362–368)** |
+| svelte-language-server-rs `670722d` | 13–18 ms | 6.8–7.8 / 16.5–21.9 ms | 5.9–6.6 / 6.4–8.6 ms | 314–315 → 363–365 MB (366–368) |
 
 The one slow `7179942` typing run (final diagnostics 88 ms, completion p95 223 ms, keystrokes 12–20 at
 81–245 ms) was not repeated in the four direct pairs that followed, where `7179942` gave 13–15 ms and
@@ -711,7 +711,7 @@ nor, while typing, document symbols, and no check here comes near the timeout.
 `670722d` merges the projection branch (47–49, `bf0dca5`) into the language-server patches 41–46
 (`1d4cb87`); the merge had no conflict and needed no fix. zeno root (476 components in 12 projects),
 every session through `bench/with-lock.sh`; official svelte-language-server 0.18.5 (Zed's install,
-TypeScript 5.9.3), svelte-rs with tsrs 0.18.0 (TypeScript 7.1.0-dev.20260930.4). The tables are
+TypeScript 5.9.3), svelte-language-server-rs with tsrs 0.18.0 (TypeScript 7.1.0-dev.20260930.4). The tables are
 `VARIANT=final-b bench/final.sh 3` at a load average of 1–2; an earlier `VARIANT=final` set with
 `EXTRA_BENCH_BIN`/`EXTRA_TYPING_BIN` = `1d4cb87` (load 4–10) checks the merge. Lines tagged `final`
 and `final-b` in `docs/measurements/bench/final.jsonl`; the other records in `docs/measurements/tests/regressions-final-670722d.txt`.
@@ -721,9 +721,9 @@ and `final-b` in `docs/measurements/bench/final.jsonl`; the other records in `do
 | | first diagnostics | edit → diagnostics (median of 5) | memory, ps RSS, settled | initialize |
 |---|---|---|---|---|
 | official 0.18.5 | 1,907–2,058 / 271–291 / 929–974 ms | 275–279 / 263–272 / 264–265 ms | 805–809 MB | 369–387 ms |
-| **svelte-rs `670722d`** | **199–201 / 15–16 / 17–19 ms** | **13–14 / 12–13 / 13–14 ms** | **339–340 MB** (svelte-rs 72, tsrs 267–268) | **14 ms** |
+| **svelte-language-server-rs `670722d`** | **199–201 / 15–16 / 17–19 ms** | **13–14 / 12–13 / 13–14 ms** | **339–340 MB** (svelte-language-server-rs 72, tsrs 267–268) | **14 ms** |
 
-* The first file's 199–201 ms is the order of `final.sh`, which always starts svelte-rs right after the
+* The first file's 199–201 ms is the order of `final.sh`, which always starts svelte-language-server-rs right after the
   official server (round 4 saw the same). In four direct alternating pairs against `7793da7` at load
   1.3–2.1, `670722d` opens it in 136–183 ms against 139–179 ms and edits in 10–13 ms against 16–21 ms
   (`docs/measurements/tests/regressions-final-670722d.txt`).
@@ -734,13 +734,13 @@ and `final-b` in `docs/measurements/bench/final.jsonl`; the other records in `do
 * **Memory with every project loaded** (`bench/allprojects.mjs <bin> <zeno> background 40000`: one
   component opened, a hover every 2.5 s while the background loads the rest, then three
   `workspace/symbol` queries): all 12 projects load, idle hovers answer in 1–5 ms, `workspace/symbol`
-  finds all three (5 files) in 2–13 ms; **284–287 MB phys_footprint** (svelte-rs 52–53, tsrs 232–235;
+  finds all three (5 files) in 2–13 ms; **284–287 MB phys_footprint** (svelte-language-server-rs 52–53, tsrs 232–235;
   ps RSS 309–315 MB). The official server in the same session holds one project, finds none of the
   three symbols, and takes 540 MB before the queries and 574 MB after (phys_footprint; RSS 558/590).
 * **Smaller workspaces** (`bench/bench.mjs` with admin-layout and field-renderer, 3 runs, load 5–11,
   `final-b` lines with `workspace` `admin` / `admin/src`): workspace = zeno/admin, official
-  1,960–2,299 / 279–283 ms, edits 262–272 ms, 603–621 MB; svelte-rs 174–213 / 12–15 ms, edits 8–11 ms,
-  162–163 MB. Workspace = zeno/admin/src, svelte-rs 149–154 / 14–17 ms, edits 8–12 ms, 162–164 MB
+  1,960–2,299 / 279–283 ms, edits 262–272 ms, 603–621 MB; svelte-language-server-rs 174–213 / 12–15 ms, edits 8–11 ms,
+  162–163 MB. Workspace = zeno/admin/src, svelte-language-server-rs 149–154 / 14–17 ms, edits 8–12 ms, 162–164 MB
   (unpatched, in the first measurement: 6.8 s / ~90 ms / 965 MB and 3.3 s / ~52 ms / 524 MB).
 
 Typing (`bench/typing.mjs`, admin-layout.svelte, as in round 3):
@@ -748,10 +748,10 @@ Typing (`bench/typing.mjs`, admin-layout.svelte, as in round 3):
 | | final diagnostics, after the last keystroke | completion while typing, p50 / p95 (max) | member completion after a keystroke, p50 / p95 (max) | unchanged document, p50 / p95 | memory before typing → peak (settled) |
 |---|---|---|---|---|---|
 | official 0.18.5 | 261–267 ms | 64–67 / 281–296 ms (311–313) | 18.8–19.0 / 22.7–24.3 ms (24–27) | 1.6–1.8 / 2.1–2.5 ms | 587–611 → 672–693 MB (839–843) |
-| **svelte-rs `670722d`** | **15–16 ms** | **7.0–8.1 / 16.3–17.8 ms (22–24)** | **6.5–7.3 / 7.9–8.4 ms (8.0–8.6)** | 2.0–2.3 / 2.5–2.6 ms | **316 → 363–364 MB (366)** |
+| **svelte-language-server-rs `670722d`** | **15–16 ms** | **7.0–8.1 / 16.3–17.8 ms (22–24)** | **6.5–7.3 / 7.9–8.4 ms (8.0–8.6)** | 2.0–2.3 / 2.5–2.6 ms | **316 → 363–364 MB (366)** |
 
 * Both end on the single TS2339 (`Property 'exten' does not exist on type 'ResolvedAdminConfig'`),
-  966–967 ms after the first keystroke on svelte-rs and 1,212–1,219 ms on the official server (the
+  966–967 ms after the first keystroke on svelte-language-server-rs and 1,212–1,219 ms on the official server (the
   typing takes 950 ms). The expected member was offered on 20 of 20 keystrokes and in 20 of 20 member
   rounds, in every run of both; no request failed.
 * Merge check (`final` set): `670722d` final diagnostics 13–18 ms, completion while typing p50 6.8–10.0
@@ -845,14 +845,14 @@ the same 56–155 ms on every build.
 | | first diagnostics | edit → diagnostics (median) | memory, settled | initialize |
 |---|---|---|---|---|
 | official 0.18.5 | 2,033–2,287 / 271–278 / 957–1,961 ms | 265–270 / 259–276 / 253–255 ms | 711–824 MB | 383–422 ms |
-| **svelte-rs `1d4cb87`** | **201–281 / 13 / 15–16 ms** | **11 / 9–10 / 10–11 ms** | **340–342 MB** | **15–17 ms** |
-| svelte-rs `7793da7` | 143–167 / 18–20 / 19–23 ms | 16–17 / 15–19 / 14 ms | 342–344 MB | 13–20 ms |
+| **svelte-language-server-rs `1d4cb87`** | **201–281 / 13 / 15–16 ms** | **11 / 9–10 / 10–11 ms** | **340–342 MB** | **15–17 ms** |
+| svelte-language-server-rs `7793da7` | 143–167 / 18–20 / 19–23 ms | 16–17 / 15–19 / 14 ms | 342–344 MB | 13–20 ms |
 
 | | final diagnostics | completion while typing, p50 / p95 | member completion, p50 / p95 | unchanged document, p50 / p95 | memory before typing → peak (settled) |
 |---|---|---|---|---|---|
 | official 0.18.5 | 239–267 ms | 66–180 / 282–319 ms | 15.8–16.7 / 19.1–23.0 ms | 1.3–1.4 / 1.5–1.8 ms | 609–619 → 669–724 MB (633–893) |
-| **svelte-rs `1d4cb87`** | **13–19 ms** | **6.3–7.5 / 14.9–17.6 ms** | **5.4–6.8 / 5.7–8.4 ms** | 1.7–1.8 / 1.9–2.1 ms | **312–318 → 355–363 MB (358–366)** |
-| svelte-rs `7793da7` | 14–18 ms | 6.4–7.4 / 15.3–20.1 ms | 5.5–6.6 / 5.8–8.1 ms | 1.6–1.9 / 1.8–3.0 ms | 314–317 → 355–359 MB (357–360) |
+| **svelte-language-server-rs `1d4cb87`** | **13–19 ms** | **6.3–7.5 / 14.9–17.6 ms** | **5.4–6.8 / 5.7–8.4 ms** | 1.7–1.8 / 1.9–2.1 ms | **312–318 → 355–363 MB (358–366)** |
+| svelte-language-server-rs `7793da7` | 14–18 ms | 6.4–7.4 / 15.3–20.1 ms | 5.5–6.6 / 5.8–8.1 ms | 1.6–1.9 / 1.8–3.0 ms | 314–317 → 355–359 MB (357–360) |
 
 (typing: the three `final.sh` runs, the first of which caught a burst of other work, keystroke p50 27.5
 ms with spikes to 100 ms, plus three direct A/B pairs.) Edits are 30–40% faster than at `7793da7`: a
@@ -888,7 +888,7 @@ admin-layout (338 lines) is unchanged, as are the expected members (20 of 20 eve
 zeno root (476 components, 12 projects), every session through `bench/with-lock.sh`.
 `VARIANT=round3-merged EXTRA_BENCH_BIN=…:42d8d9e EXTRA_TYPING_BIN=…:42d8d9e bench/final.sh 3`
 interleaves three runs of each benchmark for the official svelte-language-server 0.18.5 (Zed's
-install, TypeScript 5.9.3), svelte-rs at the merge `7793da7`, and the pre-merge `42d8d9e` (patches
+install, TypeScript 5.9.3), svelte-language-server-rs at the merge `7793da7`, and the pre-merge `42d8d9e` (patches
 1–31) as a check on the merge; tsrs 0.18.0 (TypeScript 7.1.0-dev.20260930.4); load average 2.4–5.
 Lines tagged `round3-merged` in `docs/measurements/bench/final.jsonl`.
 
@@ -897,13 +897,13 @@ Lines tagged `round3-merged` in `docs/measurements/bench/final.jsonl`.
 | | first diagnostics | edit → diagnostics (median of 5) | memory, ps RSS, settled | initialize |
 |---|---|---|---|---|
 | official 0.18.5 | 1,827–2,484 / 276–292 / 834–1,026 ms | 271–276 / 257–262 / 256–265 ms | 781–826 MB | 303–448 ms |
-| **svelte-rs `7793da7`** | **125–192 / 21–22 / 19–20 ms** | **19–21 / 17–19 / 17–18 ms** | **337–344 MB** (svelte-rs 71–72, tsrs 266–272) | **2–14 ms** |
-| svelte-rs `42d8d9e` | 132–146 / 19–21 / 21–23 ms | 18–20 / 19–20 / 15–18 ms | 336–343 MB | 2–16 ms |
+| **svelte-language-server-rs `7793da7`** | **125–192 / 21–22 / 19–20 ms** | **19–21 / 17–19 / 17–18 ms** | **337–344 MB** (svelte-language-server-rs 71–72, tsrs 266–272) | **2–14 ms** |
+| svelte-language-server-rs `42d8d9e` | 132–146 / 19–21 / 21–23 ms | 18–20 / 19–20 / 15–18 ms | 336–343 MB | 2–16 ms |
 
 The first of the three runs was the slowest for every server (official 2,484 ms, `7793da7` 192 ms,
-`42d8d9e` 146 ms; svelte-rs initialize 14–16 ms); in runs 2 and 3 the merge opens the first file in
+`42d8d9e` 146 ms; svelte-language-server-rs initialize 14–16 ms); in runs 2 and 3 the merge opens the first file in
 125–128 ms against 132–134 ms, and initializes in 2 ms. After the first file: official 577–584 MB,
-svelte-rs 304–315 MB.
+svelte-language-server-rs 304–315 MB.
 
 Typing (`bench/typing.mjs`, admin-layout.svelte: `runtime.config.exten` typed before `</script>` as 20
 single-character incremental edits 50 ms apart, each followed by a completion request and a diagnostic
@@ -913,21 +913,21 @@ and a completion there; then 20 completions on the unchanged document):
 | | final diagnostics, after the last keystroke | completion while typing, p50 / p95 (max) | member completion after a keystroke, p50 / p95 (max) | unchanged document, p50 / p95 | memory before typing → peak (settled) |
 |---|---|---|---|---|---|
 | official 0.18.5 | 226–254 ms | 53–64 / 249–263 ms (257–279) | 17.1–18.5 / 19.9–23.7 ms (20–25) | 1.3–1.6 / 1.5–1.9 ms | 612–621 → 689–697 MB (862–870) |
-| **svelte-rs `7793da7`** | **15–17 ms** | **6.2–7.4 / 15.8–17.0 ms (20–22)** | **5.7–6.0 / 6.9–7.3 ms (7.0–7.7)** | 1.8–2.0 / 2.1–2.2 ms | **315 → 351–357 MB (353–360)** |
-| svelte-rs `42d8d9e` | 16 ms | 6.4–7.1 / 16.0–17.8 ms (21–22) | 6.0–6.2 / 6.6–8.4 ms (7.8–20.9) | 1.8–1.9 / 2.1–2.3 ms | 314–315 → 349–356 MB (352–358) |
+| **svelte-language-server-rs `7793da7`** | **15–17 ms** | **6.2–7.4 / 15.8–17.0 ms (20–22)** | **5.7–6.0 / 6.9–7.3 ms (7.0–7.7)** | 1.8–2.0 / 2.1–2.2 ms | **315 → 351–357 MB (353–360)** |
+| svelte-language-server-rs `42d8d9e` | 16 ms | 6.4–7.1 / 16.0–17.8 ms (21–22) | 6.0–6.2 / 6.6–8.4 ms (7.8–20.9) | 1.8–1.9 / 2.1–2.3 ms | 314–315 → 349–356 MB (352–358) |
 
 * All three end on the same single error, `Property 'exten' does not exist on type
   'ResolvedAdminConfig'` (TS2339); measured from the first keystroke it arrives after 965–967 ms on
-  svelte-rs and 1,176–1,205 ms on the official server (the typing itself takes 950 ms).
+  svelte-language-server-rs and 1,176–1,205 ms on the official server (the typing itself takes 950 ms).
 * The expected member (`runtime`, `config`, `extensions`) was offered on 20 of 20 keystrokes and in 20
   of 20 member rounds by every server, in every run; no completion request failed.
 * While typing, the official server answers its first five to seven keystrokes in 182–279 ms each
-  (queued behind its own work) and the rest in 14–141 ms; svelte-rs answers in 13–22 ms while
+  (queued behind its own work) and the rest in 14–141 ms; svelte-language-server-rs answers in 13–22 ms while
   `runtime` is typed and 5–8 ms in the member names.
 * So against the official server, at the zeno root: first diagnostics about 14× faster (runs 2–3:
   125–128 against 1,827–1,870 ms), edits about 14×, the final diagnostics while typing about 15×,
   completion while typing about 8× at p50 and 15× at p95, a member completion about 3×, with 41–44%
-  of the memory (337–344 against 781–826 MB). The merge changes none of svelte-rs's numbers beyond
+  of the memory (337–344 against 781–826 MB). The merge changes none of svelte-language-server-rs's numbers beyond
   run-to-run noise.
 
 Correctness at `7793da7` (the same session):
@@ -997,7 +997,7 @@ Correctness at `42d8d9e`:
 ### Round 2, merged: patches 1–25 (`8b7902f`) against the official server
 
 zeno root (Zed's case: 476 components, 12 projects), every session through `bench/with-lock.sh`,
-official svelte-language-server 0.18.5 (Zed's install, TypeScript 5.9.3) against svelte-rs at
+official svelte-language-server 0.18.5 (Zed's install, TypeScript 5.9.3) against svelte-language-server-rs at
 `vendor/rsvelte` `8b7902f` with tsrs. `bench/final.sh 3` interleaves three runs of each benchmark
 and server and appends a tagged line per session to `docs/measurements/bench/final.jsonl`; load average
 1.5–4 throughout.
@@ -1008,9 +1008,9 @@ and server and appends a tagged line per session to `docs/measurements/bench/fin
 | | first diagnostics | edit → diagnostics (median of 5) | memory, ps RSS, settled | initialize |
 |---|---|---|---|---|
 | official 0.18.5 | 1,834–1,966 / 284–290 / 860–882 ms | 289–296 / 266–269 / 260–265 ms | 820–824 MB | 328–372 ms |
-| **svelte-rs `8b7902f`** | **130–137 / 22 / 21–23 ms** | **20–21 / 19–20 / 17–18 ms** | **337–339 MB** (svelte-rs 71–72, tsrs 265–268) | **2 ms** |
+| **svelte-language-server-rs `8b7902f`** | **130–137 / 22 / 21–23 ms** | **20–21 / 19–20 / 17–18 ms** | **337–339 MB** (svelte-language-server-rs 71–72, tsrs 265–268) | **2 ms** |
 
-svelte-rs's memory has all 12 projects loaded (patch 17, during the benchmark's pauses); after the
+svelte-language-server-rs's memory has all 12 projects loaded (patch 17, during the benchmark's pauses); after the
 first file it is 304–305 MB against the official server's 583–586 MB.
 
 Typing (`bench/typing.mjs`, admin-layout.svelte, 3 runs each). The script types
@@ -1023,16 +1023,16 @@ completion there, each awaited, and 20 more completions without an edit:
 | | final diagnostics, after the last keystroke | completion while typing, p50 / p95 (max) | completion at the end of the member expression after a keystroke, p50 / p95 (max) | same, unchanged document, p50 / p95 | memory before typing → peak |
 |---|---|---|---|---|---|
 | official 0.18.5 | 225–307 ms | 64–150 / 262–285 ms (274–330) | 18.5–19.9 / 22.6–24.3 ms (24–25) | 1.5–1.8 / 1.9–2.0 ms | 607–608 → 690–701 MB |
-| **svelte-rs `8b7902f`** | **15–16 ms** | **7.0–7.9 / 17.0–18.4 ms (21–24)** | **6.6–6.7 / 7.5–7.8 ms (7.5–8.0)** | 2.2–2.3 / 2.6–2.7 ms | **314–317 → 356–359 MB** |
-| svelte-rs `8b7902f`, background projects off | 13–15 ms | 4.8–5.9 / 13.9–16.4 ms (19–23) | 5.0–5.5 / 6.0–6.2 ms (6.1–6.8) | 1.6 / 1.8–1.9 ms | 160–161 → 196–199 MB |
-| svelte-rs `2c6a9f7` (patches 1–21, before the merge) | 17–18 ms | 14.7–15.9 / 26.2–27.3 ms (30–32) | 6.4–6.8 / 8.0–8.5 ms (8.5–8.6) | 2.2–2.3 / 2.5–2.6 ms | 313–317 → 387–394 MB |
+| **svelte-language-server-rs `8b7902f`** | **15–16 ms** | **7.0–7.9 / 17.0–18.4 ms (21–24)** | **6.6–6.7 / 7.5–7.8 ms (7.5–8.0)** | 2.2–2.3 / 2.6–2.7 ms | **314–317 → 356–359 MB** |
+| svelte-language-server-rs `8b7902f`, background projects off | 13–15 ms | 4.8–5.9 / 13.9–16.4 ms (19–23) | 5.0–5.5 / 6.0–6.2 ms (6.1–6.8) | 1.6 / 1.8–1.9 ms | 160–161 → 196–199 MB |
+| svelte-language-server-rs `2c6a9f7` (patches 1–21, before the merge) | 17–18 ms | 14.7–15.9 / 26.2–27.3 ms (30–32) | 6.4–6.8 / 8.0–8.5 ms (8.5–8.6) | 2.2–2.3 / 2.5–2.6 ms | 313–317 → 387–394 MB |
 
 * Every server ends on the same single error, `Property 'exten' does not exist on type
   'ResolvedAdminConfig'` (TS2339), which no earlier keystroke can produce. Measured from the first
-  keystroke it arrives after 965–968 ms on svelte-rs and 1,177–1,257 ms on the official server
+  keystroke it arrives after 965–968 ms on svelte-language-server-rs and 1,177–1,257 ms on the official server
   (the typing itself takes 950 ms).
 * The official server's completions queue behind its own work while the user types: its first six
-  keystrokes take 211–285 ms each, and the rest 16–330 ms as the queue drains. svelte-rs answers
+  keystrokes take 211–285 ms each, and the rest 16–330 ms as the queue drains. svelte-language-server-rs answers
   every keystroke in 6–24 ms (14–24 ms while `runtime` is typed, 6–9 ms in the member names).
 * Completions offered the expected member (`runtime`, `config`, `extensions`) on 20 of 20 keystrokes
   on the official server and on `8b7902f`, and on 18 of 20 on `2c6a9f7`: not at `runtime.` and
@@ -1042,15 +1042,15 @@ completion there, each awaited, and 20 more completions without an edit:
   keystroke moved them back, two import-set changes that each cost tsrs a full program build. That
   is most likely also its 30 MB higher tsrs peak (307–314 against 274–280 MB), the memory tsrs keeps
   from every full build (below).
-* After the completions the official server settles at 860–870 MB, svelte-rs at 357–361 MB.
+* After the completions the official server settles at 860–870 MB, svelte-language-server-rs at 357–361 MB.
 
 Measurement notes. Both benchmark scripts now sample memory with an asynchronous `ps`. The
 synchronous one used until this round blocked the client's event loop for ~30 ms every 100 ms,
 which added ~30 ms to about a quarter of the typing latencies on both servers (a minimal Python
 client showed no such outliers); those first typing lines stay in `final.jsonl`, marked
 `superseded`. It did not move the `bench.mjs` medians: one check run each with the asynchronous
-sampler gave 21 / 21 / 19 ms (svelte-rs) and 273 / 268 / 263 ms (official), so the three runs
-above, which used the synchronous sampler for comparability with earlier rounds, stand. svelte-rs's
+sampler gave 21 / 21 / 19 ms (svelte-language-server-rs) and 273 / 268 / 263 ms (official), so the three runs
+above, which used the synchronous sampler for comparability with earlier rounds, stand. svelte-language-server-rs's
 first open varied between 128 and 191 ms over this session (427 ms in the first session after the
 rebuild); an alternating A/B of `2c6a9f7` and
 `8b7902f` (6 sessions each) gave 126–135 and 128–133 ms, so the merge does not change it.
@@ -1086,8 +1086,8 @@ whole process tree.
 | workspace = zeno root (Zed's case) | first diagnostics | edit → diagnostics | memory, ps RSS | memory, phys_footprint | initialize |
 |---|---|---|---|---|---|
 | official svelte-language-server 0.18.5 | 2,223 / 298 / 999 ms | 260–272 ms (590 ms under load earlier) | 831 MB | 804 MB | 427 ms |
-| svelte-rs before (rsvelte + tsrs) | 8,615 / 24 / 18 ms | 19–24 ms | 1,110 MB | 1,050 MB | 600–1,350 ms |
-| **svelte-rs with patches 1–7** | **188–212 / 13–29 / 76–81 ms** | **14–19 ms** | **166–211 MB** | **190 MB** | **3–17 ms** |
+| svelte-language-server-rs before (rsvelte + tsrs) | 8,615 / 24 / 18 ms | 19–24 ms | 1,110 MB | 1,050 MB | 600–1,350 ms |
+| **svelte-language-server-rs with patches 1–7** | **188–212 / 13–29 / 76–81 ms** | **14–19 ms** | **166–211 MB** | **190 MB** | **3–17 ms** |
 
 | | first diagnostics | edit | memory (RSS) |
 |---|---|---|---|
@@ -1125,7 +1125,7 @@ the same session (load average 8–14):
 
 The memory difference is patch 17 loading the other ten projects during the benchmark's
 three-second pauses (the third file's project was then already loaded, hence 18–22 ms). With
-every project loaded (`bench/allprojects.mjs`): 288 MB phys_footprint / 312 MB RSS (svelte-rs 56,
+every project loaded (`bench/allprojects.mjs`): 288 MB phys_footprint / 312 MB RSS (svelte-language-server-rs 56,
 tsrs 232), against 1,110 MB before any patch; it stays under the ~400 MB at which background
 loading would have defaulted to off.
 
@@ -1186,7 +1186,7 @@ into a bare tsrs with the bodies written to disk gave the same diagnostics at 88
   the script kind from the language id, and a `.svelte.tsx` body read from disk loses JSDoc
   types (14 of 16 zeno JS components differed when read from disk). Their opens are content
   changes, about 3 ms each.
-* The cache moves from `.rsvelte-language-server/` to `.svelte-rs/` (still self-gitignored):
+* The cache moves from `.rsvelte-language-server/` to `.svelte-language-server-rs/` (still self-gitignored):
   upstream rsvelte refuses to run when a shadow body exists on disk, so the two must never share
   a cache. Watched-file events inside the cache are this server's own output and no longer
   trigger a refresh or a rebuild (a write of an overlay `tsconfig.json` used to restart tsgo,
@@ -1234,7 +1234,7 @@ late config still starts the sidecar (it fails if the reset is removed).
 
 **Problem.** `initialize` discovered and projected every component of every workspace folder,
 then again for each nested config that owns one (476 + 476 projections at the zeno root,
-600–700 ms before the editor may send `didOpen`), and kept them all in memory (svelte-rs 112 MB).
+600–700 ms before the editor may send `didOpen`), and kept them all in memory (svelte-language-server-rs 112 MB).
 A project was "every `.svelte` file under its directory": at zeno/admin the Node-only
 `admin/tsconfig.json` project also held all 166 components `admin/src/tsconfig.json` owns
 (332 replays, a second program). The preprocess sidecar (Node, 52 MB) started at the root only
@@ -1266,7 +1266,7 @@ the app through `@admin/*`) reported "Cannot find module".
   holds, because each project's config and shadow tree live in its own cache directory, which no
   other project's include reaches, and cache events are ignored (patch 2).
 
-**Measured** (zeno root): initialize 600–700 → 2–4 ms, memory 309 → 193 MB (svelte-rs 112 →
+**Measured** (zeno root): initialize 600–700 → 2–4 ms, memory 309 → 193 MB (svelte-language-server-rs 112 →
 48 MB, no preprocess sidecar), edits 9–17 ms, first diagnostics 164 → 185–248 ms (admin/src is
 now projected on first open; patch 5 recovers it). 54-file sample identical;
 `router.browser.ts`: 0 diagnostics and a `Component<…>` hover instead of a false TS2307.
@@ -1518,7 +1518,7 @@ loaded project dropped out once its documents closed.
 **Measured** (zeno root, `bench/allprojects.mjs`, through the lock). All 12 projects load within
 about 25 s of an editor that hovers every 2.5 s, hover latency during the loads 1–3 ms;
 `workspace/symbol` then answers in 2–13 ms with the baseline's results. Memory with every project
-loaded: 288 MB phys_footprint / 312 MB RSS (svelte-rs 56, tsrs 232) — against 1,110 MB unpatched,
+loaded: 288 MB phys_footprint / 312 MB RSS (svelte-language-server-rs 56, tsrs 232) — against 1,110 MB unpatched,
 and under the ~400 MB at which the default would have been off. With the background off, the
 first `workspace/symbol` loads the other 11 projects and answers in 321 ms, with the same memory
 afterwards. In `bench/bench.mjs` the background finishes within the three-second pause after the
@@ -1865,7 +1865,7 @@ nested dependency's component and a plain module from it; bodies are removed and
 ## 30. Watch the package directory a mirror link points at (`6fbb3d5`)
 
 **Problem** (follows patch 26). With patch 26 the watchers tsgo registers for the cache's mirror
-links reach the editor too (`.svelte-rs/projects/admin/node_modules/**/*`, and the same directory
+links reach the editor too (`.svelte-language-server-rs/projects/admin/node_modules/**/*`, and the same directory
 again under that project's shadow tree): 22 registrations at the zeno root, two per project. Zed
 scans a symlinked directory inside the worktree as a second copy, and reports a change under its
 real path (`admin/node_modules/…`), which matches no registered glob and is dropped as long as the
@@ -1967,7 +1967,7 @@ back by a constant shift, as upstream's `DocumentSnapshot` keeps for a parser er
 script completions keep working and the next keystroke projects normally; the panic message is logged
 (`svelte2tsx panicked: …`) and `parser_error` is set. `open_or_update_preprocessed` also catches a
 panic in the source-map composition around it and returns `TsgoOverlayError::Projection`, which keeps
-the previous shadow. It needs an unwinding binary: the svelte-rs workspace's `release` profile sets
+the previous shadow. It needs an unwinding binary: the svelte-language-server-rs workspace's `release` profile sets
 `panic = "unwind"` (rsvelte's own `release` aborts; its `dist-lsp` unwinds).
 
 **Tests.** `tsgo_overlay::tests::a_projection_panic_falls_back_to_the_script_of_the_same_version`
@@ -3165,9 +3165,9 @@ a key, odd spacing, a temporary and a `$`-prefixed name; fails without the fix).
 
 ## 81–82. Real projects: what the official server reports
 
-Found by using svelte-rs in Zed on four projects (query24-v2, motion-svelte,
+Found by using svelte-language-server-rs in Zed on four projects (query24-v2, motion-svelte,
 SvelteValorantCopilot, zeno), comparing every diagnostic with the official server
-(`tests/diagproj.mjs <svelte-rs|svelte-ls> <root> <files...>`).
+(`tests/diagproj.mjs <svelte-language-server-rs|svelte-ls> <root> <files...>`).
 
 ### 81. Report what svelte-language-server reports, with the project's compiler options (`30ad93c`)
 
@@ -3251,7 +3251,7 @@ protocol 33, robustness 30.
 
 Reported from Zed: typing a component's name in the markup (`<MyCom`) offered no completion, and
 hovering the `value` of `bind:value` showed no type where the official server shows one.
-`tests/regressions/markup-features.mjs <svelte-rs binary | svelte-ls>` builds a throwaway project
+`tests/regressions/markup-features.mjs <svelte-language-server-rs binary | svelte-ls>` builds a throwaway project
 from `tests/regressions/tpl` and asks both servers the same hovers and completions (including
 `completionItem/resolve`, where auto-import edits arrive); after these patches every answer matches.
 
@@ -3318,7 +3318,7 @@ logic; it now calls `format_component_bind_directive_segments`. Generated code i
 the source map gains the names.
 
 **Effect.** Both hovers match official, and so do TypeScript errors on a binding: for
-`<MyComponent bind:nope={on} />` and `bind:value={n}` (wrong type) svelte-rs now reports at 7:19 and
+`<MyComponent bind:nope={on} />` and `bind:value={n}` (wrong type) svelte-language-server-rs now reports at 7:19 and
 8:19, the prop name, as official does (before: 7:15 and 8:15, the directive). An unknown element
 binding (`<input bind:valu={on} />`, TS 2353) is reported at the directive, 9:8 (before 9:1); official
 reports 9:17, the `=`, where its quote insertion anchors. Twelve zeno admin components that use
@@ -3338,7 +3338,7 @@ that shared a directory one each (one deleted the other's `rsvelte-lint.json` on
 ## 88–89. Import quick fixes, against the official server
 
 Found checking 86: for `<OtherWidget size={1} />` with no import, official offers
-`Add import from "./OtherWidget.svelte"` on the `Cannot find name` diagnostic, svelte-rs offered no
+`Add import from "./OtherWidget.svelte"` on the `Cannot find name` diagnostic, svelte-language-server-rs offered no
 code action at all; and a script's `Add import` quick fix put the import after the first import's
 indentation. `tests/regressions/markup-features.mjs` asks both servers for both quick fixes.
 
@@ -3441,7 +3441,7 @@ line, filtered by `/div`, and the ancestor's indent is an `additionalTextEdits` 
 alone. Accepting it writes the same text.
 
 **Effect.** With Zed's filter applied to each server's items (`<` and `</` on a line of their own,
-nested, after text, on the open tag's line), every svelte-rs close tag is shown; official's are
+nested, after text, on the open tag's line), every svelte-language-server-rs close tag is shown; official's are
 hidden on a line of their own. Test: `completions::tests::a_differing_indent_is_fixed_in_its_own_edit`.
 
 ## tsrs issues (outside our control)
@@ -3496,13 +3496,13 @@ hidden on a line of their own. Test: `completions::tests::a_differing_indent_is_
   go.
 * **Import specifiers and two quick fixes come from tsrs** (found checking 89): for a component under a
   `paths` alias (`"$ui/*": ["components/ui/*"]` with `baseUrl: ./src`) official writes
-  `"$ui/select"`, svelte-rs `"components/ui/select/index"`; plain tsrs on the project's own tsconfig
+  `"$ui/select"`, svelte-language-server-rs `"components/ui/select/index"`; plain tsrs on the project's own tsconfig
   writes `"./components/ui/select"`, so the overlay config (82) changes tsrs's choice but neither is
   official's. Completions' auto-imports have the same specifiers. tsrs also offers no `Add missing
   function declaration` or `Change spelling` fix where TypeScript 5 does.
 * **The order of TypeScript's items at `<Con` right after a tag on the same line** (found checking 91):
   after `/><Con` official ranks the file's imports first (its TypeScript position falls in a different
-  context there), on a new line it ranks them like svelte-rs (auto-imported components first). Both
+  context there), on a new line it ranks them like svelte-language-server-rs (auto-imported components first). Both
   offer every component.
 * **Two binding diagnostics differ from official** (found checking 87; both before and after it): a
   Svelte analysis error without a position, `bind_invalid_name` for `<input bind:valu={on} />`, is
@@ -3634,7 +3634,7 @@ hidden on a line of their own. Test: `completions::tests::a_differing_indent_is_
   input is known to need it (the fuzz campaigns found none after patch 36), so it was dropped in
   favour of the projection branch's version; it was kept as an unapplied patch in that session's
   scratchpad (`r2/0001-fix-projection-never-write-a-repair-into-a-character.patch`).
-* The svelte-rs build relies on the root workspace's `panic = "unwind"` for patch 35 (and for the
+* The svelte-language-server-rs build relies on the root workspace's `panic = "unwind"` for patch 35 (and for the
   analysis worker's own `catch_unwind`). rsvelte's `release` profile aborts on a panic, so a
   language server built from `vendor/rsvelte` directly must use its `dist-lsp` profile.
 
@@ -3688,7 +3688,7 @@ their own. Patches 26–30's e2e record is `docs/measurements/tests/e2e-round2-l
 `docs/measurements/tests/e2e-round3-merged.json`, the baseline's run of the same session
 `e2e-baseline-round3.json`, and the comparisons `e2e-compare-round3.txt` (baseline against merged) and
 `e2e-compare-round2-ls-vs-round3.txt`. `bench/final.sh` now takes `VARIANT` (tags every line it
-appends) and `EXTRA_BENCH_BIN=<binary>:<label>`, which adds another svelte-rs build to the `bench.mjs`
+appends) and `EXTRA_BENCH_BIN=<binary>:<label>`, which adds another svelte-language-server-rs build to the `bench.mjs`
 runs as `EXTRA_TYPING_BIN` does to the typing runs. The third review's tools are in `tests/review3/`
 (`node tests/review3/<script>.mjs <binary> tests/review3/tpl [args]`); `runall.sh` now also runs four
 of them from `tests/regressions/`: `hashscope` (46), `start-of-file2` (43), `style-open` (42) and

@@ -1,9 +1,9 @@
-# svelte-rs
+# svelte-language-server-rs
 
 A fast, light Svelte language server written in Rust. Nothing runs in Node unless your project
 uses preprocessors.
 
-svelte-rs is [rsvelte](https://github.com/baseballyama/rsvelte)'s native language server (a Rust
+svelte-language-server-rs is [rsvelte](https://github.com/baseballyama/rsvelte)'s native language server (a Rust
 port of the Svelte 5 compiler and its tools) with [tsrs](https://github.com/oxc-project/tsrs) (the
 Rust port of the TypeScript 7 compiler and language server) as its type checker, plus a series of
 patches that make it fast and light on large monorepos and keep it correct while you type.
@@ -11,7 +11,7 @@ patches that make it fast and light on large monorepos and keep it correct while
 On a Svelte 5 monorepo with 476 components in 12 TypeScript projects, against the official
 `svelte-language-server` 0.18.5:
 
-| | svelte-rs | official |
+| | svelte-language-server-rs | official |
 |---|---|---|
 | open a component → type errors shown | ~0.2 s | ~2.1 s |
 | edit → diagnostics updated | 10–12 ms | 260–280 ms |
@@ -19,15 +19,15 @@ On a Svelte 5 monorepo with 476 components in 12 TypeScript projects, against th
 | memory | ~290 MB with all 12 projects loaded | ~570–600 MB with one |
 
 Methods and every recorded run: [docs/architecture.md](docs/architecture.md),
-[docs/testing.md](docs/testing.md). Status: experimental, used daily in Zed.
+[docs/testing.md](docs/testing.md). Status: experimental, used daily in Zed. Formerly named svelte-rs.
 
 ## How it works
 
 ```
-editor ──LSP──▶ svelte-rs (Rust) ───────────────LSP──▶ tsrs --lsp --stdio (Rust)
-                Svelte parser + svelte2tsx in Rust          type checks each component as a
-                HTML / CSS / Svelte features                generated .svelte.tsx "shadow"
-                compiler diagnostics, formatting            (cached under <project>/.svelte-rs/)
+editor ──LSP──▶ svelte-language-server-rs (Rust) ──LSP──▶ tsrs --lsp --stdio (Rust)
+                Svelte parser + svelte2tsx in Rust        type checks each component as a
+                HTML / CSS / Svelte features              generated .svelte.tsx "shadow", cached
+                compiler diagnostics, formatting          under <project>/.svelte-language-server-rs/
 ```
 
 Each component is turned into TypeScript in Rust and checked by tsrs alongside your `.ts` files,
@@ -43,21 +43,21 @@ and Linux x64/arm64. Node.js is needed only for projects with preprocessors.
 
 ```sh
 git clone --recurse-submodules <this repository>
-cd svelte-rs
-sh scripts/install.sh            # builds the dist profile, installs ~/.local/bin/svelte-rs
+cd svelte-language-server-rs
+sh scripts/install.sh            # builds the dist profile, installs ~/.local/bin/svelte-language-server-rs
 ```
 
-`svelte-rs --stdio` speaks LSP on stdin/stdout, so any editor with an LSP client can run it.
+`svelte-language-server-rs --stdio` speaks LSP on stdin/stdout, so any editor with an LSP client can run it.
 
 ### Zed
 
 Keep Zed's Svelte extension (it provides the language and grammar) and point its server at
-svelte-rs in `~/.config/zed/settings.json`:
+svelte-language-server-rs in `~/.config/zed/settings.json`:
 
 ```jsonc
 "lsp": {
   "svelte-language-server": {
-    "binary": { "path": "/Users/you/.local/bin/svelte-rs", "arguments": ["--stdio"] },
+    "binary": { "path": "/Users/you/.local/bin/svelte-language-server-rs", "arguments": ["--stdio"] },
     "settings": { "rsvelte": { "lint": { "enable": true } } } // optional, see Configuration
   }
 }
@@ -69,18 +69,18 @@ language server" is enough. Remove the entry to go back to the official server.
 ### Neovim
 
 ```lua
-vim.lsp.config('svelte_rs', {
-  cmd = { 'svelte-rs', '--stdio' },
+vim.lsp.config('svelte_language_server_rs', {
+  cmd = { 'svelte-language-server-rs', '--stdio' },
   filetypes = { 'svelte' },
   root_markers = { 'svelte.config.js', 'vite.config.ts', 'package.json', '.git' },
 })
-vim.lsp.enable('svelte_rs')
+vim.lsp.enable('svelte_language_server_rs')
 ```
 
 ## Configuration
 
-**TypeScript engine.** svelte-rs runs tsrs unless `TSGO_BIN` names another TypeScript 7 language
-server (tsgo works too). tsrs is looked up as `SVELTE_RS_TSRS`, then `node_modules/.bin/tsrs` in the
+**TypeScript engine.** svelte-language-server-rs runs tsrs unless `TSGO_BIN` names another TypeScript 7 language
+server (tsgo works too). tsrs is looked up as `SVELTE_LANGUAGE_SERVER_RS_TSRS`, then `node_modules/.bin/tsrs` in the
 working directory or a parent, then `tsrs` on `PATH`, then `~/.bun/bin` and `~/.cargo/bin`.
 
 **Svelte config and preprocessors.** In each directory above a component, a `vite.config.*` whose
@@ -91,7 +91,7 @@ or Node loads them. Project code is never executed when the editor marks the wor
 (`initializationOptions.isTrusted: false`) or `rsvelte.preprocess.enable` is false.
 `compilerOptions` such as `experimental.async` and `runes` are read statically from the same files.
 
-**Diagnostics.** Like the official server, svelte-rs reports TypeScript, Svelte compiler and CSS
+**Diagnostics.** Like the official server, svelte-language-server-rs reports TypeScript, Svelte compiler and CSS
 diagnostics. rsvelte's eslint-plugin-svelte rules are off unless the project has an
 `rsvelte-lint.json` (`{}` enables the recommended preset).
 
@@ -101,8 +101,8 @@ diagnostics. rsvelte's eslint-plugin-svelte rules are off unless the project has
 after the first one is served; on by default). The official extension's `svelte.plugin.*` tree is
 accepted too.
 
-**Cache.** svelte-rs writes the generated TypeScript for closed components, an overlay
-`tsconfig.json` and the Svelte type shims under `<workspace>/.svelte-rs/`, which carries its own
+**Cache.** svelte-language-server-rs writes the generated TypeScript for closed components, an overlay
+`tsconfig.json` and the Svelte type shims under `<workspace>/.svelte-language-server-rs/`, which carries its own
 `.gitignore`. Deleting it is always safe.
 
 ## Differences from the official server
@@ -113,7 +113,7 @@ accepted too.
 - Svelte analysis follows rsvelte's target (Svelte 5.57). A project on an older Svelte can see
   warnings its own compiler version would not emit yet (e.g. `state_referenced_locally` on props).
 - `.svelte.ts`/`.svelte.js` modules and plain `.ts` files are served by your TypeScript server, not
-  by svelte-rs, so `.ts` files do not see named exports of `.svelte` components.
+  by svelte-language-server-rs, so `.ts` files do not see named exports of `.svelte` components.
 - Windows is untested.
 
 ## Contributing

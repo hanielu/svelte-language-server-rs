@@ -1,6 +1,6 @@
-# Contributing to svelte-rs (for people and coding agents)
+# Contributing to svelte-language-server-rs (for people and coding agents)
 
-svelte-rs is a Svelte language server: rsvelte's native server (Rust) with tsrs (Rust TypeScript 7)
+svelte-language-server-rs is a Svelte language server: rsvelte's native server (Rust) with tsrs (Rust TypeScript 7)
 as its type checker, plus patches that make it fast on large monorepos and match what the official
 `svelte-language-server` reports. Read [README.md](README.md), then
 [docs/architecture.md](docs/architecture.md) and [docs/testing.md](docs/testing.md) before changing
@@ -11,8 +11,8 @@ touch the code you are about to change.
 
 | path | what |
 |---|---|
-| `crates/svelte_rs` | the `svelte-rs` binary: finds tsrs, sets `TSGO_BIN`, runs `rsvelte_language_server::run_stdio()` |
-| `vendor/rsvelte` | git submodule: rsvelte with this project's patches on its `svelte-rs` branch. Almost every change lands here. |
+| `crates/svelte_language_server_rs` | the `svelte-language-server-rs` binary: finds tsrs, sets `TSGO_BIN`, runs `rsvelte_language_server::run_stdio()` |
+| `vendor/rsvelte` | git submodule: rsvelte with this project's patches on its `svelte-language-server-rs` branch. Almost every change lands here. |
 | `vendor/rsvelte/crates/rsvelte_language_server` | the server: `server.rs` (LSP loop, tsgo/tsrs routing), `tsgo_overlay.rs` (projects, shadows, overlay tsconfig), `worker.rs` (native analysis), `lint.rs`, `preprocess_sidecar.{rs,mjs}` |
 | `vendor/rsvelte/crates/rsvelte_projection` | svelte2tsx in Rust (component → TypeScript + source map) |
 | `vendor/rsvelte/crates/rsvelte_core` | the Svelte compiler port (parser, analysis) |
@@ -32,16 +32,16 @@ keep `panic = "unwind"`: the server isolates per-request panics with `catch_unwi
    `tests/diagproj.mjs` (it can run both servers) before and after your change.
 2. **Measure, don't assume.** Performance changes need numbers from `bench/` before and after, from
    runs in the same session (other builds skew timings; each result line records the load).
-   Memory: report the whole process tree (svelte-rs + tsrs + Node sidecar).
+   Memory: report the whole process tree (svelte-language-server-rs + tsrs + Node sidecar).
 3. **Reproduce first.** Every fix starts with a failing reproduction: a unit or protocol test in
    rsvelte's suite where possible, otherwise a script in `tests/regressions/` that builds a
    throwaway project from `tests/regressions/tpl`. The reproduction must fail without the fix.
-4. **One patch per problem.** Commit inside `vendor/rsvelte` on the `svelte-rs` branch, one focused
+4. **One patch per problem.** Commit inside `vendor/rsvelte` on the `svelte-language-server-rs` branch, one focused
    commit per fix, message in rsvelte's style: `fix(language-server): <what is now true>` or
    `perf(...)`, with a body that states the problem, the change and the evidence. Then commit the
    submodule pointer in this repository together with a new numbered section in
    `docs/patches.md` (Problem / Change / Effect with measurements and test names).
-5. **Don't touch users' projects.** The server may write only its cache, `<workspace>/.svelte-rs/`.
+5. **Don't touch users' projects.** The server may write only its cache, `<workspace>/.svelte-language-server-rs/`.
    When testing against a real project that an editor is using at the same time, use a copy
    (rsync without `node_modules`, then symlink each `node_modules` back), or serialise sessions with
    `bench/with-lock.sh`. Never commit a real project's files as fixtures without its owner's consent.
@@ -54,16 +54,16 @@ keep `panic = "unwind"`: the server isolates per-request panics with `catch_unwi
 
 ```sh
 git submodule update --init vendor/rsvelte
-cargo build --release -p svelte_rs                       # target/release/svelte-rs
+cargo build --release -p svelte_language_server_rs                       # target/release/svelte-language-server-rs
 
 cd vendor/rsvelte                                        # rsvelte's suites, built outside the tree
 CARGO_TARGET_DIR=../../target-tests cargo test -p rsvelte_language_server --lib --test protocol --test robustness
 CARGO_TARGET_DIR=../../target-tests cargo test -p rsvelte_projection
 cd ../..
 
-sh tests/regressions/runall.sh "$PWD/target/release/svelte-rs" dev
-node tests/diagproj.mjs svelte-rs <project> <file.svelte>...
-node bench/bench.mjs svelte-rs <project> <file.svelte>...
+sh tests/regressions/runall.sh "$PWD/target/release/svelte-language-server-rs" dev
+node tests/diagproj.mjs svelte-language-server-rs <project> <file.svelte>...
+node bench/bench.mjs svelte-language-server-rs <project> <file.svelte>...
 ```
 
 Known: 5 tests in rsvelte's `tests/upstream_fixture_manifest.rs` need the language-tools submodule
@@ -99,7 +99,7 @@ tens of GB.
 ## For coding agents
 
 - Work in `vendor/rsvelte` for server changes; never rewrite its history or the upstream commits
-  below the `svelte-rs` branch.
+  below the `svelte-language-server-rs` branch.
 - Do not push, publish, or open pull requests unless the person you work for asks you to.
 - Long builds and test runs: run them in the background and wait for them, don't poll.
 - If a finding is outside your task, record it in `docs/patches.md` under "Not done / follow-ups"

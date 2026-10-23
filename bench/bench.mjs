@@ -1,7 +1,7 @@
 // Svelte language-server benchmark: open -> diagnostics, edit -> diagnostics, process-tree RSS.
 //
 // Usage: [BACKGROUND=0] node bench/bench.mjs <server> <projectRoot> <file.svelte> [<file.svelte>...]
-//   server: "svelte-ls" (the Node svelte-language-server Zed installs) or "svelte-rs" (this repo's release build)
+//   server: "svelte-ls" (the Node svelte-language-server Zed installs) or "svelte-language-server-rs" (this repo's release build)
 // Prints one JSON line.
 //
 // For each file it inserts `const __benchN: number = "x";` as the last line of the instance
@@ -17,7 +17,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ZED = `${process.env.HOME}/Library/Application Support/Zed`;
 const EDITS = Number(process.env.EDITS ?? 5);
 const TIMEOUT_MS = 180_000;
-// BACKGROUND=0: svelte-rs/rsvelte load no project in the background (`rsvelte.backgroundProjects`).
+// BACKGROUND=0: svelte-language-server-rs/rsvelte load no project in the background (`rsvelte.backgroundProjects`).
 const rsvelteSettings = process.env.BACKGROUND === "0" ? { backgroundProjects: { enable: false } } : null;
 
 const inlay = {
@@ -35,7 +35,7 @@ const TSRS = process.env.TSRS_BIN ?? `${process.env.HOME}/.bun/bin/tsrs`;
 const RSVELTE = process.env.RSVELTE_BIN ?? path.join(HERE, "../target-rsvelte/release/rsvelte-language-server");
 const servers = {
 	"svelte-ls": { cmd: "node", args: [`${ZED}/extensions/work/svelte/node_modules/svelte-language-server/bin/server.js`, "--stdio"] },
-	"svelte-rs": { cmd: process.env.SVELTE_RS_BIN ?? path.join(HERE, "../target/release/svelte-rs"), args: ["--stdio"] },
+	"svelte-language-server-rs": { cmd: process.env.SVELTE_LANGUAGE_SERVER_RS_BIN ?? path.join(HERE, "../target/release/svelte-language-server-rs"), args: ["--stdio"] },
 	// rsvelte's native language server with tsrs as its TypeScript 7 child.
 	"rsvelte-tsrs": { cmd: RSVELTE, args: ["--stdio"], env: { TSGO_BIN: TSRS } },
 	// The same server with tsgo (TypeScript 7 in Go); set TSGO_BIN to a tsgo binary.

@@ -1,6 +1,6 @@
-// Hover, completion and import quick fixes in markup, for svelte-rs and the official server side by side.
+// Hover, completion and import quick fixes in markup, for svelte-language-server-rs and the official server side by side.
 //
-// Usage: node tests/regressions/markup-features.mjs <svelte-rs binary | svelte-ls> [tests/regressions/tpl]
+// Usage: node tests/regressions/markup-features.mjs <svelte-language-server-rs binary | svelte-ls> [tests/regressions/tpl]
 // Builds a throwaway project from tpl (a project with `svelte` installed) and asks, in Page.svelte:
 //   hover on a component prop name, a `bind:` directive name, an element attribute name, a shorthand;
 //   completion after `<MyCom` (imported component), `<OtherWid` (component not imported yet), `<` (also after

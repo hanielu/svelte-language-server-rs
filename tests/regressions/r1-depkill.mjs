@@ -31,7 +31,7 @@ if (order === "app-first") {
   s.open("app/src/App.svelte");
   out.appAfterDepOpen = await s.settle("app/src/App.svelte", 6000);
 }
-const cacheDir = fs.existsSync(root + "/.svelte-rs") ? "/.svelte-rs" : "/.rsvelte-language-server";
+const cacheDir = fs.existsSync(root + "/.svelte-language-server-rs") ? "/.svelte-language-server-rs" : "/.rsvelte-language-server";
 const link = fs.readdirSync(root + cacheDir, { recursive: true }).filter((p) => String(p).endsWith("app/node_modules"));
 out.shadowLinks = link.map((p) => { const full = root + cacheDir + "/" + p; return p + (fs.lstatSync(full).isSymbolicLink() ? " -> symlink" : " (real dir)"); });
 out.ok = JSON.stringify(out.appAfterDepOpen) === JSON.stringify(["2:2322:Type 'number' is not assignable to type 'string'."]);

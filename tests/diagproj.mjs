@@ -1,6 +1,6 @@
-// Print every diagnostic a server reports for files of a real project, to compare svelte-rs with the
+// Print every diagnostic a server reports for files of a real project, to compare svelte-language-server-rs with the
 // official svelte-language-server.
-// Usage: node tests/diagproj.mjs <svelte-rs|svelte-ls> <projectRoot> <file.svelte>...   (SVELTE_RS_BIN overrides the binary)
+// Usage: node tests/diagproj.mjs <svelte-language-server-rs|svelte-ls> <projectRoot> <file.svelte>...   (SVELTE_LANGUAGE_SERVER_RS_BIN overrides the binary)
 // Waits until diagnostics have been quiet for 2 s (at least 4 s), then also pulls them when the server supports it.
 import { spawn } from "node:child_process";
 import { pathToFileURL } from "node:url";
@@ -12,7 +12,7 @@ const root = path.resolve(rootArg);
 const ZED = `${process.env.HOME}/Library/Application Support/Zed`;
 const servers = {
 	"svelte-ls": { cmd: "node", args: [`${ZED}/extensions/work/svelte/node_modules/svelte-language-server/bin/server.js`, "--stdio"] },
-	"svelte-rs": { cmd: process.env.SVELTE_RS_BIN ?? `${process.env.HOME}/.local/bin/svelte-rs`, args: ["--stdio"] },
+	"svelte-language-server-rs": { cmd: process.env.SVELTE_LANGUAGE_SERVER_RS_BIN ?? `${process.env.HOME}/.local/bin/svelte-language-server-rs`, args: ["--stdio"] },
 };
 const spec = servers[serverName];
 const child = spawn(spec.cmd, spec.args, { cwd: root, stdio: ["pipe", "pipe", "pipe"] });

@@ -1,5 +1,5 @@
 [package]
-name = "svelte_rs"
+name = "svelte_language_server_rs"
 description = "rsvelte's native Svelte language server with tsrs (Rust TypeScript) as its type checker"
 version.workspace = true
 edition.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 rust-version.workspace = true
 
 [[bin]]
-name = "svelte-rs"
+name = "svelte-language-server-rs"
 path = "src/main.rs"
 
 [dependencies]
