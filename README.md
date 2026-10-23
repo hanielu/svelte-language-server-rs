@@ -41,8 +41,8 @@ Requirements: Rust 1.95+, and [tsrs](https://github.com/oxc-project/tsrs) (`bun 
 `npm i -g tsrs`, or a `tsrs` devDependency in your project). tsrs ships binaries for macOS arm64
 and Linux x64/arm64. Node.js is needed only for projects with preprocessors.
 
-Windows: it compiles and the known Windows issues are fixed, but it has not been run there yet
-(see [docs/testing.md](docs/testing.md#testing-on-windows)). tsrs 0.18.0 has no Windows binary;
+Windows: tried on Windows 11 with Zed and tsgo
+([docs/testing.md](docs/testing.md#testing-on-windows)). tsrs 0.18.0 has no Windows binary;
 without one the server runs the project's TypeScript 7 (`@typescript/native-preview` installed in
 the project) through Node, or set `TSGO_BIN` to a `tsgo.exe`.
 
@@ -140,7 +140,7 @@ accepted too.
   warnings its own compiler version would not emit yet (e.g. `state_referenced_locally` on props).
 - `.svelte.ts`/`.svelte.js` modules and plain `.ts` files are served by your TypeScript server, not
   by svelte-language-server-rs, so `.ts` files do not see named exports of `.svelte` components.
-- Windows is untested.
+- On Windows it has been tried with Zed and tsgo only.
 
 ## Contributing
 

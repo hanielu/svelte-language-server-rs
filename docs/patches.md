@@ -1,7 +1,7 @@
 # Patches to rsvelte
 
 svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `64ad1c4`).
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `46a8289`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -3466,7 +3466,9 @@ drive or UNC path, unless the plain form exceeds Windows' path limit), used ever
 `path_to_uri` strips it too. Elsewhere nothing changes.
 
 **Effect.** Tests `uri::tests::a_verbatim_path_loses_its_prefix`, `a_verbatim_path_is_a_plain_file_uri`,
-`canonicalize_resolves_like_the_standard_library` (string handling: they run on every platform).
+`canonicalize_resolves_like_the_standard_library` (string handling: they run on every platform). The
+last asserted equality with `fs::canonicalize` itself and failed on Windows, where the two differ by
+design; `46a8289` compares with the standard path less its prefix.
 
 ### 94. Link `node_modules` with a junction on Windows, and remove links as Windows does (`c7a230c`)
 
