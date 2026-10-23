@@ -1,8 +1,7 @@
 # Patches to rsvelte
 
 svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `c7a230c`;
-95–99 sit on it in `fix/windows-paths`, head `64ad1c4`).
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `64ad1c4`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -3504,7 +3503,7 @@ no Windows build), on svelte-dnd-kit, a pnpm monorepo whose `packages/core` is `
 under a root `package.json` without `type`. On `packages/core/.../dnd-context.svelte` the official
 server reports nothing; svelte-language-server-rs reported 70 errors, from four path assumptions that hold on
 macOS and Linux. Each was found in the generated overlay and confirmed with `tsgo -p` on it
-(`--traceResolution`, `--explainFiles`) before the fix. On `fix/windows-paths`, over `c7a230c`.
+(`--traceResolution`, `--explainFiles`) before the fix.
 
 ### 95. Keep a shadow's `../` imports (`74d1f7c`)
 
