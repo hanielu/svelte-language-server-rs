@@ -1,7 +1,7 @@
 # Patches to rsvelte
 
 svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `5c9579a`).
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `5d4fdde`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -3776,6 +3776,27 @@ passes. `cargo clippy --no-deps` on the language server reports only `symbols.rs
 100–101's run, every script the same but `slowmix`'s arrival order and the side `r2c-format` and
 `r2d-hover` took of their probe/edit race, both `ok`; alone, three times each, they vary the same way).
 
+## 103. Give an extracted component a file URI on Windows (`5d4fdde`)
+
+**Problem.** Found running 95–98 on Windows (the one library test still failing there after 102):
+the extract-component command wrote the new component's URI as `file://` followed by the joined
+path, only its spaces escaped. Windows joins with `\`, and `uri_to_path` answers `C:/…` for a drive
+URI, so a document at `file:///C:/w/src/App.svelte` got `file://C:/w/src\./NewComp.svelte` for the
+`create` and the new file's edit: not a file URI, so a Windows editor creates nothing or the wrong
+file. A path with other characters a URI must escape (`#`, `%`, non-ASCII) was wrong everywhere.
+
+**Change.** The URI comes from `uri::path_to_uri`, as every other one the server writes: `/`
+separators, `file:///` before a drive, percent-escaped. Upstream (`path.join`, then vscode-uri)
+also drops the `./` and spells the drive `c%3A`; both are left as they were, as editors resolve
+either.
+
+**Effect.** Tests: `extract::tests::extracts_template_and_copies_tags`, which failed on Windows, and
+`a_component_beside_a_windows_document_gets_a_file_uri` (Windows only), `file:///C:/w/src/./NewComp.svelte`
+for a drive path (`file://C:/w/src\./NewComp.svelte` without the fix); the protocol
+`extract_component_is_applied_through_workspace_apply_edit` passes. Suites after 103 on Windows 11:
+lib 524 (1 ignored), protocol 36, robustness 6 (the Unix-only ones do not run), none failing. `cargo
+fmt` clean; clippy reports nothing in `extract.rs`.
+
 ## tsrs issues (outside our control)
 
 * **Memory kept after every full program build.** tsrs frees its program owners
@@ -3984,11 +4005,6 @@ passes. `cargo clippy --no-deps` on the language server reports only `symbols.rs
 * **The same `\` paths in rsvelte_check** (found fixing 95): `svelte_check/overlay.rs` passes
   `display()` paths to the external-import rewrite too, so `rsvelte check` on Windows presumably drops
   `../` the same way. Not run.
-* **Tests that cannot pass on Windows** (found running 95–98 there; the protocol tests' URI helper
-  is fixed with 99): `uri::tests::canonicalize_resolves_like_the_standard_library` expects std's
-  verbatim answer;
-  `extract::tests::extracts_template_and_copies_tags` gets `file:///tmp\./NewComp.svelte`, so
-  "extract component" may hand Windows editors a URI with a `\` in it (not checked in an editor).
 
 ## Tests
 
