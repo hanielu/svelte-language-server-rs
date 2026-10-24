@@ -1,7 +1,7 @@
 # Patches to rsvelte
 
 svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `ca86e93`).
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `39cbf17`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -3823,6 +3823,61 @@ every keystroke. Tests: `completions::tests::a_moustache_ends_where_scan_matchin
 `markup_after_a_script_with_an_apostrophe_in_a_comment_gets_emmet`; both failed without the fix.
 Suites on Windows 11: lib 526 (1 ignored), protocol 36, robustness 6, none failing. `cargo fmt` clean;
 clippy reports nothing in `completions.rs`.
+
+## 105–106. Reported from Zed in the debate project
+
+### 105. Go to a component imported through a path alias (`2e235da`)
+
+**Problem.** Cmd+click on `"$lib/components/image-input.svelte"` or `"$routes/components/…svelte"`
+(`kit.alias` in the Svelte config) went nowhere, where official goes to the component; the name the
+import binds, a relative `./x.svelte` and an aliased `.ts` module (`"$ui/tooltip"`) all worked. The
+shadow imports `"$lib/…/image-input.svelte.tsx"`; recorded between the server and tsrs, tsrs answers
+a module that `paths` resolved to a component's shadow with the span of its whole module (`1:0` to
+`130:62`, from the first token after `///<reference>` to the end), and a relative one, as TypeScript
+does, with the empty range at the top. Most of that span is generated code, so `map_definition_range`
+dropped the location.
+
+**Change.** A definition range that runs from the shadow's first token to its end is the module
+itself: it lands at the file's start (0:1, `mapUnmappedToTheStartOfFile`), as the empty range at the
+top does, before the other rules for an unmapped range.
+
+**Effect.** On a copy of the debate frontend, `$lib/…` and `$routes/…` component paths (three) go to
+their files, as official; `$ui/tooltip`, `svelte-sonner`, the relative paths and the names are
+unchanged. Test: `tsgo_response::tests::a_definition_spanning_the_whole_shadow_lands_at_the_start_of_its_file`
+(dropped without the fix).
+
+### 106. Render JSDoc tags in hovers and completion docs as upstream (`2c86321`)
+
+**Problem.** Reported from Zed with two screenshots: hovering formsnap's `<Control>`, official shows
+its `@example` as a Svelte code block followed by the "Snippet Props" list; svelte-language-server-rs
+showed one code block holding the ` ```svelte ` fence and everything after it. tsgo writes a quick
+info's tags its own way: every `@example` in a `tsx` fence longer than any backtick run inside it, a
+caption, a `@default` and a multi-line `@param` on the tag's line, `@author`'s email in angle
+brackets, and a `- ` kept between a parameter and its text. Upstream builds both a hover and a
+resolved completion item's documentation with `getMarkdownDocumentation` (`previewer.ts`). Compared on
+one fixture over the LSP: each of the five hovers with tags, and the Markdown completion
+documentation, differed in them.
+
+**Change.** `upstream_documentation` parses tsgo's tags (`*@name*`, a backticked name, the comment; an
+example's caption and fenced code) and renders them as `getTagDocumentation` does: `makeCodeblock`
+keeps an example that starts with a fence and fences the rest without a language; a multi-line body
+goes below the tag after two spaces; `getWithType` splits a parameter from its text and drops the
+`-`; `makeEmailTag` unwraps the email. Hovers and Markdown completion documentation both go through
+it. A deliberate difference: tsgo's `{@link x}` targets stay links, where upstream shows `{@link x}`.
+
+**Effect.** The fixture's hovers and completion documentation match official's but for those links,
+and formsnap's `<Control>` hovers as in the first screenshot. Not changed: TypeScript 7's declaration
+line (`(alias) function plain(…)`, no `import plain` line under an alias), which is tsrs's quick
+info. Tests: `jsdoc_tags_are_rendered_as_upstream_renders_them` (seven tsgo renderings and
+upstream's, recorded over the LSP) and `completion_documentation_renders_jsdoc_tags_as_upstream`.
+
+Suites after 105–106: lib 537 (1 ignored), protocol 36, robustness 32; 105 alone passes lib 535. One
+lib run at 105 failed `locations_workspace_edits_and_nested_symbols_map_recursively`: the
+`tsgo_response` tests named their workspaces after the clock, which repeats across parallel tests on
+macOS, so one test's cleanup removed another's files; `39cbf17` adds a counter, as the other helpers
+have. `scripts/check-windows.sh` passes. `runall.sh` on the release build:
+`docs/measurements/tests/regressions-defhover.txt` (against v0.2.0's run, every script the same but
+`slowmix`'s arrival order).
 
 ## tsrs issues (outside our control)
 
