@@ -1,7 +1,7 @@
 # Patches to rsvelte
 
 svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `5d4fdde`).
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `ca86e93`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -3796,6 +3796,33 @@ for a drive path (`file://C:/w/src\./NewComp.svelte` without the fix); the proto
 `extract_component_is_applied_through_workspace_apply_edit` passes. Suites after 103 on Windows 11:
 lib 524 (1 ignored), protocol 36, robustness 6 (the Unix-only ones do not run), none failing. `cargo
 fmt` clean; clippy reports nothing in `extract.rs`.
+
+## 104. Match a moustache's braces as `scanMatchingBraces` does (`ca86e93`)
+
+**Problem.** Reported from Zed on Windows: typing `div` in svelte-dnd-kit's `dnd-context.svelte`
+offered nothing, where official offers `dd, div, dl, …` and then `div`. Markup Emmet (100), Emmet
+in `<style>` (102) and close tags all ask first whether the cursor is inside a moustache, as
+upstream's `isInsideMoustacheTag` does, seeded at the enclosing element or, in top-level markup, at
+the document's start — so the walk goes through the scripts. `moustache_end`, the port of
+`scanMatchingBraces` (`lib/documents/utils.ts`) it walks with, skipped quoted strings only, each to
+its next quote: the apostrophe in the component's `// It's possible for the active node…` opened a
+string past every later brace, no moustache closed, and the markup read as inside one. Not specific
+to Windows or to CRLF; any script holding a comment with an apostrophe, a `//` or `/* */` holding a
+brace, a quote left open on its line, or a template literal inside a `${}` could do it.
+
+**Change.** `moustache_end` is `scanMatchingBraces` line for line: a quoted string ends at its line,
+`//` and `/* */` comments are skipped (and, as upstream, the character after `*/`), and a template
+literal's `${}` nests (`template_stop`, upstream's `scanTemplateString`). A regular expression is
+read as code, as upstream reads it.
+
+**Effect.** dnd-context over the LSP, typed as Zed does (an incremental `didChange` per keystroke,
+CRLF as on disk and LF as Zed holds it, at the end of the file and on a new line in its markup):
+nothing → `dd, div, dl, dt, dir, del, dfn, details`, then `div, dir`, then `div`, as official at
+every keystroke. Tests: `completions::tests::a_moustache_ends_where_scan_matching_braces_ends_it`
+(ten texts, each end read off upstream's own `scanMatchingBraces`) and
+`markup_after_a_script_with_an_apostrophe_in_a_comment_gets_emmet`; both failed without the fix.
+Suites on Windows 11: lib 526 (1 ignored), protocol 36, robustness 6, none failing. `cargo fmt` clean;
+clippy reports nothing in `completions.rs`.
 
 ## tsrs issues (outside our control)
 
