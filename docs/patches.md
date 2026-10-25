@@ -1,7 +1,7 @@
 # Patches to rsvelte
 
 svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `39cbf17`).
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `b6e4f84`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -3878,6 +3878,34 @@ macOS, so one test's cleanup removed another's files; `39cbf17` adds a counter, 
 have. `scripts/check-windows.sh` passes. `runall.sh` on the release build:
 `docs/measurements/tests/regressions-defhover.txt` (against v0.2.0's run, every script the same but
 `slowmix`'s arrival order).
+
+## 107. Type elements against the project's `svelteOptions.namespace` (`b6e4f84`)
+
+**Problem.** Reported from Zed in svelte-lynx: `src/app.svelte` showed five `Object literal may only
+specify known properties, and '"ontap"' does not exist in type 'HTMLProps<"view", SVGAttributes<any>>'`,
+where official shows none. The project's tsconfig sets `"svelteOptions": { "namespace": "svelteLynx" }`
+and declares Lynx's elements in `svelteLynx.IntrinsicElements`. Upstream reads that option
+(`typingsNamespace: raw?.svelteOptions?.namespace || 'svelteHTML'`, `service.ts`), so svelte2tsx
+emits `svelteLynx.createElement("view", …)`; the overlay never passed it, the shadows called
+`svelteHTML.createElement`, and there `view` is SVG's `<view>` element.
+
+**Change.** The overlay reads the namespace as upstream does: the project config's own
+`svelteOptions.namespace` (its raw JSON, not a config it extends), `svelteHTML` without one, and
+`svelteNative.JSX` wherever svelte-native is installed and `jsxFactory` names no Svelte factory
+(upstream's svelte-native detection). The projection already took it
+(`Svelte2TsxOptions::typings_namespace`, which also stops `preserveBind` for a custom namespace).
+
+**Effect.** On a copy of svelte-lynx, 14 components (`src`, `packages/svelte-lynx/src`,
+`tests/fixtures`) report what official reports — `src/app.svelte` 5 → 0, its `bind:`s included — but
+for one hint TypeScript 7 adds: `tests/fixtures/bare-attributes.svelte`'s bare `hidden` on a `<view>`,
+deprecated in Lynx's types, is `'hidden' is deprecated` (6385). TypeScript 5.9 does not flag a
+deprecated property written in an object literal and tsrs does, in a plain `.ts` file too, so it is
+TypeScript 7's, not the projection's. Tests: `a_projects_svelte_options_namespace_types_its_elements`
+and `svelte_native_types_elements_against_its_jsx_namespace`.
+
+Suites after 107: lib 539 (1 ignored), protocol 36, robustness 32. `scripts/check-windows.sh` passes.
+`runall.sh` on the release build: `docs/measurements/tests/regressions-namespace.txt` (against
+105–106's run, every script the same but two edit races and `slowmix`'s arrival order).
 
 ## tsrs issues (outside our control)
 
