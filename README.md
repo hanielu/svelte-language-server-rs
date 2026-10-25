@@ -19,7 +19,7 @@ On a Svelte 5 monorepo with 476 components in 12 TypeScript projects, against th
 | memory | ~290 MB with all 12 projects loaded | ~570–600 MB with one |
 
 Methods and every recorded run: [docs/architecture.md](docs/architecture.md),
-[docs/testing.md](docs/testing.md). Status: experimental, used daily in Zed. Formerly named svelte-rs.
+[docs/testing.md](docs/testing.md). Status: experimental, used daily in Zed.
 
 ## How it works
 
