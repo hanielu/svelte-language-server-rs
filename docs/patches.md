@@ -3907,6 +3907,39 @@ Suites after 107: lib 539 (1 ignored), protocol 36, robustness 32. `scripts/chec
 `runall.sh` on the release build: `docs/measurements/tests/regressions-namespace.txt` (against
 105–106's run, every script the same but two edit races and `slowmix`'s arrival order).
 
+## 108. Map a rename's edits on Windows (`5c631f3`)
+
+**Problem.** Found checking 105–107 on Windows (TypeScript 7.0.2 as tsgo, Zed's URI spelling): every
+rename of a Svelte symbol came back with its edits on the cache's shadows, unmapped —
+`.svelte-language-server-rs/projects/…/basic.svelte.tsx:43:179`, where official edits
+`basic.svelte:36:15` — so an editor applying it leaves the components unchanged and writes into the
+cache. In one component as across them (`autoScroll` in `dnd-context.svelte`, six edits; the `id`
+prop of `<Droppable>`, three components). Older than 105–107: the 103 and 104 builds answer the same.
+tsgo keys its edits by its own spelling of a Windows drive, `file:///c%3A/Users/…`, for the
+`file:///C:/Users/…` it was sent; `tsgo_rename`'s `document_by_shadow` compared the two as text, found
+no shadow, and passed every edit on as it came. References and the other answers map through the
+overlay's path lookup, which a drive's case does not change, and were right. Elsewhere the two
+spellings are one: TypeScript 7 writes `(`, `)`, a space and `+` as `path_to_uri` does
+(`%28app%29%20x/%2Bpage.ts`), so only Windows is affected.
+
+**Change.** A rename's edits find their shadow by path: `documents_by_shadow` keys the documents by
+their shadow's path (`uri_to_path`, compared by components, a drive in any case), once per answer.
+The file-rename mapping (`$/getEditsForFileRename`, `result_uri_for`) compares by path too.
+
+**Effect.** On a copy of svelte-dnd-kit (Windows 11, TypeScript 7.0.2, the release build), each
+rename gets official's edits: `<Droppable>`'s `id` prop from `basic.svelte`, at `basic.svelte:36:15`,
+`draggable-containers.svelte:129:14`, `sortable-list.svelte:95:49` and `use-droppable.svelte.d.ts:16:5`
+(at the shorthand `{id}` official replaces `{id` with `box={id` and this server `{id}` with
+`box={id}`, the same text); `autoScroll` in `dnd-context.svelte`, its six; the `Droppable` import, its
+three. Before, all but the `.d.ts` edit were on shadows. File renames were already right, as tsgo
+keys a `willRenameFiles` answer by the URIs it was sent, and are unchanged: moving `basic.svelte`
+edits `+page.svelte`'s import and its own `./draggable.svelte`, as official. Tests:
+`tsgo_rename::tests::an_edit_in_tsgos_spelling_of_the_drive_maps_to_the_component` and
+`tsgo_custom::tests::will_rename_result_maps_tsgos_spelling_of_the_drive` (Windows only); both
+failed without the fix, the edits left on tsgo's `file:///c%3A/…` shadow URIs. Suites on Windows 11:
+lib 533 (1 ignored), protocol 36, robustness 6, none failing. `cargo fmt` clean; clippy reports
+nothing in `tsgo_rename.rs` or `tsgo_custom.rs`.
+
 ## tsrs issues (outside our control)
 
 * **Memory kept after every full program build.** tsrs frees its program owners
@@ -4115,6 +4148,22 @@ Suites after 107: lib 539 (1 ignored), protocol 36, robustness 32. `scripts/chec
 * **The same `\` paths in rsvelte_check** (found fixing 95): `svelte_check/overlay.rs` passes
   `display()` paths to the external-import rewrite too, so `rsvelte check` on Windows presumably drops
   `../` the same way. Not run.
+* **Found checking 105–107 on Windows with TypeScript 7.0.2** (each the same on the 104 build):
+  a component re-exported by a `.ts` file (`import {Accessibility} from '../accessibility/index.js'`
+  in svelte-dnd-kit's `dnd-context.svelte`) resolves to Svelte's ambient `declare module '*.svelte'`
+  (hover `const Comp: LegacyComponentType`, definition in `svelte/types/index.d.ts`), where official
+  reaches `accessibility.svelte`, so its props go unchecked; with tsgo 7.0.0-dev.20260707.2 too.
+  Auto-import's edit has no indentation (`import Droppable from …;\n`, official
+  `\timport Droppable from …;\r\n` in a CRLF file, `\t…\n` in an LF one). And TypeScript 7.0.2 hands
+  an `@example` that brings its own fence over unwrapped (```` ```ts ````, no `tsx` fence around it),
+  so 106 takes that fence for tsgo's and drops its `ts`, which official keeps.
+* **The keep-alive shadows' pushed diagnostics** (found fixing 108): `server.rs` holds back tsgo's
+  `publishDiagnostics` for a shadow open only to keep its project by comparing tsgo's URI as text
+  (`shadow.as_str() == uri`), which on Windows presumably never matches, as 108's did. Not run.
+* **A component's references from its tag** (found checking 108, before and after it, Windows only
+  checked): at `<Droppable` in svelte-dnd-kit's `basic.svelte`, official lists the component's imports
+  and opening tags in two other components too (six locations, no closing tag); this server, the
+  three in `basic.svelte` (its import, the opening and the closing tag).
 
 ## Tests
 
