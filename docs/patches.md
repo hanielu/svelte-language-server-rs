@@ -1,7 +1,7 @@
 # Patches to rsvelte
 
 svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `b6e4f84`).
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `b5a92ee`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -3939,6 +3939,33 @@ edits `+page.svelte`'s import and its own `./draggable.svelte`, as official. Tes
 failed without the fix, the edits left on tsgo's `file:///c%3A/…` shadow URIs. Suites on Windows 11:
 lib 533 (1 ignored), protocol 36, robustness 6, none failing. `cargo fmt` clean; clippy reports
 nothing in `tsgo_rename.rs` or `tsgo_custom.rs`.
+
+## 109. Keep a declaration tag's binding to its own block (`b5a92ee`)
+
+**Problem.** Reported from Zed in taasc: `src/app/shell/sidebar.svelte` showed four
+`state_referenced_locally` warnings, on the setter parameter of `bind:open={() => …, (open) =>
+previews.setOpen(link.key, open)}` (lines 224 and 240), where official shows none. The template's only
+other `open` is `{const open = $derived(!collapsed.has(team.id))}` in a later `{#each}`. rsvelte's
+scope 0 holds a copy of every declaration, and `is_block_local_out_of_scope` dropped a lookup that
+reached a binding outside its block only for the block-local kinds (each items and indices, await
+values); a declaration tag's binding takes its initializer's kind, `Derived` here, so the setter's
+parameter resolved to it.
+
+**Change.** The scope builder marks a declaration tag's bindings (`Binding::declaration_tag`), which
+are block-local whatever their kind. Keying the rule on any binding declared in a template block
+instead dropped bindings that `named_slot_let_scope` and `dev_ownership_shadowed_local_root` rely on
+(a slotted node's `let:`, a shadowed local), so the rule is this narrow.
+
+**Effect.** sidebar.svelte on a copy of taasc: 4 → 0, as official. Tests:
+`state_referenced_locally_template_declaration` (rsvelte_core; a setter parameter in a sibling block
+and at the top level, both warning before; inside the block the declaration still warns, as official
+5.57.2 does). The full rsvelte_core run (5,612 pass) also found `escaped_quote_lookback_guard` failing
+on patch 100's Emmet port; its two hits are ports of emmet-helper's `/([^\\])\$…/` regexes, now in
+the guard's allow-list with that reason (`967a1c1`). The 25 other failures there all need the empty
+`submodules/svelte`. Suites after 109: lib 539 (1 ignored), protocol 36, robustness 32, projection 870;
+`scripts/check-windows.sh` passes. `runall.sh` on the release build:
+`docs/measurements/tests/regressions-decltag.txt` (against v0.2.1's run, every script the same but an
+edit race and two arrival orders).
 
 ## tsrs issues (outside our control)
 
