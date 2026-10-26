@@ -1,7 +1,7 @@
 # Patches to rsvelte
 
 svelte-language-server-rs runs rsvelte's language server unchanged except for the commits below, which live on
-the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `b5a92ee`).
+the `svelte-language-server-rs` branch of the `vendor/rsvelte` submodule (base: upstream `5ed8ea3`; head: `8ca6dd9`).
 Patches 1–21, 26–31, 41–46, 50–54, 55–64 and 67–72 touch `crates/rsvelte_language_server` only; 22–25,
 32–40, 47–49, 65–66 and 73–80 touch the projection (`crates/rsvelte_projection`) and the loose parser
 (`crates/rsvelte_core`), except 35, which is in the language server. 22–25 were developed on the
@@ -3966,6 +3966,40 @@ the guard's allow-list with that reason (`967a1c1`). The 25 other failures there
 `scripts/check-windows.sh` passes. `runall.sh` on the release build:
 `docs/measurements/tests/regressions-decltag.txt` (against v0.2.1's run, every script the same but an
 edit race and two arrival orders).
+
+## 110–111. Reported from Zed in doctors-portal
+
+`src/routes/(app)/add/card-composer.svelte` showed five TypeScript errors official does not: four
+TS2877 and `Cannot find module './$types'`.
+
+### 110. Keep `rewriteRelativeImportExtensions` out of the overlay (`4bfd744`)
+
+**Problem.** The project's tsconfig sets `rewriteRelativeImportExtensions: true`. Shadows import a
+component as `"#lib/x.svelte.tsx"`, and with the option on TypeScript reports every such non-relative
+import as `This import uses a '.tsx' extension to resolve to an input TypeScript file, but will not be
+rewritten during emit because it is not a relative path` (TS2877). Official's imports keep `.svelte`.
+
+**Change.** The overlay, which already sets `noEmit`, sets `rewriteRelativeImportExtensions: false`.
+Test: `the_overlay_does_not_rewrite_import_extensions`.
+
+### 111. Resolve a package `extends` file-first, as TypeScript does (`8ca6dd9`)
+
+**Problem.** The tsconfig extends `"$app/tsconfig"`, SvelteKit's generated package:
+`node_modules/$app/tsconfig.json` beside a `tsconfig/` directory holding only `service-worker.json`.
+`config_path_candidates` took the directory, looked for `tsconfig/tsconfig.json`, found nothing, and
+the overlay lost the config's `rootDirs`, `.svelte-kit/types` among them, so `./$types` did not
+resolve.
+
+**Change.** TypeScript's `nodeNextJsonConfigResolver` tries the file first (`X.json`, or `X` naming
+one), then `X/tsconfig.json`; a package `extends` now does too (`package_config_candidates`). Test:
+`a_package_extends_is_the_file_before_the_directory`.
+
+**Effect.** card-composer.svelte on a copy of doctors-portal: 5 TypeScript errors → 0, as official.
+Not ported: official's two `Unknown at rule @screen` warnings come from vscode-css-languageservice's
+lint rules, which svelte-language-server-rs has none of. Suites after 111: lib 541 (1 ignored),
+protocol 36, robustness 32; 110 alone passes lib 540. `scripts/check-windows.sh` passes. `runall.sh`
+on the release build: `docs/measurements/tests/regressions-overlay-extends.txt` (against 109's run,
+every script the same but `slowmix`'s arrival order).
 
 ## tsrs issues (outside our control)
 
