@@ -4001,6 +4001,43 @@ protocol 36, robustness 32; 110 alone passes lib 540. `scripts/check-windows.sh`
 on the release build: `docs/measurements/tests/regressions-overlay-extends.txt` (against 109's run,
 every script the same but `slowmix`'s arrival order).
 
+## 112. No compiler diagnostics before the preprocessor answers (`a40b866`)
+
+**Problem.** Found checking 109–111 on Windows: opening svelte-dnd-kit's `dnd-context.svelte`
+(`vitePreprocess({ script: true })`, an `enum Status` at line 99) showed `Parsing error:
+typescript_invalid_feature: TypeScript language features like enums are not natively supported` until
+the preprocessed text arrived: 0.4 → 1.2–1.7 s on an idle machine, several seconds on a busy one.
+Pushed (the first publish at 0.4 s held the error, the next one cleared it) and pulled alike (the first
+pull answered it; the sidecar's `workspace/diagnostic/refresh` brought the right one). Official
+compiles only the preprocessed text (`SvelteDocument.getCompiled`) and publishes once, without it.
+`didOpen` already waits for the sidecar, but other lints do not: the answer to the server's
+`workspace/configuration`, which an editor that opens a file at once gives after its `didOpen`,
+re-lints every open document, as do a configuration change, a project-config change and a tsgo
+restart; and a pull is answered at once. Each compiled the text as written. Edits did not show it
+(`didChange` waits too). Older than 109–111.
+
+**Change.** The server keeps the version each component was last sent to the sidecar at
+(`preprocess_pending`), until the sidecar answers that version, fails on it, or the sidecar is given
+up on (its restart circuit opens, preprocessing is turned off or restarted). While a document waits
+(`awaiting_preprocess`), a lint publishes nothing, and a pull gets tsgo's half alone; the sidecar's
+answer lints it again, or asks the editor to pull again, as before. A request that never answers
+still ends: the sidecar fails it after 30 s and replays the latest input after a crash.
+
+**Effect.** `dnd-context.svelte` on a copy of svelte-dnd-kit (Windows 11, TypeScript 7.0.2, the release
+build): pushed, one publish, empty, at 1.1–1.7 s (before: the parse error at 0.4 s, cleared at
+1.3–1.7 s; official: one empty publish at about 5.8 s); pulled, the first pull holds no compiler
+diagnostics and the refresh's is empty (before: the parse error, then empty). A typed error still
+shows 54 ms after the edit and clears 81 ms after the revert. Tests (protocol), with a markup
+preprocessor that takes 1.5 s to replace an `enum`:
+`a_component_awaiting_preprocessing_publishes_no_raw_compiler_errors` (a client that answers
+`workspace/configuration` after its `didOpen`) and
+`a_pull_before_preprocessing_answers_reports_no_raw_compiler_errors`; both failed without the fix,
+the raw `typescript_invalid_feature` in the first publish and the first pull. Suites on Windows 11:
+lib 535 (1 ignored), protocol 38, robustness 6 (with
+`tsgo_checks_the_component_as_written_and_the_compiler_as_preprocessed`), none failing. `cargo fmt`
+clean; clippy reports nothing in `server.rs` or `tests/protocol.rs`. Not run: the Unix-only
+robustness tests and `runall.sh`.
+
 ## tsrs issues (outside our control)
 
 * **Memory kept after every full program build.** tsrs frees its program owners
