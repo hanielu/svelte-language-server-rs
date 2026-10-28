@@ -4038,6 +4038,39 @@ lib 535 (1 ignored), protocol 38, robustness 6 (with
 clean; clippy reports nothing in `server.rs` or `tests/protocol.rs`. Not run: the Unix-only
 robustness tests and `runall.sh`.
 
+## 113. No semantic tokens on component tag names (`e2ae87d`)
+
+**Problem.** Found matching Zed's highlighting to Cursor's: Zed 1.25 can lay LSP semantic tokens
+over tree-sitter (`"semantic_tokens": "combined"`), and with it `<AsComponent>` and
+`</AsComponent>` turned from the theme's type colour to its variable colour. The server sent a
+`variable` token on both tag names. Official sends none there: `SemanticTokensProvider.ts`'s `map`
+("Ensure components in the template get no semantic highlighting") drops a class, type, parameter,
+variable or function token whose preceding character is `<` or `/` and whose `svelteNodeAt` is an
+`InlineComponent`. Every other token (`$effect` as a function, `const` bindings as `readonly`
+variables, in the script and the template) already matched.
+
+**Change.** The server hands the mapper the token types of the legend it announced (tsgo's,
+narrowed to the editor's; one helper now builds both). For those five types,
+`map_semantic_tokens` drops a token when the character before its source start is `<` or `/` and
+the deepest template node at that offset is a `Component`, `<svelte:component>` or `<svelte:self>`
+(`nodes::offset_is_on_component`, upstream's walk: the last sibling that reaches the offset, and
+nothing inside an attribute, expression or child). The component is parsed once per response, only
+when such a token comes up, and only for a component (`TsgoOverlay::component_source_text`): a
+`.svelte.ts` module parsed as a template would read `useState<Foo>()` as a `<Foo>` component.
+
+**Effect.** On a copy of motion-svelte's `motion.svelte` (Zed's client capabilities, release
+builds): the `variable` token on `<AsComponent {...sharedProps} />` is gone, and every other token
+is unchanged. On the `burst.mjs` component (2,106 lines, 300 `<Child />` tags), the answer loses
+exactly the 300 `Child` tokens (`type.readonly`) and nothing else. That run goes through the new
+parse; semantic tokens while typing (`burst.mjs … 1500 semantic 20`, base/fix/fix/base on macOS)
+stay at p50 25 / 25 / 26 / 25 ms, max 46 / 50 / 49 / 47 ms, completion p50 17–18 ms, no restarts.
+Tests: `semantic_tokens_skip_component_tag_names` (`tsgo_response.rs`; failed without the fix, which
+kept the opening and closing tag tokens) and `only_a_component_s_own_text_is_on_the_component`
+(`nodes.rs`). Suites: lib 543 (1 ignored), protocol 38, robustness 32, none failing;
+`runall.sh` reports no failing check. `cargo fmt` clean; clippy adds nothing (with `-D warnings`
+it stops on two existing lints in `rsvelte_core`). Not run: `diagproj.mjs`, since diagnostics do not
+go through this path.
+
 ## tsrs issues (outside our control)
 
 * **Memory kept after every full program build.** tsrs frees its program owners

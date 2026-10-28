@@ -77,6 +77,10 @@ svelte-language-server-rs in `~/.config/zed/settings.json`:
 Quit and reopen Zed after changing the path; after reinstalling the same path, "editor: restart
 language server" is enough. Remove the entry to go back to the official server.
 
+The server's semantic tokens (what makes `$effect` a function and a `const` binding a constant in
+VS Code) are off in Zed by default; `"languages": { "Svelte": { "semantic_tokens": "combined" } }`
+lays them over the extension's syntax highlighting.
+
 ### VS Code
 
 VS Code needs a client extension: the official Svelte extension starts its server as a Node module,
