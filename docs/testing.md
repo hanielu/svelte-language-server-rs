@@ -118,6 +118,18 @@ On a Windows PC:
    language server's log (Zed: "debug: open language server logs") for errors, and for any path
    with `\\?\` or URI with `%3F` in it.
 
+7. **A go to definition that works on macOS and not on Windows**: record it with
+   `tests/regressions/defprobe.mjs`, which asks the server as an editor does and prints the server's
+   answer and, with `--tsgo`, the TypeScript engine's own answer to the server (it starts the engine
+   behind a pass-through that logs its traffic):
+
+   ```powershell
+   node tests\regressions\defprobe.mjs target\release\svelte-language-server-rs.exe C:\path\to\project src\file.svelte 32:26 --tsgo C:\path\to\project\node_modules\@typescript\native-preview-win32-x64\lib\tsgo.exe
+   ```
+
+   `32:26` is the line and column Zed's status bar shows; `--tsgo` takes the engine the server runs
+   (the `tsgo.exe` that `TSGO_BIN` names, or the one `@typescript/native-preview` installs).
+
 ## Recorded measurements
 
 `docs/measurements/bench/` holds every benchmark line (`final.jsonl`, tagged by build and variant),
