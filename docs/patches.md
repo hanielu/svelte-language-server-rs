@@ -4071,6 +4071,51 @@ kept the opening and closing tag tokens) and `only_a_component_s_own_text_is_on_
 it stops on two existing lints in `rsvelte_core`). Not run: `diagproj.mjs`, since diagnostics do not
 go through this path.
 
+## 114. A flood of `node_modules` file events neither stalls nor reloads the projects (`6f4cd79`)
+
+**Problem.** Reported from Zed on Windows: Ctrl+click on `import("features/background-window.svelte")`
+in SvelteValorantCopilot's `current-page.svelte` did nothing, where it works on macOS, and
+`defprobe.mjs` (added for it) got the right answer every time. Zed's log had the answer: each
+definition, references and semantic-tokens request failed with "TypeScript project configuration
+changed". Recorded between Zed and the server (a pass-through logging every message), on the
+server's first run in the project: tsgo's watchers, which the server registers with the editor,
+cover the workspace root (`**/*`) and every `node_modules/**/*`, and the server places its
+`node_modules` links in the cache; Zed then loaded the pnpm monorepo's `node_modules` and reported
+all it loaded as created, 538,072 `didChangeWatchedFiles` entries in batches of up to 419,592,
+none a change on disk. A run whose cache already existed got none. Two things went wrong with them:
+
+* 485 were dependencies' `tsconfig.json` and `vite.config.ts`, and `is_project_config` took any file
+  of that name, `node_modules` included: each batch reloaded every project and restarted tsgo,
+  aborting what was in flight.
+* Every event cost disk lookups on the server's loop: the preprocess-dependency check canonicalized
+  each path, and `apply_file_changes` canonicalized it again for every loaded project and asked
+  whether it was a directory. Replaying the recorded 72,787-event batch into v0.2.3 (on a copy),
+  a `selectionRange`, which the server answers without tsgo, waited 26.6 s with the configs taken
+  out and 13.9 s with them (a reload replaces the per-event refresh); the 419,592-event batch, 84.1 s.
+
+Not specific to Windows, but only seen there: a first run with the editor watching, or a real
+`pnpm install`, produces the same flood anywhere.
+
+**Change.** A config under a `node_modules` is no project config: it configures a dependency, never
+a project of the workspace (`package.json` was already treated so). Before any per-event work,
+`is_server_change` drops what cannot matter to the server, without touching the disk: the cache's
+echoes, as before, and of a `node_modules` everything but a dependency's component (a project
+shadows those) and a preprocessor's own file, matched by name before its path is resolved. tsgo still
+gets every event, as it did.
+
+**Effect.** The same replays into the patched build: 72,787 events, `selectionRange` 0.29 s and a
+definition 0.79 s, with or without the configs (before: 26.6 / 27.0 s, and 13.9 / 15.1 s with a
+reload); 419,592 events, 2.1 s and 4.8 s (before: 84.1 / 87.7 s); no project reloaded. What is left
+on the big batch is reading it, and tsgo handling it. Tests:
+`a_dependencys_config_in_node_modules_reloads_no_project` (robustness, now also on Windows with
+`one_project`; failed without the fix: the definition held open got "TypeScript project
+configuration changed" and tsgo was shut down) and, for the rules,
+`a_dependencys_config_is_no_project_config` and
+`of_node_modules_only_components_and_preprocessor_files_matter` (`server.rs`). Suites on Windows 11:
+lib 539 (1 ignored), protocol 38, robustness 7, none failing. `cargo fmt` clean; clippy adds nothing
+(`robustness.rs`'s unused `std::fmt::Write` predates it). Not run here: the Unix-only robustness
+tests and `runall.sh`.
+
 ## tsrs issues (outside our control)
 
 * **Memory kept after every full program build.** tsrs frees its program owners
